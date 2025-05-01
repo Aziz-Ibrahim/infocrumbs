@@ -18,9 +18,7 @@ if os.path.isfile('env.py'):
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
-
+TEMPLATES_DIR = BASE_DIR / 'templates'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -58,6 +56,7 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+AUTH_USER_MODEL = 'users.CustomUser'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -149,3 +148,38 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# API Keys & Endpoints
+
+NEWS_API_KEY = os.environ.get('NEWS_API_KEY')
+NEWS_API_URL = os.environ.get('NEWS_API_URL')
+
+THE_NEWS_API_KEY = os.environ.get('THE_NEWS_API_KEY')
+THE_NEWS_API_URL = os.environ.get('THE_NEWS_API_URL')
+
+LASTFM_API_KEY = os.environ.get('LASTFM_API_KEY')
+LASTFM_API_URL = os.environ.get('LASTFM_API_URL')
+
+ALPHA_VANTAGE_API_KEY = os.environ.get('ALPHA_VANTAGE_API_KEY')
+ALPHA_VANTAGE_API_URL = os.environ.get('ALPHA_VANTAGE_API_URL')
+
+FINNHUB_API_KEY = os.environ.get('FINNHUB_API_KEY')
+FINNHUB_API_URL = os.environ.get('FINNHUB_API_URL')
+
+APININJA_API_KEY = os.environ.get('APININJA_API_KEY')
+APININJA_API_URL = os.environ.get('APININJA_API_URL')
+
+SPORTS_API_KEY = os.environ.get('SPORTS_API_KEY')
+
+SPORTMONKS_API_KEY = os.environ.get('SPORTMONKS_API_KEY')
+SPORTMONKS_API_URL = os.environ.get('SPORTMONKS_API_URL')
+
+PARENUAL_API_KEY = os.environ.get('PARENUAL_API_KEY')
+PARENUAL_API_URL = os.environ.get('PARENUAL_API_URL')
+
+TREFLE_API_KEY = os.environ.get('TREFLE_API_KEY')
+TREFLE_API_URL = os.environ.get('TREFLE_API_URL')
+
+PERMAPEOPLE_KEY_ID = os.environ.get('PERMAPEOPLE_KEY_ID')
+PERMAPEOPLE_KEY_SECRET = os.environ.get('PERMAPEOPLE_KEY_SECRET')
+PERMAPEOPLE_API_URL = os.environ.get('PERMAPEOPLE_API_URL')
