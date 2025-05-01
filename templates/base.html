@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Aziz Ibrahim">
+    <meta name="description" content="InfoCrumbs — Discover curated, bite-sized insights across your favorite topics.">
+    <meta name="keywords" content="InfoCrumbs, news digest, smart articles, trend insights, tech news, curated info">
+
+    <!-- SEO -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Favicon (optional) -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
+    <!-- Title -->
+    <title>{% block title %}InfoCrumbs{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="dark-theme">
+    <!-- Header / Navbar -->
+    <header>
+        <nav>
+            <h1><a href="/">InfoCrumbs</a></h1>
+            <!-- Add nav links here -->
+        </nav>
+    </header>
+
+    <!-- Main content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ now.year }} InfoCrumbs. Crafted by Aziz Ibrahim.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
