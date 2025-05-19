@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ crumb.title }}</h2>
+    <p><strong>Source:</strong> {{ crumb.source }}</p>
+    <p><strong>Published:</strong> {{ crumb.published_at }}</p>
+    <p><strong>Topic:</strong> {{ crumb.topic }}</p>
+    <p>{{ crumb.summary }}</p>
+    <p><a href="{{ crumb.url }}" target="_blank">Read more</a></p>
+{% endblock %}

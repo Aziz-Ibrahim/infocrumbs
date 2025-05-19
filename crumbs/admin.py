@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import Crumb
 
-# Register your models here.
+@admin.register(Crumb)
+class CrumbAdmin(admin.ModelAdmin):
+    list_display = ('title', 'topic', 'source', 'published_at', 'added_on')
+    search_fields = ('title', 'summary', 'source')
+    list_filter = ('topic', 'source', 'published_at')

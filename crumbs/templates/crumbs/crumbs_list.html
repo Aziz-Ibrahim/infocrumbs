@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Crumbs</h2>
+{% for crumb in page_obj %}
+<div class="crumb">
+    <h3><a href="{% url 'crumb_detail' crumb.pk %}">{{ crumb.title }}</a></h3>
+    <p>{{ crumb.summary }}</p>
+    <a href="{{ crumb.url }}" target="_blank">Read more</a>
+</div>
+{% empty %}
+<p>No crumbs found.</p>
+{% endfor %}
+
+<!-- Pagination controls -->
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">« Prev</a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next »</a>
+    {% endif %}
+</div>
+{% endblock %}

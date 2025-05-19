@@ -1,0 +1,14 @@
+.pagination {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.pagination a {
+    color: var(--neon-blue);
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.pagination span {
+    color: var(--text-light);
+}
