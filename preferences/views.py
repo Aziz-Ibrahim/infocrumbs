@@ -10,11 +10,12 @@ from .forms import UserPreferenceForm
 @login_required
 def set_preferences(request):
     obj, created = UserPreference.objects.get_or_create(user=request.user)
-    form = UserPreferenceForm(request.POST or None, instance=obj)
+    form = UserPreferenceForm(request.POST or None, instance=obj, user=request.user)
     if form.is_valid():
         form.save()
-        return redirect('home')
+        return redirect('home')  # or wherever makes sense
     return render(request, 'preferences/set_preferences.html', {'form': form})
+
 
 
 @csrf_exempt
