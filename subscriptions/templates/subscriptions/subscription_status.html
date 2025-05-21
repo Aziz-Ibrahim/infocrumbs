@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6 text-center text-white">Your Subscription Status</h1>
+
+    {% if subscription %}
+        <div class="bg-[#1A103D] p-6 rounded-2xl shadow-md border border-[#333A56] text-light text-center">
+            <p><strong class="text-neon-green">Plan:</strong> {{ subscription.plan.name|title }}</p>
+            <p><strong class="text-neon-blue">Duration:</strong> {{ subscription.get_frequency_display }}</p>
+            <p><strong class="text-neon-orange">Valid Until:</strong> {{ subscription.valid_until|date:"Y-m-d H:i" }}</p>
+        </div>
+    {% else %}
+        <div class="text-center text-white">
+            <p>You are not subscribed to any plan yet.</p>
+            <a href="{% url 'choose_plan' %}"
+                class="inline-block mt-4 px-4 py-2 bg-neon-green text-black font-bold rounded hover:bg-neon-blue transition">Choose
+                a Plan</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
