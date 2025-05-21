@@ -20,9 +20,18 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  # allauth
-    path('crumbs/', include('crumbs.urls')),  # crumbs
-    path('feedback/', include('feedback.urls')),  # feedback
-    path('preferences/', include('preferences.urls')),  # preferences
-    path('subscriptions/', include('subscriptions.urls')),  # subscriptions
+    # crumbs
+    path('crumbs/', include('crumbs.urls')),
+    path('api/crumbs/', include('crumbs.api_urls')),
+    # feedback
+    path('feedback/', include('feedback.urls')),
+    path('api/feedback/', include('feedback.api_urls')),
+    # preferences
+    path('preferences/', include('preferences.urls')),
+    path('api/preferences/', include('preferences.api_urls')),
+    # subscriptions
+    path('subscriptions/', include('subscriptions.urls')),
+    path('api/subscriptions/', include('subscriptions.api_urls')),
+
 ]
 
