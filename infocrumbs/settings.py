@@ -46,10 +46,10 @@ INSTALLED_APPS = [
 
     # Custom apps
     'accounts',
-    'preferences',
-    'feedback',
-    'crumbs',
     'core',
+    'crumbs',
+    'feedback',
+    'preferences',
     'subscriptions',
 ]
 

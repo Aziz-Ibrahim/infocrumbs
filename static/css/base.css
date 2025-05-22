@@ -1,9 +1,105 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap');
+
+/* Root Variables */
 :root {
-    --bg-dark: #0A0F2C;
-    --bg-alt: #1A103D;
-    --text-light: #E0E0E0;
-    --neon-green: #39FF14;
-    --neon-orange: #FF6F00;
-    --neon-blue: #00F0FF;
-    --border-color: #333A56;
+    /* --- Colors --- */
+    --bg-dark: #0A0F2C; /* Main dark background */
+    --bg-alt: #1A103D;  /* Slightly lighter/different dark background */
+    --bg-light: #2A1F52; /* Even lighter dark background (e.g., for cards/sections) */
+
+    --text-light: #B3FFAB; /* Main light text color (greenish) */
+    --text-dark: #05071A; /* Dark text on light elements */
+    --text-muted: #80A89C; /* Muted or secondary text color */
+
+    --neon-green: #39FF14; /* Primary accent neon green */
+    --neon-orange: #FF6F00; /* Secondary accent neon orange */
+    --neon-blue: #00F0FF; /* Tertiary accent neon blue */
+    --neon-purple: #A020F0; /* Extra accent purple for variety */
+    --neon-pink: #FF1493; /* Extra accent pink for variety */
+
+    /* --- Gradients --- */
+    --border-gradient: linear-gradient(
+        135deg,
+        var(--neon-green) 0%,
+        var(--neon-blue) 50%,
+        var(--neon-orange) 100%
+    );
+    --button-gradient: linear-gradient(
+        45deg,
+        var(--neon-blue),
+        var(--neon-purple)
+    ); /* For buttons or interactive elements */
+    --text-gradient: linear-gradient(
+        90deg,
+        var(--neon-green),
+        var(--neon-blue)
+    ); /* For special headings or text */
+
+    /* --- Typography --- */
+    --font-primary: 'Tilt Neon', sans-serif; /* From Google fonts */
+    --font-secondary: 'Courier New', Courier, monospace; /* Backup */
+    --font-size-base: 16px;
+    --font-size-sm: 14px;
+    --font-size-md: 18px;
+    --font-size-lg: 24px;
+    --font-size-xl: 36px;
+    --line-height-base: 1.6;
+
+    /* --- Spacing --- */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 48px;
+
+    /* --- Border & Radius --- */
+    --border-width: 3px;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+
+    /* --- Shadows & Effects --- */
+    --glow-effect: 0 0 10px var(--neon-green),
+                    0 0 20px var(--neon-blue),
+                    0 0 30px var(--neon-orange);
+    --text-shadow-neon: 0 0 5px var(--neon-green),
+                        0 0 10px var(--neon-blue); /* For glowing text */
+    --box-shadow-elevate: 0 5px 15px rgba(0, 0, 0, 0.5); /* For depth */
+    --transition-speed: 0.3s ease-in-out; /* For smooth animations */
+
+    /* --- Z-index (for layering) --- */
+    --z-index-base: 1;
+    --z-index-dropdown: 10;
+    --z-index-modal: 100;
+    --z-index-tooltip: 1000;
+}
+
+/* Body Styles */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: var(--font-primary);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Universal Styles */
+.gradient-border {
+    border: var(--border-width) solid transparent;
+    background: linear-gradient(to right, var(--bg-dark), var(--bg-dark)), var(--border-gradient);
+    background-clip: padding-box, border-box;
+    background-origin: border-box;
+}
+
+.glow {
+    box-shadow: var(--glow-effect);
+}
+
+.blink {
+    animation: blink 1s infinite alternate;
 }
