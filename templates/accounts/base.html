@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Account | InfoCrumbs{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-container glow gradient-border p-4 rounded mt-5">
+    {% block account_content %}
+    <!-- Default fallback, to be overridden -->
+    {% endblock %}
+</div>
+{% endblock %}

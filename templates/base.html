@@ -1,4 +1,5 @@
-<!-- templates/base.html -->
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,13 +10,23 @@
 
     {% load static %}
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- Base Styles -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" type="image/png" href="{% static 'images/apple-touch-icon.png' %}" sizes="180x180">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon-16x16.png' %}" sizes="16x16">
+
+
+    
     <!-- App-specific styles -->
     {% block extra_css %}{% endblock %}
 
-    <!-- Root element for JS frameworks (like React) -->
+    <!-- CSRF Token for JS use -->
     <script>
         const csrftoken = '{{ csrf_token }}';
     </script>
@@ -23,27 +34,64 @@
 
 <body class="bg-dark text-light">
 
-    <!-- Header -->
-    <header>
-        <nav>
-            <h1><a href="{% url 'home' %}">Crumbs</a></h1>
-            {% if user.is_authenticated %}
-                <span>Welcome, {{ user.username }}</span> |
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a> |
-                <a href="{% url 'signup' %}">Signup</a>
-            {% endif %}
+        <!-- Header / Navbar -->
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg gradient-border px-3">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand logo-link" href="{% url 'home' %}">
+                    <img src="{% static 'images/infocrumbs-nav-icon.png' %}" alt="InfoCrumbs Logo" class="logo-glow" height="40">
+                </a>
+
+                <!-- Toggle Button (for mobile) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Collapsible Content -->
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="{% url 'crumb_list' %}">Crumbs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="{% url 'set_preferences' %}">Preferences</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="{% url 'subscription_status' %}">Subscription</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" action="{% url 'account_logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link nav-link text-light p-0 m-0" style="border: none; background: none;">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="{% url 'account_login' %}">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="{% url 'account_signup' %}">Sign Up</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
 
+
     <!-- Main Content -->
-    <main>
+    <main class="site-main">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer class="site-footer">
         <p>&copy; 2025 InfoCrumbs. All rights reserved.</p>
     </footer>
 
@@ -52,6 +100,13 @@
 
     <!-- App-specific scripts -->
     {% block extra_js %}{% endblock %}
+
+    <!-- Bootstrap JS and dependencies -->
+    <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kQtW33rZJAHjge9cFA1zKC+3gpTgG1U5U6qUPN0q8yxF0zj1v1lIo4U8nA53XMJf"
+    crossorigin="anonymous"
+    ></script>
 </body>
 
 </html>

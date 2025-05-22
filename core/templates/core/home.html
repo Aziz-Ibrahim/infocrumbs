@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to InfoCrumbs{% endblock %}
+
+{% block content %}
+<section class="welcome-section glow">
+    <h1 class="glow-text">Welcome to <span class="highlight">InfoCrumbs</span></h1>
+    <p class="tagline">Summarized insights. Personalized for you.</p>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'crumb_list' %}" class="neon-button">Explore Crumbs</a>
+    {% else %}
+        <a href="{% url 'account_login' %}" class="neon-button">Get Started</a>
+    {% endif %}
+</section>
+{% endblock %}

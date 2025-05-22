@@ -3,8 +3,10 @@
     <div class="topics-grid">
         {% for topic in form.topics.field.queryset %}
         <label class="topic-card">
-            <input type="checkbox" name="topics" value="{{ topic.id }}" {% if topic in form.initial.topics.all
-                %}checked{% endif %}>
+            <input type="checkbox" name="topics" value="{{ topic.id }}"
+                    {% if topic in form.initial.topics.all%}
+                        checked
+                    {% endif %}>
             <div class="topic-image" style="background-image: url('{{ topic.image_url|default: }}')"></div>
             <div class="topic-name">{{ topic.name }}</div>
         </label>

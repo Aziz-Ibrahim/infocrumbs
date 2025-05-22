@@ -103,3 +103,97 @@ body {
 .blink {
     animation: blink 1s infinite alternate;
 }
+
+/* Base Template */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    color: var(--text-light);
+}
+
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    background-color: var(--bg-alt);
+    border-top: 1px solid var(--neon-blue);
+}
+
+.site-main {
+    padding: var(--spacing-lg);
+    max-width: 1000px;
+    margin: auto;
+}
+
+
+/* Home Page */
+.welcome-section {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background-color: var(--bg-alt);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow-elevate);
+    margin: var(--spacing-lg);
+}
+
+.glow-text {
+    font-size: var(--font-size-xl);
+    color: var(--neon-green);
+    text-shadow: var(--text-shadow-neon);
+    margin-bottom: var(--spacing-md);
+}
+
+.highlight {
+    color: var(--neon-blue);
+    font-weight: bold;
+    text-shadow: var(--text-shadow-neon);
+}
+
+.tagline {
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.neon-button {
+    background: var(--button-gradient);
+    color: var(--bg-dark);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: var(--glow-effect);
+    transition: transform var(--transition-speed);
+}
+
+.neon-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--neon-green);
+}
+
+/* Login Page */
+input, select, textarea {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+    border: 1px solid var(--neon-purple);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    width: 100%;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: bold;
+    color: var(--neon-green);
+}
