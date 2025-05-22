@@ -9,7 +9,7 @@
     --bg-light: #2A1F52; /* Even lighter dark background (e.g., for cards/sections) */
 
     --text-light: #B3FFAB; /* Main light text color (greenish) */
-    --text-dark: #05071A; /* Dark text on light elements */
+    --text-dark: #080e45; /* Dark text on light elements */
     --text-muted: #80A89C; /* Muted or secondary text color */
 
     --neon-green: #39FF14; /* Primary accent neon green */
@@ -25,15 +25,23 @@
         var(--neon-blue) 50%,
         var(--neon-orange) 100%
     );
+    --border-gradient-hover: linear-gradient(
+        100deg,
+        var(--neon-green) 0%,
+        var(--neon-blue) 50%,
+        var(--neon-orange) 100%
+    );
     --button-gradient: linear-gradient(
         45deg,
         var(--neon-blue),
         var(--neon-purple)
     ); /* For buttons or interactive elements */
     --text-gradient: linear-gradient(
-        90deg,
+        75deg,
         var(--neon-green),
-        var(--neon-blue)
+        var(--neon-blue),
+        var(--neon-orange),
+        var(--neon-purple)
     ); /* For special headings or text */
 
     /* --- Typography --- */
@@ -96,6 +104,10 @@ body {
     background-origin: border-box;
 }
 
+.text-light {
+    color: var(--text-light) !important;
+}
+
 .glow {
     box-shadow: var(--glow-effect);
 }
@@ -113,6 +125,7 @@ body {
     padding: var(--spacing-md);
     font-size: var(--font-size-lg);
     color: var(--text-light);
+    z-index: var(--z-index-dropdown);
 }
 
 .site-footer {
@@ -166,13 +179,12 @@ body {
 
 .neon-button {
     background: var(--button-gradient);
-    color: var(--bg-dark);
+    color: var(--text-dark);
     padding: var(--spacing-sm) var(--spacing-md);
     border: none;
     border-radius: var(--border-radius-md);
     text-decoration: none;
     font-weight: bold;
-    box-shadow: var(--glow-effect);
     transition: transform var(--transition-speed);
 }
 

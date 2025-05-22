@@ -1,0 +1,67 @@
+.preferences-container {
+    max-width: 1200px;
+    margin: 100px auto 60px; /* offset header and footer */
+    padding: 1rem;
+}
+
+.topics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.topic-card {
+    position: relative;
+    cursor: pointer;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+    border: solid 2px transparent;
+    border-image: var(--border-gradient) 1;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+}
+
+.topic-card:hover {
+    transform: scale(1.03);
+    border-image: var(--border-gradient-hover) 1;
+}
+
+.topic-card input[type="checkbox"] {
+    display: none;
+}
+
+.topic-image {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Ensures square tiles */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.topic-name {
+    text-align: center;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+
+.tick-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: var(--neon-blue);
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50%;
+    display: none;
+    z-index: 2;
+    box-shadow: 0 0 10px var(--neon-accent);
+}
+
+.topic-card.selected .tick-overlay {
+    display: block;
+}

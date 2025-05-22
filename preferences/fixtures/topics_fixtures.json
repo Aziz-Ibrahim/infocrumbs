@@ -1,0 +1,122 @@
+[
+    {
+        "model": "preferences.topic",
+        "pk": 1,
+        "fields": {
+            "name": "arts & crafts",
+            "slug": "arts-crafts",
+            "description": "",
+            "image": "topics/arts.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 2,
+        "fields": {
+            "name": "cars & transport",
+            "slug": "cars-transport",
+            "description": "",
+            "image": "topics/cars.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 3,
+        "fields": {
+            "name": "AI & computing",
+            "slug": "ai-computing",
+            "description": "",
+            "image": "topics/computing.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 4,
+        "fields": {
+            "name": "DIY",
+            "slug": "diy",
+            "description": "",
+            "image": "topics/diy.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 5,
+        "fields": {
+            "name": "fashion",
+            "slug": "fashion",
+            "description": "",
+            "image": "topics/fashion.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 6,
+        "fields": {
+            "name": "stock, crypto & finance",
+            "slug": "stock-crypto-finance",
+            "description": "",
+            "image": "topics/finance.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 7,
+        "fields": {
+            "name": "food & drink",
+            "slug": "food-drink",
+            "description": "",
+            "image": "topics/food.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 8,
+        "fields": {
+            "name": "plants and gardening",
+            "slug": "plants-and-gardening",
+            "description": "",
+            "image": "topics/gardening.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 9,
+        "fields": {
+            "name": "music",
+            "slug": "music",
+            "description": "",
+            "image": "topics/music.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 10,
+        "fields": {
+            "name": "world news",
+            "slug": "world-news",
+            "description": "",
+            "image": "topics/news.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 11,
+        "fields": {
+            "name": "sports and fitness",
+            "slug": "sports-and-fitness",
+            "description": "",
+            "image": "topics/sports.png"
+        }
+    },
+    {
+        "model": "preferences.topic",
+        "pk": 12,
+        "fields": {
+            "name": "climate and weather",
+            "slug": "climate-and-weather",
+            "description": "",
+            "image": "topics/weather.png"
+        }
+    }
+]
