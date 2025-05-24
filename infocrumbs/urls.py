@@ -7,6 +7,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # allauth
     path('accounts/', include('allauth.urls')),
+    # accounts
+    path('accounts/', include('accounts.urls')),
     # Home page
     path('', include('core.urls')),
     # crumbs

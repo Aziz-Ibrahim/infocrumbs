@@ -1,0 +1,15 @@
+<h3>Your Comment History</h3>
+
+{% if comments %}
+    <ul class="comments-list">
+        {% for comment in comments %}
+            <li>
+                <strong>On "{{ comment.crumb.title }}":</strong><br>
+                {{ comment.content }}<br>
+                <small>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No comments yet.</p>
+{% endif %}

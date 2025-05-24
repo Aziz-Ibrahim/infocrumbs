@@ -1,0 +1,24 @@
+<div class="subscription-status">
+    {% if subscription %}
+        <h3>Subscription Status</h3>
+        <p>
+            You are subscribed to the <strong>{{ subscription.plan.name|capfirst }}</strong> plan.
+        </p>
+        <p>
+            Frequency: {{ subscription.frequency.name }} ({{ subscription.frequency.discount_percent }}% off)
+        </p>
+        <p>
+            Expires at: {{ subscription.expires_at|date:"F j, Y" }}
+        </p>
+        <a href="{% url 'choose_plan' %}" class="btn">
+            Change Plan
+        </a>
+    {% else %}
+        <h3>
+            You are not subscribed yet.
+        </h3>
+        <a href="{% url 'choose_plan' %}" class="btn">
+            Subscribe Now
+        </a>
+    {% endif %}
+</div>

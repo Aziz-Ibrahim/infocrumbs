@@ -1,6 +1,10 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from crumbs.models import Crumb
+from feedback.models import Comment
+from preferences.models import Topic
 
 
 class CustomUser(AbstractUser):
@@ -21,3 +25,12 @@ class CustomUser(AbstractUser):
         return self.username
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE)
+    saved_crumbs = models.ManyToManyField(Crumb, blank=True)
+    comment_history = models.ManyToManyField(Comment, blank=True)
+    topic_preferences = models.ManyToManyField(Topic, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"

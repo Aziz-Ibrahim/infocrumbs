@@ -1,0 +1,58 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
+{% endblock %}
+
+{% block account_content %}
+<h2>My Account</h2>
+
+<!-- User Details -->
+<section class="mb-4 p-3 border rounded bg-secondary text-light">
+    <h3>My Details</h3>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+</section>
+
+<p><a href="{% url 'account_change_password' %}">Change Password</a></p>
+
+<!-- Profile Tabs -->
+<div class="profile-tabs">
+    <button class="tab-btn" data-url="{% url 'load_account_details_partial' %}">Edit Details</button>
+    <button class="tab-btn" data-url="{% url 'load_preferences_partial' %}">Topic Preferences</button>
+    <button class="tab-btn" data-url="{% url 'load_subscription_partial' %}">Subscription</button>
+    <button class="tab-btn" data-url="{% url 'load_saved_crumbs_partial' %}">Saved Crumbs</button>
+    <button class="tab-btn" data-url="{% url 'load_comments_partial' %}">Comment History</button>
+</div>
+
+<!-- Placeholder for dynamic content -->
+<div id="profile-placeholder" class="profile-placeholder">
+    <p>Select a section to view more details.</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".tab-btn");
+    const placeholder = document.getElementById("profile-placeholder");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            const url = button.dataset.url;
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    placeholder.innerHTML = html;
+                })
+                .catch(error => {
+                    placeholder.innerHTML = "<p>Error loading section.</p>";
+                    console.error("Error loading profile section:", error);
+                });
+        });
+    });
+});
+</script>
+{% endblock %}

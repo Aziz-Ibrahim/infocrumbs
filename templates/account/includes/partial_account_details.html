@@ -1,0 +1,13 @@
+<form method="POST" action="{% url 'account_update' %}">
+    {% csrf_token %}
+    <label>First Name</label>
+    <input type="text" name="first_name" value="{{ user.first_name }}">
+
+    <label>Last Name</label>
+    <input type="text" name="last_name" value="{{ user.last_name }}">
+
+    <label>Email</label>
+    <input type="email" name="email" value="{{ user.email }}">
+
+    <button type="submit">Update</button>
+</form>

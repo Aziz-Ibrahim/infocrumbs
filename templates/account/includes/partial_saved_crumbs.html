@@ -1,0 +1,14 @@
+<h3>Saved Crumbs</h3>
+
+{% if saved_crumbs %}
+    <ul class="saved-crumbs-list">
+        {% for item in saved_crumbs %}
+            <li>
+                <strong>{{ item.crumb.title }}</strong><br>
+                <small>Saved at {{ item.saved_at|date:"M d, Y H:i" }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No saved crumbs yet.</p>
+{% endif %}

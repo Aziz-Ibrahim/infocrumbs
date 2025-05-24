@@ -1,0 +1,24 @@
+.profile-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: var(--neon-accent);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.tab-btn:hover {
+    background: var(--neon-accent-dark);
+}
+
+.profile-placeholder {
+    margin-top: 2rem;
+}
