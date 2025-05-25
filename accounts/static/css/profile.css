@@ -1,6 +1,82 @@
-.account-container{
+/* Account Templates */
+
+/* __Login Page__ */
+.login-container {
     min-width: 950px;
-    margin: 10px auto 60px; /* offset header and footer */
+    width: 100%;
+    margin: 100px auto 60px;
+    /* offset header and footer */
+    padding: 1rem;
+    background-color: var(--bg-dark);
+    border-radius: 8px;
+}
+
+.login-form {
+    color: var(--text-light);
+}
+
+/* __Password Toggle__ */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 38px;
+    cursor: pointer;
+    color: var(--neon-purple);
+    z-index: 10;
+}
+
+.toggle-password:hover {
+    color: var(--neon-orange);
+}
+
+
+/* __Sign Up Page__ */
+/* ____Form group spacing and label styling____ */
+form .mb-3 {
+    margin-bottom: 1rem;
+}
+
+form label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Input field styling */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="date"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    transition: border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+}
+
+/* Focus state */
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+
+/* Profile Page */
+.account-container {
+    min-width: 950px;
+    margin: 10px auto 60px;
+    /* offset header and footer */
     padding: 1rem;
 }
 
@@ -30,11 +106,12 @@
 }
 
 
-/* Preferences */
+/* __Preferences Tab__ */
 
 .preferences-container {
     max-width: 1200px;
-    margin: 100px auto 60px; /* offset header and footer */
+    margin: 100px auto 60px;
+    /* offset header and footer */
     padding: 1rem;
 }
 
@@ -68,7 +145,8 @@
 
 .topic-image {
     width: 100%;
-    aspect-ratio: 1 / 1; /* Ensures square tiles */
+    aspect-ratio: 1 / 1;
+    /* Ensures square tiles */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

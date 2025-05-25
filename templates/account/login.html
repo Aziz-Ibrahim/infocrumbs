@@ -5,30 +5,24 @@
 {% block title %}Login - InfoCrumbs{% endblock %}
 
 {% block content %}
-<div class="login-container gradient-border glow" style="padding: var(--spacing-lg); border-radius: var(--border-radius-md); max-width: 400px; width: 100%;">
-    <h2 class="glow-text" style="text-align: center; margin-bottom: var(--spacing-md); font-size: var(--font-size-lg);">
+<div class="container login-container gradient-border glow">
+    <h2 class="text-light">
         Welcome Back
     </h2>
+    <div class="row">
+        <div class="col col-md-6 text-light login-form">
+                <form method="post" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
 
-    <form method="post" action="{% url 'account_login' %}" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
-        {% csrf_token %}
-        {{ form|crispy }}
+                    <button type="submit" class="neon-button">Log In</button>
 
-        <button type="submit" class="glow" style="
-            padding: var(--spacing-sm);
-            font-size: var(--font-size-md);
-            background: var(--button-gradient);
-            color: var(--text-dark);
-            border: none;
-            border-radius: var(--border-radius-sm);
-            cursor: pointer;
-            transition: var(--transition-speed);
-        ">Log In</button>
-
-        <p style="text-align: center; font-size: var(--font-size-sm);">
-            Don't have an account?
-            <a href="{% url 'account_signup' %}" style="color: var(--neon-blue); text-decoration: underline;">Sign up</a>
-        </p>
-    </form>
+                    <p class="text-sm mt-3">
+                        Don't have an account?
+                        <a href="{% url 'account_signup' %}" style="color: var(--neon-blue); text-decoration: none;">Sign up</a>
+                    </p>
+                </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

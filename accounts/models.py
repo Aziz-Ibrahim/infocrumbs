@@ -28,6 +28,7 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
+    date_of_birth = models.DateField(null=True, blank=True)
     saved_crumbs = models.ManyToManyField(Crumb, blank=True)
     comment_history = models.ManyToManyField(Comment, blank=True)
     topic_preferences = models.ManyToManyField(Topic, blank=True)

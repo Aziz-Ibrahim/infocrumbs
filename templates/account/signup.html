@@ -5,30 +5,92 @@
 {% block title %}Sign Up - InfoCrumbs{% endblock %}
 
 {% block content %}
-<div class="login-container gradient-border glow" style="padding: var(--spacing-lg); border-radius: var(--border-radius-md); max-width: 400px; width: 100%;">
-    <h2 class="glow-text" style="text-align: center; margin-bottom: var(--spacing-md); font-size: var(--font-size-lg);">
+<div class="container login-container gradient-border glow">
+    <h2 class="text-light">
         Create Your Account
     </h2>
 
-    <form method="post" action="{% url 'account_signup' %}" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
-        {% csrf_token %}
-        {{ form|crispy }}
+    <div class="row">
+        <div class="col text-light login-form">
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
 
-        <button type="submit" class="glow" style="
-            padding: var(--spacing-sm);
-            font-size: var(--font-size-md);
-            background: var(--button-gradient);
-            color: var(--text-dark);
-            border: none;
-            border-radius: var(--border-radius-sm);
-            cursor: pointer;
-            transition: var(--transition-speed);
-        ">Sign Up</button>
+                <div class="row">
+                    <!-- Left column -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                        </div>
+                    </div>
 
-        <p style="text-align: center; font-size: var(--font-size-sm);">
-            Already have an account?
-            <a href="{% url 'account_login' %}" style="color: var(--neon-blue); text-decoration: underline;">Log in</a>
-        </p>
-    </form>
+                    <!-- Right column -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.date_of_birth.label_tag }}
+                            {{ form.date_of_birth }}
+                        </div>
+                        <div class="mb-3 position-relative">
+                            {{ form.password1.label_tag }}
+                            {{ form.password1 }}
+                            <i class="fa-regular fa-eye toggle-password mt-2" data-target="id_password1"></i>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            {{ form.password2.label_tag }}
+                            {{ form.password2 }}
+                            <i class="fa-regular fa-eye toggle-password mt-2" data-target="id_password2"></i>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="neon-button">
+                                Sign Up
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-sm">
+                                Already have an account?
+                                <a href="{% url 'account_login' %}"
+                                    style="color: var(--neon-blue); text-decoration: none;">Log in</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".toggle-password").forEach(icon => {
+            icon.addEventListener("click", function () {
+                const targetId = this.getAttribute("data-target");
+                const input = document.getElementById(targetId);
+
+                if (input.type === "password") {
+                    input.type = "text";
+                    this.classList.remove("fa-eye");
+                    this.classList.add("fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    this.classList.remove("fa-eye-slash");
+                    this.classList.add("fa-eye");
+                }
+            });
+        });
+    });
+</script>
+{% endblock extra_js %}

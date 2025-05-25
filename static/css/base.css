@@ -198,20 +198,3 @@ body {
     transform: scale(1.05);
     box-shadow: 0 0 15px var(--neon-green);
 }
-
-/* Login Page */
-input, select, textarea {
-    background-color: var(--bg-light);
-    color: var(--text-light);
-    border: 1px solid var(--neon-purple);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-sm);
-    width: 100%;
-}
-
-label {
-    display: block;
-    margin-bottom: var(--spacing-xs);
-    font-weight: bold;
-    color: var(--neon-green);
-}

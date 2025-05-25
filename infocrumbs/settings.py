@@ -72,6 +72,9 @@ LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Set of allowed login methods
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm'
+}
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 CRISPY_ALLOWED_TEMPLATE_PACK = 'bootstrap5'
