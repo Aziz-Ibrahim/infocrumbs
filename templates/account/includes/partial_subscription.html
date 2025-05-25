@@ -10,14 +10,14 @@
         <p>
             Expires at: {{ subscription.expires_at|date:"F j, Y" }}
         </p>
-        <a href="{% url 'choose_plan' %}" class="btn">
+        <a href="{% url 'choose_plan' %}" class="neon-button">
             Change Plan
         </a>
     {% else %}
         <h3>
             You are not subscribed yet.
         </h3>
-        <a href="{% url 'choose_plan' %}" class="btn">
+        <a href="{% url 'choose_plan' %}" class="neon-button">
             Subscribe Now
         </a>
     {% endif %}

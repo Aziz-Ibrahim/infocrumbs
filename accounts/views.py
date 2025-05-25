@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from preferences.models import Topic
+from preferences.models import UserPreference
 from feedback.models import SavedCrumb, Comment
 from subscriptions.models import UserSubscription
 from subscriptions.views import choose_plan 
@@ -23,20 +23,16 @@ def load_account_details(request):
 
 @login_required
 def account_update(request):
-    if request.method == 'POST':
-        user = request.user  # This is your CustomUser instance
+    if request.method == "POST":
+        user = request.user
+        user.first_name = request.POST.get("first_name", user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.email = request.POST.get("email", user.email)
 
-        user.first_name = request.POST.get('first_name', '').strip()
-        user.last_name = request.POST.get('last_name', '').strip()
-        user.email = request.POST.get('email', '').strip()
-
-        # might want to validate that the new email isn't already taken
         user.save()
         messages.success(request, "Account details updated successfully.")
 
-    return render('account/includes/partial_account_details.html', {
-        'user': request.user
-    })
+    return redirect("profile")
 
 
 @login_required
@@ -50,16 +46,22 @@ def load_saved_crumbs_partial(request):
 @login_required
 def load_comments_partial(request):
     comments = Comment.objects.filter(user=request.user).select_related('crumb')
-    return render(request, "accounts/includes/partial_comments.html", {
+    return render(request, "account/includes/partial_comments.html", {
         "comments": comments
     })
 
 
+
 @login_required
 def load_preferences_partial(request):
-    user_topics = request.user.profile.topics.all()
+    try:
+        user_preferences = UserPreference.objects.get(user=request.user)
+        topics = user_preferences.topics.all()
+    except UserPreference.DoesNotExist:
+        topics = []
+
     return render(request, "account/includes/partial_preferences.html", {
-        "topics": user_topics
+        "topics": topics
     })
 
 

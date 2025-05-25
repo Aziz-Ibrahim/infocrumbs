@@ -122,10 +122,17 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    padding: var(--spacing-md);
     font-size: var(--font-size-lg);
     color: var(--text-light);
+    background-color: var(--bg-alt);
     z-index: var(--z-index-dropdown);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var--(--bg-dark) !important;
 }
 
 .site-footer {
@@ -134,7 +141,6 @@ body {
     left: 0;
     right: 0;
     text-align: center;
-    padding: var(--spacing-md);
     font-size: var(--font-size-sm);
     color: var(--text-muted);
     background-color: var(--bg-alt);

@@ -1,8 +1,8 @@
-{% extends "accounts/base.html" %}
+{% extends "account/base.html" %}
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
 {% block account_content %}
@@ -16,16 +16,24 @@
     <p><strong>Email:</strong> {{ user.email }}</p>
 </section>
 
-<p><a href="{% url 'account_change_password' %}">Change Password</a></p>
-
 <!-- Profile Tabs -->
-<div class="profile-tabs">
-    <button class="tab-btn" data-url="{% url 'load_account_details_partial' %}">Edit Details</button>
-    <button class="tab-btn" data-url="{% url 'load_preferences_partial' %}">Topic Preferences</button>
-    <button class="tab-btn" data-url="{% url 'load_subscription_partial' %}">Subscription</button>
-    <button class="tab-btn" data-url="{% url 'load_saved_crumbs_partial' %}">Saved Crumbs</button>
-    <button class="tab-btn" data-url="{% url 'load_comments_partial' %}">Comment History</button>
-</div>
+<ul class="nav nav-tabs mb-4" id="profileTab">
+    <li class="nav-item">
+        <a class="nav-link active text-light bg-dark border-light" data-url="{% url 'load_account_details_partial' %}" href="#">Edit Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_preferences_partial' %}" href="#">Topic Preferences</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_subscription_partial' %}" href="#">Subscription</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_saved_crumbs_partial' %}" href="#">Saved Crumbs</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_comments_partial' %}" href="#">Comment History</a>
+    </li>
+</ul>
 
 <!-- Placeholder for dynamic content -->
 <div id="profile-placeholder" class="profile-placeholder">
@@ -36,12 +44,21 @@
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const buttons = document.querySelectorAll(".tab-btn");
+    const tabs = document.querySelectorAll(".nav-tabs .nav-link");
     const placeholder = document.getElementById("profile-placeholder");
 
-    buttons.forEach(button => {
-        button.addEventListener("click", () => {
-            const url = button.dataset.url;
+    tabs.forEach(tab => {
+        tab.addEventListener("click", (e) => {
+            e.preventDefault();  // Prevent default anchor behavior
+
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove("active"));
+
+            // Add active class to the clicked tab
+            tab.classList.add("active");
+
+            // Load the content
+            const url = tab.dataset.url;
             fetch(url)
                 .then(response => response.text())
                 .then(html => {
@@ -53,6 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
         });
     });
+
+    // Optionally trigger the first tab on page load
+    if (tabs.length > 0) {
+        tabs[0].click();
+    }
 });
 </script>
+
 {% endblock %}

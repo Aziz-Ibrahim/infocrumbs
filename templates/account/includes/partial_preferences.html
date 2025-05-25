@@ -1,24 +1,30 @@
 <h3>Your Topic Preferences</h3>
 
-<div class="topic-grid">
-    {% for topic in topics %}
-        <label class="topic-card">
-            <input
-                type="checkbox"
-                disabled
-                checked
-            >
-            <div class="topic-image" style="background-image: url('{{ topic.image.url }}')">
-                <div class="tick-overlay">&#10004;</div>
-            </div>
-            <div class="topic-info text-center">
-                <h5>{{ topic.name }}</h5>
-                <p>{{ topic.description }}</p>
-            </div>
-        </label>
-    {% empty %}
-        <p>No topics selected yet.</p>
-    {% endfor %}
+<div class="preferences-container"> 
+    <div class="topics-grid">
+        {% for topic in topics %}
+            <label class="topic-card">
+                <input
+                    type="checkbox"
+                    name="topics"
+                    value="{{ topic.id }}"
+                    disabled
+                    checked
+                >
+                <div class="topic-image" style="background-image: url('{{ topic.image.url }}')">
+                    <div class="tick-overlay">&#10004;</div>
+                </div>
+                <div class="topic-info text-center">
+                    <h5>{{ topic.name }}</h5>
+                    <p>{{ topic.description }}</p>
+                </div>
+            </label>
+        {% empty %}
+            <p>No topics selected yet.</p>
+        {% endfor %}
+    </div>
 </div>
 
-<a href="{% url 'set_preferences' %}" class="btn">Edit Topic Preferences</a>
+<div class="text-center my-4">
+    <a href="{% url 'set_preferences' %}" class="neon-button">Edit Topic Preferences</a>
+</div>
