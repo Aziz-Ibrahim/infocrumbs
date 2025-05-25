@@ -2,17 +2,30 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h1 class="text-2xl font-bold mb-6 text-center text-white">Choose a Subscription Plan</h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="container my-5">
+    <h1 class="text-center mb-4">Choose Your Subscription Plan</h1>
+    <div class="row g-4 justify-content-center">
         {% for plan in plans %}
-            <div class="bg-[#1A103D] p-6 rounded-2xl shadow-md border border-[#333A56] text-light">
-                <h2 class="text-xl font-semibold text-neon-green mb-2">{{ plan.name|title }}</h2>
-                <p class="mb-1 text-neon-blue">Duration: {{ plan.get_duration_display }}</p>
-                <p class="mb-4 text-neon-orange font-bold">Price: ${{ plan.price }}</p>
-                <a href="{% url 'subscribe' plan.id %}"
-                    class="inline-block px-4 py-2 bg-neon-green text-black font-bold rounded hover:bg-neon-blue transition">Subscribe</a>
+            <div class="card bg-dark text-light gradient-border m-2 p-4">
+                    {% if plan.name == 'Premium' %}
+                        <h3>{{ plan.name }} <i class="fa-regular fa-gem"></i></h3>
+                    {% else %}
+                        <h3>{{ plan.name }} <i class="fa-regular fa-user"></i></h3>
+                    {% endif %}
+                <p>Allows you to select up to {{ plan.topic_limit }} topics to follow</p>
+<hr>
+                <p>Select renewal frequency</p>
+                <ul class="list-unstyled">
+                    {% for freq in plan.frequencies %}
+                    <li class="p-4 d-flex justify-content-between">
+                        £{{ freq.price }}- Billed {{ freq.name }}
+                        {% if freq.discount > 0 %}
+                            <small class="text-muted">({{ freq.discount }}% off)</small>
+                        {% endif %}
+                        <a href="{% url 'subscribe' plan.id %}?frequency={{ freq.id }}" class="btn neon-button btn-sm m-2">Subscribe</a>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         {% endfor %}
     </div>

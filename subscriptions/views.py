@@ -3,39 +3,73 @@ from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from datetime import timedelta
 
-from .models import SubscriptionPlan, UserSubscription
+from .models import SubscriptionPlan, UserSubscription, SubscriptionFrequency
 
 
-
-@login_required
 def choose_plan(request):
     plans = SubscriptionPlan.objects.all()
-    return render(request, 'subscriptions/choose_plan.html', {'plans': plans})
+    frequencies = SubscriptionFrequency.objects.all()
+
+    # base weekly prices — could be moved into DB later
+    base_prices = {
+        'basic': 5,
+        'premium': 10,
+    }
+
+    plan_options = []
+
+    for plan in plans:
+        base_price = base_prices.get(plan.name, 5)
+        frequency_options = []
+
+        for freq in frequencies:
+            weeks = freq.duration_days / 7
+            full_price = base_price * weeks
+            discounted_price = full_price * (1 - (freq.discount_percent / 100))
+
+            frequency_options.append({
+                'id': freq.id,
+                'name': freq.name,
+                'discount': freq.discount_percent,
+                'price': round(discounted_price, 2),
+            })
+
+        plan_options.append({
+            'id': plan.id,
+            'name': plan.get_name_display(),
+            'topic_limit': plan.topic_limit,
+            'frequencies': frequency_options
+        })
+
+    return render(request, 'subscriptions/choose_plan.html', {
+        'plans': plan_options
+    })
+
 
 
 @login_required
 def subscribe(request, plan_id):
     plan = get_object_or_404(SubscriptionPlan, id=plan_id)
+    frequency_id = request.GET.get('frequency')
 
-    # Dummy duration logic for now
-    if plan.duration == 'weekly':
-        duration = timedelta(weeks=1)
-    elif plan.duration == 'monthly':
-        duration = timedelta(days=30)
-    elif plan.duration == 'annually':
-        duration = timedelta(days=365)
-    else:
-        duration = timedelta(days=7)
+    if not frequency_id:
+        return redirect('choose_plan')
+
+    frequency = get_object_or_404(SubscriptionFrequency, id=frequency_id)
+
+    duration = timedelta(days=frequency.duration_days)
+    expires_at = now() + duration
 
     subscription, created = UserSubscription.objects.update_or_create(
         user=request.user,
         defaults={
             'plan': plan,
-            'frequency': plan.duration,
-            'valid_until': now() + duration
+            'frequency': frequency,
+            'expires_at': expires_at
         }
     )
-    return redirect('subscription_status')
+    return redirect('account_profile')
+
 
 
 @login_required

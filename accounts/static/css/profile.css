@@ -1,3 +1,9 @@
+.account-container{
+    min-width: 950px;
+    margin: 10px auto 60px; /* offset header and footer */
+    padding: 1rem;
+}
+
 .profile-tabs {
     display: flex;
     gap: 1rem;
