@@ -19,19 +19,19 @@
 <!-- Profile Tabs -->
 <ul class="nav nav-tabs mb-4" id="profileTab">
     <li class="nav-item">
-        <a class="nav-link active text-light bg-dark border-light" data-url="{% url 'load_account_details_partial' %}" href="#">Edit Details</a>
+        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_subscription_partial' %}" href="#">Subscription</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_preferences_partial' %}" href="#">Topic Preferences</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_subscription_partial' %}" href="#">Subscription</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_saved_crumbs_partial' %}" href="#">Saved Crumbs</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_comments_partial' %}" href="#">Comment History</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active text-light bg-dark border-light" data-url="{% url 'load_account_details_partial' %}" href="#">Edit Details</a>
     </li>
 </ul>
 
@@ -60,9 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // Load the content
             const url = tab.dataset.url;
             fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    placeholder.innerHTML = html;
+                .then(response => response.json())
+                .then(data => {
+                    if (data.html) {
+                        placeholder.innerHTML = data.html;
+                    } else {
+                        placeholder.innerHTML = "<p>No content available.</p>";
+                    }
                 })
                 .catch(error => {
                     placeholder.innerHTML = "<p>Error loading section.</p>";
@@ -71,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Optionally trigger the first tab on page load
+    // trigger the first tab on page load
     if (tabs.length > 0) {
         tabs[0].click();
     }

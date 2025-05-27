@@ -23,7 +23,8 @@ urlpatterns = [
     # subscriptions
     path('subscriptions/', include('subscriptions.urls')),
     path('api/subscriptions/', include('subscriptions.api_urls')),
-
+    # checkout
+    path('checkout/', include('checkout.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

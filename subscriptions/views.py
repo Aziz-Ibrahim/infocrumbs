@@ -1,38 +1,34 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from datetime import timedelta
 
 from .models import SubscriptionPlan, UserSubscription, SubscriptionFrequency
-
+from .utils import calculate_subscription_price
 
 def choose_plan(request):
     plans = SubscriptionPlan.objects.all()
     frequencies = SubscriptionFrequency.objects.all()
 
-    # base weekly prices — could be moved into DB later
-    base_prices = {
-        'basic': 5,
-        'premium': 10,
-    }
-
     plan_options = []
 
     for plan in plans:
-        base_price = base_prices.get(plan.name, 5)
         frequency_options = []
 
         for freq in frequencies:
-            weeks = freq.duration_days / 7
-            full_price = base_price * weeks
-            discounted_price = full_price * (1 - (freq.discount_percent / 100))
+            price = calculate_subscription_price(plan.name, freq.duration_days)
 
-            frequency_options.append({
-                'id': freq.id,
-                'name': freq.name,
-                'discount': freq.discount_percent,
-                'price': round(discounted_price, 2),
-            })
+            if price is not None:
+                frequency_options.append({
+                    'id': freq.id,
+                    'name': freq.name,
+                    'discount': freq.discount_percent,
+                    'price': price,
+                })
+            else:
+                print(f"Warning: Could not calculate price for plan '{plan.name}' and duration '{freq.duration_days}'")
+
 
         plan_options.append({
             'id': plan.id,
@@ -46,7 +42,6 @@ def choose_plan(request):
     })
 
 
-
 @login_required
 def subscribe(request, plan_id):
     plan = get_object_or_404(SubscriptionPlan, id=plan_id)
@@ -57,19 +52,22 @@ def subscribe(request, plan_id):
 
     frequency = get_object_or_404(SubscriptionFrequency, id=frequency_id)
 
-    duration = timedelta(days=frequency.duration_days)
-    expires_at = now() + duration
+    final_price = calculate_subscription_price(plan.name, frequency.duration_days)
 
-    subscription, created = UserSubscription.objects.update_or_create(
-        user=request.user,
-        defaults={
-            'plan': plan,
-            'frequency': frequency,
-            'expires_at': expires_at
-        }
-    )
-    return redirect('account_profile')
+    if final_price is None:
+        return redirect('choose_plan')
 
+
+    context = {
+        'plan': plan,
+        'frequency': frequency,
+        'plan_id': plan.id,
+        'frequency_id': frequency.id,
+        'price': final_price,
+        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
+    }
+
+    return render(request, 'checkout/checkout.html', context)
 
 
 @login_required

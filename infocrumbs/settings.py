@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+if os.path.isfile('env.py'):
+    import env
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +57,7 @@ INSTALLED_APPS = [
     # Custom apps
     'accounts',
     'core',
+    'checkout',
     'crumbs',
     'feedback',
     'preferences',
@@ -161,6 +165,24 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Stripe
+
+STRIPE_CURRENCY = 'gbp'
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
+STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WH_SECRET', '')
+
+# Stripe price lookup table
+STRIPE_PRICE_LOOKUP = {
+    'basic_weekly': 'price_123abcBasicWeek',
+    'basic_monthly': 'price_456abcBasicMonth',
+    'basic_annually': 'price_789abcBasicYear',
+    'premium_weekly': 'price_123xyzPremiumWeek',
+    'premium_monthly': 'price_456xyzPremiumMonth',
+    'premium_annually': 'price_789xyzPremiumYear',
+}
 
 
 # Default primary key field type

@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
 from preferences.models import UserPreference
 from feedback.models import SavedCrumb, Comment
 from subscriptions.models import UserSubscription
-from subscriptions.views import choose_plan 
 
 
 @login_required
@@ -67,11 +68,17 @@ def load_preferences_partial(request):
 
 @login_required
 def load_subscription_partial(request):
-    try:
-        subscription = request.user.usersubscription
-    except UserSubscription.DoesNotExist:
-        subscription = None
-    return render(request, 'account/includes/partial_subscription.html', {
-        'subscription': subscription
-    })
+    user_subscription = (
+        UserSubscription.objects
+        .filter(user=request.user)
+        .select_related('plan', 'frequency')
+        .first()
+    )
 
+    html = render_to_string(
+        'account/includes/partial_subscription.html',
+        {'user_subscription': user_subscription},
+        request=request
+    )
+
+    return JsonResponse({'html': html})

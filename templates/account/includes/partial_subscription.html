@@ -1,14 +1,14 @@
 <div class="subscription-status">
-    {% if subscription %}
+    {% if user_subscription %}
         <h3>Subscription Status</h3>
         <p>
-            You are subscribed to the <strong>{{ subscription.plan.name|capfirst }}</strong> plan.
+            You are subscribed to the <strong>{{ user_subscription.plan.name|capfirst }}</strong> plan.
         </p>
         <p>
-            Frequency: {{ subscription.frequency.name }} ({{ subscription.frequency.discount_percent }}% off)
+            Frequency: {{ user_subscription.frequency.name }}
         </p>
         <p>
-            Expires at: {{ subscription.expires_at|date:"F j, Y" }}
+            Renews on: {{ user_subscription.expires_at|date:"j / F / Y" }}
         </p>
         <a href="{% url 'choose_plan' %}" class="neon-button">
             Change Plan
