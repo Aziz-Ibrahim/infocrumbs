@@ -1,26 +1,43 @@
-/* Custom styles for Stripe Elements */
-.StripeElement {
+/* Custom styles for Stripe Elements and form layout */
+
+/* Overall container for the checkout form to center and style it */
+.container {
+    max-width: 700px; /* Adjust max-width for better readability on larger screens */
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding: 1.5rem; /* Add some padding around the content */
+    background-color: var(--bg-dark); /* Use a dark background for the container */
+    border-radius: 0.5rem; /* Slightly rounded corners for the container */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5); /* More prominent shadow */
+    color: #f8f9fa; /* Light text color for general content */
+}
+
+/* Style for the Stripe Card Element container */
+/* This is crucial for making it look like a regular Bootstrap input field */
+#card-element { /* Targeting the ID used in your HTML */
     box-sizing: border-box;
-    height: 40px;
-    padding: 10px 12px;
-    border: 1px solid #ced4da; /* Bootstrap default border color */
-    border-radius: 4px;
-    background-color: white;
-    box-shadow: 0 1px 3px 0 #e6ebf1;
-    -webkit-transition: box-shadow 150ms ease;
-    transition: box-shadow 150ms ease;
+    height: 48px; /* Standard Bootstrap input height */
+    padding: 0.75rem 1rem; /* Padding inside the input field, matches Bootstrap form-control */
+    border: 1px solid #495057; /* Darker border for a subtle look */
+    border-radius: 0.25rem; /* Standard Bootstrap border-radius */
+    background-color: #343a40; /* Dark background for the input area */
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); /* Inner shadow for depth */
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; /* Smooth transitions */
+    display: flex; /* Helps with vertical alignment of content inside Stripe Element */
+    align-items: center; /* Vertically centers content */
 }
 
-.StripeElement--focus {
-    box-shadow: 0 1px 3px 0 #cfd7df;
+/* Focus state for Stripe Elements for better UX */
+#card-element.StripeElement--focus {
+    border-color: #80bdff; /* A standard blue focus color */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Glow effect on focus */
 }
 
-.StripeElement--invalid {
-    border-color: #fa755a;
-}
-
-.StripeElement--webkit-autofill {
-    background-color: #fefde5 !important;
+/* Style for displaying Stripe validation errors */
+#card-errors {
+    color: #dc3545; /* Bootstrap's danger red color */
+    margin-top: 0.5rem;
+    font-size: 0.875em;
 }
 
 /* Styles for the loading overlay */
@@ -31,7 +48,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8); /* Slightly darker overlay */
     z-index: 9999;
 }
 
@@ -42,9 +59,45 @@
     height: 100%;
 }
 
-/* General checkout page adjustments */
-.card.gradient-border {
-    border: 1px solid transparent;
-    border-image: linear-gradient(to right, #007bff, #00c6ff); /* Example gradient */
-    border-image-slice: 1;
+/* Ensure form fieldset labels are visible against dark background */
+.fieldset-label {
+    color: #f8f9fa; /* Light color for legend text */
+    background-color: #212529; /* Match container background */
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Adjust general text color in card for better contrast */
+.card.bg-dark.text-light {
+    background-color: #343a40 !important; /* Deeper dark for cards */
+    color: #f8f9fa !important;
+    border-color: #495057 !important; /* Consistent border */
+}
+
+/* Ensure any <hr> elements are visible */
+hr {
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Lighter line for dark theme */
+}
+
+/* Adjust text-muted for better visibility on dark background */
+.text-muted {
+    color: #adb5bd !important; /* Lighter grey for muted text */
+}
+
+/* Align text for totals */
+.text-right {
+    text-align: right !important;
+}
+
+/* Ensure crispy forms inputs blend well (if you're not using default Bootstrap styling) */
+.form-control {
+    background-color: #343a40;
+    color: #f8f9fa;
+    border: 1px solid #495057;
+}
+.form-control:focus {
+    background-color: #343a40;
+    color: #f8f9fa;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
