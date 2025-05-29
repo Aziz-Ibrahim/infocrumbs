@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class SubscriptionPlan(models.Model):
@@ -9,6 +10,7 @@ class SubscriptionPlan(models.Model):
     ]
     name = models.CharField(max_length=20, choices=PLAN_CHOICES, unique=True)
     topic_limit = models.PositiveIntegerField(default=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.get_name_display()
@@ -39,12 +41,16 @@ class UserSubscription(models.Model):
         null=True
     )
     start_date = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
+    end_date = models.DateTimeField()
+    active = models.BooleanField(default=False)
+    stripe_payment_intent_id = models.CharField(
+        max_length=255, blank=True, null=True, unique=True
+        )
+
 
     def __str__(self):
         return f"{self.user.username} - {self.plan.name}"
 
     def is_active(self):
-        from django.utils import timezone
-        return self.expires_at > timezone.now()
+        return self.active and self.end_date > timezone.now()
 

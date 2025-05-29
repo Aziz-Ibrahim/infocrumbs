@@ -1,129 +1,93 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Checkout - {{ plan.name }}{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock %}
+
+{% block page_header %}
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Confirm your subscription</h2>
-    <p>
-        You selected the <strong>{{ plan.name }}</strong> plan
-    </p>
-    <p>
-        Renews <strong>{{ frequency.name }}</strong>, starting from today.
-    </p>
-    <p>
-        Amount to be paid: <strong>£{{ price }}</strong>
-    </p>
-
-    <form id="payment-form">
-        <div class="form-group">
-            <label for="card-element">Card Details</label>
-            <div id="card-element" class="stripe-card-element-wrapper">
-                </div>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <hr>
+                <h2 class="logo-font mb-4">Subscription Checkout</h2>
+                <hr>
+            </div>
         </div>
-        <div id="card-errors" role="alert" class="text-danger mt-2"></div>
-        <button type="submit" class="neon-button mt-3">Pay</button>
-    </form>
-</div>
 
+        <div class="row">
+            <div class="col-12 col-lg-6 offset-lg-3">
+                <p class="text-muted">Confirm Your Subscription Details</p>
+                <div class="card bg-dark text-light p-4 mb-4">
+                    <h4 class="mb-3">{{ plan.get_name_display }} Plan</h4>
+                    <p><strong>Topic Limit:</strong> {{ plan.topic_limit }}</p>
+                    <p><strong>Renewal Frequency:</strong> {{ frequency.name }}</p>
+                    {% if frequency.discount > 0 %}
+                        <p><strong>Discount:</strong> {{ frequency.discount_percent }}%</p>
+                    {% endif %}
+                    <hr>
+                    <h3 class="text-right">Total: £{{ price|floatformat:2 }}</h3>
+                </div>
+
+                <p class="text-muted">Please provide your payment details below.</p>
+                <form action="{% url 'checkout' plan.id frequency.id %}" method="POST" id="payment-form">
+                    {% csrf_token %}
+                    <fieldset class="rounded px-3 mb-5">
+                        <legend class="fieldset-label small text-black px-2 w-auto">Payment Information</legend>
+                        <div class="mb-3 card-element" id="card-element"></div>
+
+                        <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
+                        <input type="hidden" value="{{ client_secret }}" name="client_secret">
+                        <input type="hidden" value="{{ plan.id }}" name="plan_id" id="id_plan_id">
+                        <input type="hidden" value="{{ frequency.id }}" name="frequency_id" id="id_frequency_id">
+                    </fieldset>
+
+                    <div class="submit-button text-right mt-5 mb-2">
+                        <a href="{% url 'choose_plan' %}" class="btn btn-outline-black rounded-0">
+                            <span class="icon">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="font-weight-bold">Choose another plan</span>
+                        </a>
+                        <button id="submit-button" class="neon-button"> Complete Subscription <i class="fas fa-lock"></i>
+                        </button>
+                        <p class="small text-danger my-0">
+                            <span class="icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                            <span>Your card will be charged <strong>£{{ price|floatformat:2 }}</strong></span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="loading-overlay">
+        <h1 class="text-light logo-font loading-spinner">
+            <span class="icon">
+                <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+            </span>
+        </h1>
+    </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-    const stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
-    const elements = stripe.elements();
+    {{ block.super }}
 
-    // Define the style for Stripe's elements to match Bootstrap/Crispy Forms
-    const cardStyle = {
-        base: {
-            color: '#aab7c4',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-            fontSmoothing: 'antialiased',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#aab7c4'
-            },
-        },
-        invalid: {
-            color: '#fa755a',
-            iconColor: '#fa755a'
-        },
-    };
-
-    // Create the card element with custom style and hide postal code
-    const card = elements.create("card", {
-        style: cardStyle,
-        hidePostalCode: true // This hides the zip code field
-    });
-    card.mount("#card-element");
-
-    // Event listener for card errors
-    card.addEventListener('change', function(event) {
-        const displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-            displayError.classList.add('text-danger');
-        } else {
-            displayError.textContent = '';
-            displayError.classList.remove('text-danger');
-        }
-    });
-
-    const form = document.getElementById("payment-form");
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        // Disable button and show loading state
-        const payButton = form.querySelector('button[type="submit"]');
-        payButton.disabled = true;
-        payButton.textContent = 'Processing...';
-
-        try {
-            const response = await fetch("{% url 'create_payment_intent' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({
-                    plan_id: "{{ plan_id }}",
-                    frequency_id: "{{ frequency_id }}"
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                document.getElementById("card-errors").textContent = data.error;
-                document.getElementById("card-errors").classList.add('text-danger');
-                return; // Stop execution if there's an error from the server
-            }
-
-            const result = await stripe.confirmCardPayment(data.clientSecret, {
-                payment_method: {
-                    card: card
-                }
-            });
-
-            if (result.error) {
-                document.getElementById("card-errors").textContent = result.error.message;
-                document.getElementById("card-errors").classList.add('text-danger');
-            } else {
-                if (result.paymentIntent.status === "succeeded") {
-                    window.location.href = "{% url 'account_profile' %}";
-                }
-            }
-        } catch (error) {
-            document.getElementById("card-errors").textContent = 'An unexpected error occurred. Please try again.';
-            document.getElementById("card-errors").classList.add('text-danger');
-            console.error('Payment form submission error:', error);
-        } finally {
-            // Re-enable button and reset text regardless of success/failure (unless redirected)
-            payButton.disabled = false;
-            payButton.textContent = 'Pay';
-        }
-    });
-</script>
+    <script src="https://js.stripe.com/v3/"></script>
+    {{ stripe_public_key|json_script:"id_stripe_public_key" }}
+    {{ client_secret|json_script:"id_client_secret" }}
+    {# Pass user data safely as JSON #}
+    {{ request.user.get_full_name|default:request.user.username|json_script:"id_user_full_name" }}
+    {{ request.user.email|json_script:"id_user_email" }}
+    <script src="{% static 'js/stripe_elements.js' %}"></script>
 {% endblock %}

@@ -101,15 +101,19 @@
     <!-- Base Scripts -->
     <script src="{% static 'js/base.js' %}"></script>
 
-    <!-- App-specific scripts -->
-    {% block extra_js %}{% endblock %}
 
-    <!-- Bootstrap JS and dependencies -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kQtW33rZJAHjge9cFA1zKC+3gpTgG1U5U6qUPN0q8yxF0zj1v1lIo4U8nA53XMJf"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"
     ></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- App-specific scripts -->
+    {% block extra_js %}{% endblock %}
+    
 </body>
 
 </html>
