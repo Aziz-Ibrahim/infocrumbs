@@ -16,16 +16,16 @@
 <hr>
                 <p>Select renewal frequency</p>
                     <ul class="list-unstyled">
-                        {% for freq in plan.frequencies %}
-                        <li class="p-4 d-flex justify-content-between">
-                            <p>DEBUG: freq.id = {{ freq.id|default:"(empty ID)" }}, freq.name = {{ freq.name|default:"(empty Name)" }}</p> {# Add this line #}
-                            £{{ freq.price }}- Billed {{ freq.name }}
-                            {% if freq.discount > 0 %}
-                                <small class="text-muted">({{ freq.discount }}% off)</small>
-                            {% endif %}
-                            <a href="{% url 'checkout' plan.id freq.id %}" class="btn neon-button btn-sm m-2">Subscribe</a>
-                        </li>
-                        {% endfor %}
+                            {% for freq in plan.frequencies %}
+                            <li class="p-2 d-flex justify-content-between">
+                                <p>{{ freq.name|default:"(empty Name)" }}</p>
+                                <p>£{{ freq.price }}</p>
+                                {% if freq.discount > 0 %}
+                                    <small class="text-muted">({{ freq.discount }}% off)</small>
+                                {% endif %}
+                                <a href="{% url 'checkout' plan.id freq.id %}" class="btn neon-button">Subscribe</a>
+                            </li>
+                            {% endfor %}
                     </ul>
             </div>
         {% endfor %}

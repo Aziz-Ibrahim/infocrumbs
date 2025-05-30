@@ -5,43 +5,37 @@
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 {% endblock %}
 
-{% block page_header %}
-    <div class="container header-container">
-        <div class="row">
-            <div class="col"></div>
-        </div>
-    </div>
-{% endblock %}
+{% block title %}Checkout - {{ plan.get_name_display }} Plan{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container gradient-border">
         <div class="row">
             <div class="col-12">
                 <hr>
-                <h2 class="logo-font mb-4">Subscription Checkout</h2>
+                <h2 class="text-light">Subscription Checkout</h2>
                 <hr>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-12 col-lg-6 offset-lg-3">
+            <div class="col-12">
                 <p class="text-muted">Confirm Your Subscription Details</p>
                 <div class="card bg-dark text-light p-4 mb-4">
-                    <h4 class="mb-3">{{ plan.get_name_display }} Plan</h4>
-                    <p><strong>Topic Limit:</strong> {{ plan.topic_limit }}</p>
-                    <p><strong>Renewal Frequency:</strong> {{ frequency.name }}</p>
+                    <h3 class="mb-3 text-light">{{ plan.get_name_display }} Plan</h3>
+                    <p class="text-light">Topic Limit: {{ plan.topic_limit }}</p>
+                    <p class="text-light">Renewal Frequency: {{ frequency.name }}</p>
                     {% if frequency.discount > 0 %}
-                        <p><strong>Discount:</strong> {{ frequency.discount_percent }}%</p>
+                        <p class="text-light">Discount: {{ frequency.discount_percent }}%</p>
                     {% endif %}
                     <hr>
-                    <h3 class="text-right">Total: £{{ price|floatformat:2 }}</h3>
+                    <h3 class="text-right text-light">Total: £{{ price|floatformat:2 }}</h3>
                 </div>
 
                 <p class="text-muted">Please provide your payment details below.</p>
                 <form action="{% url 'checkout' plan.id frequency.id %}" method="POST" id="payment-form">
                     {% csrf_token %}
                     <fieldset class="rounded px-3 mb-5">
-                        <legend class="fieldset-label small text-black px-2 w-auto">Payment Information</legend>
+                        <legend class="fieldset-label small text-light px-2 w-auto">Payment Information</legend>
                         <div class="mb-3 card-element" id="card-element"></div>
 
                         <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
