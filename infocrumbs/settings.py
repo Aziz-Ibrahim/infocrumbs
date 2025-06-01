@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
-if os.path.isfile('env.py'):
+if os.path.exists('env.py'):
     import env
 
 
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'checkout',
     'crumbs',
     'feedback',
+    'pipeline',
     'preferences',
     'subscriptions',
 ]
@@ -183,6 +184,49 @@ STRIPE_PRICE_LOOKUP = {
     'premium_monthly': 'price_456xyzPremiumMonth',
     'premium_annually': 'price_789xyzPremiumYear',
 }
+
+# API keys for external services
+# News & Media APIs
+NEWS_API_KEY = os.environ.get('NEWS_API_KEY')
+NEWS_API_URL = os.environ.get('NEWS_API_URL')
+
+THE_NEWS_API_KEY = os.environ.get('THE_NEWS_API_KEY')
+THE_NEWS_API_URL = os.environ.get('THE_NEWS_API_URL')
+
+# Music
+LASTFM_API_KEY = os.environ.get('LASTFM_API_KEY')
+LASTFM_API_URL = os.environ.get('LASTFM_API_URL')
+
+# Finance
+ALPHA_VANTAGE_API_KEY = os.environ.get('ALPHA_VANTAGE_API_KEY')
+ALPHA_VANTAGE_API_URL = os.environ.get('ALPHA_VANTAGE_API_URL')
+
+FINNHUB_API_KEY = os.environ.get('FINNHUB_API_KEY')
+FINNHUB_API_URL = os.environ.get('FINNHUB_API_URL')
+
+# Quotes
+APININJA_API_KEY = os.environ.get('APININJA_API_KEY')
+APININJA_API_URL = os.environ.get('APININJA_API_URL')
+
+# Sports
+SPORTS_API_KEY = os.environ.get('SPORTS_API_KEY')
+SPORTMONKS_API_KEY = os.environ.get('SPORTMONKS_API_KEY')
+SPORTMONKS_API_URL = os.environ.get('SPORTMONKS_API_URL')
+
+# Gardeining / Plants
+PARENUAL_API_KEY = os.environ.get('PARENUAL_API_KEY')
+PARENUAL_API_URL = os.environ.get('PARENUAL_API_URL')
+
+TREFLE_API_KEY = os.environ.get('TREFLE_API_KEY')
+TREFLE_API_URL = os.environ.get('TREFLE_API_URL')
+
+PERMAPEOPLE_KEY_ID = os.environ.get('PERMAPEOPLE_KEY_ID')
+PERMAPEOPLE_KEY_SECRET = os.environ.get('PERMAPEOPLE_KEY_SECRET')
+PERMAPEOPLE_API_URL = os.environ.get('PERMAPEOPLE_API_URL')
+
+RAPIDAPI_API_KEY = os.environ.get('RAPIDAPI_API_KEY')
+RAPIDAPI_API_URL = os.environ.get('RAPIDAPI_API_URL')
+
 
 
 # Default primary key field type
