@@ -1,26 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Crumbs List
+{% endblock %}
+
 {% block content %}
-<h2>Crumbs</h2>
-{% for crumb in page_obj %}
-<div class="crumb">
-    <h3><a href="{% url 'crumb_detail' crumb.pk %}">{{ crumb.title }}</a></h3>
-    <p>{{ crumb.summary }}</p>
-    <a href="{{ crumb.url }}" target="_blank">Read more</a>
-</div>
-{% empty %}
-<p>No crumbs found.</p>
-{% endfor %}
+    <h2>Crumbs</h2>
+    <form method="get" class="mb-3">
+        <label for="topic-select">Filter by topic:</label>
+        <select id="topic-select" name="topic" onchange="this.form.submit()">
+            <option value="">All Topics</option>
+            {% for topic in topics %}
+                <option value="{{ topic.id }}"
+                    {% if selected_topic == topic.id %}selected{% endif %}>
+                    {{ topic.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+    {% for crumb in page_obj %}
+        <div class="crumb">
+            <h3>{{ crumb.title }}</h3>
+            <a href="{% url 'crumb_detail' crumb.pk %}" class="neon-button">View Crumb</a>
+            {% if crumb.id in saved_crumbs %}
+                <small class="text-muted">
+                    <i class="fas fa-star"></i> Saved
+                </small>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>No crumbs found.</p>
+    {% endfor %}
 
-<!-- Pagination controls -->
-<div class="pagination">
-    {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">« Prev</a>
-    {% endif %}
+    <!-- Pagination controls -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">« Prev</a>
+        {% endif %}
 
-    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
 
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">Next »</a>
-    {% endif %}
-</div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next »</a>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
     <h2>{{ crumb.title }}</h2>
-    <p><strong>Source:</strong> {{ crumb.source }}</p>
-    <p><strong>Published:</strong> {{ crumb.published_at }}</p>
-    <p><strong>Topic:</strong> {{ crumb.topic }}</p>
+    <small class="text-muted">Source: {{ crumb.source }}</small>
+    <small class="text-muted">Published: {{ crumb.published_at }}</small>
+    <h3><strong>Topic:</strong> {{ crumb.topic }}</h3>
     <p>{{ crumb.summary }}</p>
     <p><a href="{{ crumb.url }}" target="_blank">Read more</a></p>
+    {% if is_saved %}
+        <small class="text-muted">
+            <i class="fas fa-star"></i> You saved this crumb
+        </small>
+    {% endif %}
 {% endblock %}
