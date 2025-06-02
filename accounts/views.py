@@ -16,9 +16,13 @@ def profile_view(request):
 
 @login_required
 def load_account_details(request):
-    return render(request, 'account/includes/partial_account_details.html',{
-        'user': request.user
-    })
+    html = render_to_string(
+        'account/includes/partial_account_details.html',
+        {'user': request.user},
+        request=request
+    )
+    return JsonResponse({"html": html})
+
 
 
 
@@ -39,17 +43,24 @@ def account_update(request):
 @login_required
 def load_saved_crumbs_partial(request):
     saved_crumbs = SavedCrumb.objects.filter(user=request.user).select_related('crumb')
-    return render(request, "account/includes/partial_saved_crumbs.html", {
-        "saved_crumbs": saved_crumbs
-    })
+    html = render_to_string(
+        "account/includes/partial_saved_crumbs.html",
+        {"saved_crumbs": saved_crumbs},
+        request=request
+    )
+    return JsonResponse({"html": html})
 
 
 @login_required
 def load_comments_partial(request):
     comments = Comment.objects.filter(user=request.user).select_related('crumb')
-    return render(request, "account/includes/partial_comments.html", {
-        "comments": comments
-    })
+    html = render_to_string(
+        "account/includes/partial_comments.html",
+        {"comments": comments},
+        request=request
+    )
+    return JsonResponse({"html": html})
+
 
 
 
@@ -61,9 +72,12 @@ def load_preferences_partial(request):
     except UserPreference.DoesNotExist:
         topics = []
 
-    return render(request, "account/includes/partial_preferences.html", {
-        "topics": topics
-    })
+    html = render_to_string(
+        "account/includes/partial_preferences.html",
+        {"topics": topics},
+        request=request
+    )
+    return JsonResponse({"html": html})
 
 
 @login_required

@@ -2,14 +2,14 @@
 {% load static %}
 
 {% block content %}
-<div class="container max-w-xl mx-auto">
-    <h1 class="text-2xl font-bold mb-6 text-center text-white">Your Subscription Status</h1>
-
+<div class="container">
+    <h1 class="text-center text-light">Your Subscription Status</h1>
+    <hr>
     {% if subscription %}
-        <div class="bg-[#1A103D] p-6 rounded-2xl shadow-md border border-[#333A56] text-light text-center">
+        <div class="gradient-border glow text-light text-center">
             <p><strong class="text-neon-green">Plan:</strong> {{ subscription.plan.name|title }}</p>
-            <p><strong class="text-neon-blue">Duration:</strong> {{ subscription.get_frequency_display }}</p>
-            <p><strong class="text-neon-orange">Valid Until:</strong> {{ subscription.valid_until|date:"Y-m-d H:i" }}</p>
+            <p><strong class="text-neon-blue">Frequency:</strong> {{ user_subscription.frequency.name }}</p>
+            <p><strong class="text-neon-orange">Valid Until:</strong> {{ subscription.end_date|date:"Y-m-d H:i" }}</p>
         </div>
     {% else %}
         <div class="text-center text-white">

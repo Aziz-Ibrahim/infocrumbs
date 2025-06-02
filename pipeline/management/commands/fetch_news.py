@@ -18,7 +18,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("No articles were fetched."))
             return
 
-        topic_name = "World News"
+        topic_name = "world news"
         topic, _ = Topic.objects.get_or_create(name=topic_name)
 
         created_count = 0
