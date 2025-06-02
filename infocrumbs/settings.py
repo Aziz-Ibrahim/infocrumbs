@@ -190,9 +190,6 @@ STRIPE_PRICE_LOOKUP = {
 NEWS_API_KEY = os.environ.get('NEWS_API_KEY')
 NEWS_API_URL = os.environ.get('NEWS_API_URL')
 
-THE_NEWS_API_KEY = os.environ.get('THE_NEWS_API_KEY')
-THE_NEWS_API_URL = os.environ.get('THE_NEWS_API_URL')
-
 # Music
 LASTFM_API_KEY = os.environ.get('LASTFM_API_KEY')
 LASTFM_API_URL = os.environ.get('LASTFM_API_URL')
@@ -204,11 +201,14 @@ ALPHA_VANTAGE_API_URL = os.environ.get('ALPHA_VANTAGE_API_URL')
 FINNHUB_API_KEY = os.environ.get('FINNHUB_API_KEY')
 FINNHUB_API_URL = os.environ.get('FINNHUB_API_URL')
 
-# Quotes
+# Ninja API
 APININJA_API_KEY = os.environ.get('APININJA_API_KEY')
 APININJA_API_URL = os.environ.get('APININJA_API_URL')
 
 # Sports
+THENEWS_API_KEY = os.environ.get('THENEWSAPI_API_KEY')
+THENEWSAPI_SPORTS_URL = os.environ.get('THENEWSAPI_SPORTS_URL')
+
 SPORTS_API_KEY = os.environ.get('SPORTS_API_KEY')
 SPORTMONKS_API_KEY = os.environ.get('SPORTMONKS_API_KEY')
 SPORTMONKS_API_URL = os.environ.get('SPORTMONKS_API_URL')
