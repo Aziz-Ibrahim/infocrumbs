@@ -8,7 +8,7 @@ Crumbs List
 
 {% block content %}
 
-    <div class="container gradient-border">
+    <div class="container gradient-border m-auto p-5">
         <h2>Crumbs</h2>
         <div class="row">
             <div class="col-12">
@@ -32,14 +32,14 @@ Crumbs List
         <div class="row">
             {% for crumb in page_obj %}
                 <div class="col-md-4 mb-4 d-flex">
-                    <div class="card crumb bg-dark text-light w-100">
+                    <div class="card crumb gradient-border text-light w-100">
                         <div class="card-body">
                             <h5 class="card-title">{{ crumb.title }}</h5>
                             <a href="{% url 'crumb_detail' crumb.pk %}" class="neon-button">View Crumb</a>
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">
-                                <i class="fas fa-calendar-alt"></i> {{ crumb.published_at }}
+                                <i class="fas fa-calendar-alt"></i> {{ crumb.added_on }}
                             </small>
                             {% if crumb.id in saved_crumbs %}
                                 <small class="text-muted ms-3">
@@ -57,12 +57,12 @@ Crumbs List
         </div>
 
     <!-- Pagination controls -->
-    <div class="pagination">
+    <div class="pagination text-center">
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}">« Prev</a>
         {% endif %}
 
-        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
 
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}">Next »</a>

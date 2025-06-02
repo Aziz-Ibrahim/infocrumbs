@@ -3,7 +3,7 @@
     <h2>{{ crumb.title }}</h2>
     <small class="text-muted">Source: {{ crumb.source }}</small>
     <small class="text-muted">Published: {{ crumb.published_at }}</small>
-    <h3><strong>Topic:</strong> {{ crumb.topic }}</h3>
+    <p class="text-muted"><strong>Topic:</strong> {{ crumb.topic }}</p>
     <p>{{ crumb.summary }}</p>
     <p><a href="{{ crumb.url }}" target="_blank">Read more</a></p>
     {% if is_saved %}
