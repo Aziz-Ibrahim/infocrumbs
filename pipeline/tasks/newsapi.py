@@ -1,7 +1,13 @@
 import requests
 from django.conf import settings
 
+
 def fetch_newsapi_articles():
+    """
+    Fetches the latest articles from NewsAPI and returns a list of dictionaries
+    containing article details such as title, summary, URL, source,
+    published date, and topic slug.
+    """
     url = settings.NEWS_API_URL
     response = requests.get(url)
     if response.status_code != 200:

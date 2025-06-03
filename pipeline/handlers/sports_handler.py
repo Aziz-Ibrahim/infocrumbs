@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from pipeline.utils import summarize_text
 from crumbs.models import Crumb
 from preferences.models import Topic
 
@@ -14,13 +16,13 @@ def save_sports_articles(articles):
         if Crumb.objects.filter(
             title=article['title'],
             url=article['url']
-            ).exists():
+        ).exists():
             continue
 
         try:
             Crumb.objects.create(
                 title=article["title"][:255],
-                summary=article.get("summary", "")[:500],
+                summary=summarize_text(article.get("summary") or article.get("description", "")),
                 url=article["url"],
                 source=article.get("source", "Unknown"),
                 topic=topic,

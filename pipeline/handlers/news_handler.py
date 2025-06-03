@@ -1,7 +1,9 @@
-from crumbs.models import Crumb
-from preferences.models import Topic
 from django.utils.dateparse import parse_datetime
 from django.utils.text import slugify
+
+from crumbs.models import Crumb
+from preferences.models import Topic
+from pipeline.utils import summarize_text
 
 
 def handle_news_data(article_list):
@@ -17,15 +19,18 @@ def handle_news_data(article_list):
         if Crumb.objects.filter(
             title=article['title'],
             url=article['url']
-            ).exists():
+        ).exists():
             continue
 
         try:
-            crumb = Crumb.objects.create(
+            summary_input = article.get("summary") or article.get("description", "")
+            summary = summarize_text(summary_input)
+
+            Crumb.objects.create(
                 title=article["title"][:255],
-                summary=article["summary"] or "",
+                summary=summary,
                 url=article["url"],
-                source=article["source"],
+                source=article.get("source", "Unknown"),
                 topic=topic,
                 published_at=parse_datetime(article["published_at"]),
             )
