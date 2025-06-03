@@ -186,6 +186,10 @@ STRIPE_PRICE_LOOKUP = {
 }
 
 # API keys for external services
+
+# Hugging Face API
+HF_API_TOKEN = os.environ.get('HF_API_TOKEN')
+
 # News & Media APIs
 NEWS_API_KEY = os.environ.get('NEWS_API_KEY')
 NEWS_API_URL = os.environ.get('NEWS_API_URL')
