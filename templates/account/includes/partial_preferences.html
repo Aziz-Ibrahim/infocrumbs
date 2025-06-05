@@ -1,3 +1,5 @@
+
+
 <h3>Your Topic Preferences</h3>
 
 <div class="preferences-container"> 
@@ -27,10 +29,19 @@
 </div>
 
 <div class="text-center my-4">
-    <a 
-        href="{% url 'set_preferences' %}" 
-        class="neon-button"
-        aria-label="link to change topic preferences page">
-            Edit Topic Preferences
-    </a>
+    {% if user_subscription %}
+        <a 
+            href="{% url 'set_preferences' %}" 
+            class="neon-button"
+            aria-label="link to change topic preferences page">
+                Edit Topic Preferences
+        </a>
+    {% else %}
+        <a 
+            href="{% url 'choose_plan' %}" 
+            class="neon-button"
+            aria-label="link to change topic preferences page">
+                Edit Topic Preferences
+        </a>
+    {% endif %}
 </div>

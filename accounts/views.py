@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 
 from preferences.models import UserPreference
@@ -11,7 +12,15 @@ from subscriptions.models import UserSubscription
 
 @login_required
 def profile_view(request):
-    return render(request, 'account/profile.html')
+    user = request.user
+    subscription = UserSubscription.objects.filter(
+        user=user,
+        active=True
+        ).first()
+    context = {
+        'user_subscription': subscription,
+    }
+    return render(request, 'account/profile.html', context)
 
 
 @login_required
@@ -72,9 +81,19 @@ def load_preferences_partial(request):
     except UserPreference.DoesNotExist:
         topics = []
 
+    user_subscription = UserSubscription.objects.filter(
+        user=request.user,
+        active=True,
+        end_date__gte=now()
+    )
+
+
     html = render_to_string(
         "account/includes/partial_preferences.html",
-        {"topics": topics},
+        {
+            "topics": topics,
+            "user_subscription": user_subscription,
+        },
         request=request
     )
     return JsonResponse({"html": html})
