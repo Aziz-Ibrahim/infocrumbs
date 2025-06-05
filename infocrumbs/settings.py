@@ -229,9 +229,9 @@ PERMAPEOPLE_KEY_ID = os.environ.get('PERMAPEOPLE_KEY_ID')
 PERMAPEOPLE_KEY_SECRET = os.environ.get('PERMAPEOPLE_KEY_SECRET')
 PERMAPEOPLE_API_URL = os.environ.get('PERMAPEOPLE_API_URL')
 
-RAPIDAPI_API_KEY = os.environ.get('RAPIDAPI_API_KEY')
-RAPIDAPI_API_URL = os.environ.get('RAPIDAPI_API_URL')
-
+#Trivia / Fun
+USELESS_FACTS_API_URL = os.environ.get('USELESS_FACTS_API_URL')
+CHUCKNORRIS_API_URL = os.environ.get('CHUCKNORRIS_API_URL')
 
 
 # Default primary key field type
