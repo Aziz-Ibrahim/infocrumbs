@@ -1,14 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/crumbs.css' %}">
+{% endblock %}
+
 {% block content %}
-    <h2>{{ crumb.title }}</h2>
-    <small class="text-muted">Source: {{ crumb.source }}</small>
-    <small class="text-muted">Published: {{ crumb.published_at }}</small>
-    <p class="text-muted"><strong>Topic:</strong> {{ crumb.topic }}</p>
-    <p>{{ crumb.summary }}</p>
-    <p><a href="{{ crumb.url }}" target="_blank">Read more</a></p>
-    {% if is_saved %}
-        <small class="text-muted">
-            <i class="fas fa-star"></i> You saved this crumb
-        </small>
-    {% endif %}
+    <div class="container crumb-container py-5 px-5 gradient-border glow">
+        <h2>{{ crumb.title }}</h2>
+        <ul class="list-unstyled list-inline">
+            <li class="list-inline-item"><small class="text-muted">Source: {{ crumb.source }}</small></li>
+            <li class="list-inline-item"><p class="text-muted"><strong>Topic:</strong> {{ crumb.topic }}</p></li>
+            <li class="list-inline-item"><small class="text-muted">Published: {{ crumb.published_at }}</small></li>
+        </ul>
+        <hr>
+        <p>{{ crumb.summary }}</p>
+        <ul class="list-unstyled listine">
+            <li class="list-inline-item"><p><a href="{{ crumb.url }}" target="_blank" aria-label="Read the full article from the sourecs, opens in a new teb">Read more</a></p></li>
+            <li class="list-inline-item"><p><a href="{% url 'crumb_list' %}" class="text-right" aria-label="Return to crumbs list page"><i class="fa-solid fa-circle-left"></i>Back</a></p></li>
+        </ul>
+        {% if is_saved %}
+            <small class="text-muted">
+                <i class="fas fa-star"></i> You saved this crumb
+            </small>
+        {% endif %}
+    </div>
 {% endblock %}

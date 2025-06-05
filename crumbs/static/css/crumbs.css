@@ -1,3 +1,16 @@
+.crumb-container {
+    min-width: 950px;
+    text-align: center;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
 .pagination {
     text-align: center;
     margin: 2rem 0;
