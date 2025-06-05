@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
+{% block title %}{{ user.username }}{% endblock %}
+
 {% block account_content %}
 <h2>My Account</h2>
 
@@ -19,19 +21,50 @@
 <!-- Profile Tabs -->
 <ul class="nav nav-tabs mb-4" id="profileTab">
     <li class="nav-item">
-        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_subscription_partial' %}" href="#">Subscription</a>
+        <a 
+        class="nav-link text-light bg-dark border-light" 
+        data-url="{% url 'load_subscription_partial' %}" 
+        href="#"
+        aria-label="open subscriptions tab"
+        >
+            Subscription
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_preferences_partial' %}" href="#">Topic Preferences</a>
+        <a 
+        class="nav-link text-light bg-dark border-light" 
+        data-url="{% url 'load_preferences_partial' %}" 
+        href="#"
+        aria-label="open topic preferences tab">
+            Topic Preferences
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_saved_crumbs_partial' %}" href="#">Saved Crumbs</a>
+        <a 
+        class="nav-link text-light bg-dark border-light" 
+        data-url="{% url 'load_saved_crumbs_partial' %}" 
+        href="#"
+        aria-label="open saved crumbs tab">
+            Saved Crumbs
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-light bg-dark border-light" data-url="{% url 'load_comments_partial' %}" href="#">Comment History</a>
+        <a 
+        class="nav-link text-light bg-dark border-light" 
+        data-url="{% url 'load_comments_partial' %}" 
+        href="#"
+        aria-label="open your comment history tab">
+            Comment History
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active text-light bg-dark border-light" data-url="{% url 'load_account_details_partial' %}" href="#">Edit Details</a>
+        <a 
+        class="nav-link active text-light bg-dark border-light" 
+        data-url="{% url 'load_account_details_partial' %}" 
+        href="#"
+        aria-label="open chage details tab">
+            Edit Details
+        </a>
     </li>
 </ul>
 

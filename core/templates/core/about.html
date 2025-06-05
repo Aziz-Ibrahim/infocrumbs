@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}About{% endblock %}
+
 {% block content %}
 <div class="container py-5 gradient-border glow">
     <h1 class="mb-4">About InfoCrumbs</h1>
@@ -12,7 +14,12 @@
     </p>
     <p>
         The project was built as part of a full-stack web development course at
-        <a href="https://codeinstitute.net" target="_blank">Code Institute</a>,
+        <a 
+        href="https://codeinstitute.net" 
+        target="_blank"
+        aria-label="link to Code Instituste's home page, opens in a new tab">
+            Code Institute
+        </a>,
         applying Django, REST APIs, Bootstrap, and other modern web technologies.
     </p>
 
@@ -28,19 +35,28 @@
     <p>
         Check out more of my work:
     </p>
-    <ul>
+    <ul class="list-unstyled px-5">
         <li>
-            <a href="https://github.com/Aziz-Ibrahim" target="_blank">
+            <a 
+            href="https://github.com/Aziz-Ibrahim"
+            target="_blank"
+            aria-label="link to developer's github profile, opens in a new tab">
                 GitHub Profile
             </a>
         </li>
         <li>
-            <a href="https://aziz-ibrahim.github.io/math4kids/index.html" target="_blank">
+            <a 
+            href="https://aziz-ibrahim.github.io/math4kids/index.html" 
+            target="_blank"
+            aria-lable="link to Math 4 Kids website, opens in a new tab">
                 Math4Kids – Educational Game
             </a>
         </li>
         <li>
-            <a href="https://cinemate-776f20737057.herokuapp.com/" target="_blank">
+            <a 
+            href="https://cinemate-776f20737057.herokuapp.com/" 
+            target="_blank"
+            aria-label="link to Cinemate website, opens in a new tab">
                 Cinemate – Movie Discovery App
             </a>
         </li>

@@ -35,7 +35,12 @@ Crumbs List
                     <div class="card crumb gradient-border text-light w-100">
                         <div class="card-body">
                             <h5 class="card-title">{{ crumb.title }}</h5>
-                            <a href="{% url 'crumb_detail' crumb.pk %}" class="neon-button">View Crumb</a>
+                            <a 
+                            href="{% url 'crumb_detail' crumb.pk %}" 
+                            class="neon-button"
+                            aria-label="link to crumb details page">
+                                View Crumb
+                            </a>
                         </div>
                         <div class="card-footer">
                             <small class="text-muted">
@@ -59,13 +64,21 @@ Crumbs List
     <!-- Pagination controls -->
     <div class="pagination text-center">
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">« Prev</a>
+            <a href="?page={{ page_obj.previous_page_number }}"
+            aria-label="load next page">
+                <i class="fa-duotone fa-solid fa-angle-left"></i> Prev
+            </a>
         {% endif %}
 
-        <p>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+        <p class="px-2">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </p>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Next »</a>
+            <a href="?page={{ page_obj.next_page_number }}"
+            aria-label="load previous page">
+                Next <i class="fa-duotone fa-solid fa-angle-right"></i>
+            </a>
         {% endif %}
     </div>
 {% endblock %}

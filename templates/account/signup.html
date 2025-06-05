@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Sign Up - InfoCrumbs{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
 <div class="container login-container gradient-border glow">
@@ -45,12 +45,16 @@
                         <div class="mb-3 position-relative">
                             {{ form.password1.label_tag }}
                             {{ form.password1 }}
-                            <i class="fa-regular fa-eye toggle-password mt-2" data-target="id_password1"></i>
+                            <i 
+                            class="fa-regular fa-eye toggle-password mt-2" 
+                            data-target="id_password1"></i>
                         </div>
                         <div class="mb-3 position-relative">
                             {{ form.password2.label_tag }}
                             {{ form.password2 }}
-                            <i class="fa-regular fa-eye toggle-password mt-2" data-target="id_password2"></i>
+                            <i 
+                            class="fa-regular fa-eye toggle-password mt-2" 
+                            data-target="id_password2"></i>
                         </div>
                         <div class="mb-3">
                             <button type="submit" class="neon-button">
@@ -61,7 +65,10 @@
                             <p class="text-sm">
                                 Already have an account?
                                 <a href="{% url 'account_login' %}"
-                                    style="color: var(--neon-blue); text-decoration: none;">Log in</a>
+                                    aria-label="link to log in page"
+                                    class="link-light">
+                                    Log in
+                                </a>
                             </p>
                         </div>
                     </div>

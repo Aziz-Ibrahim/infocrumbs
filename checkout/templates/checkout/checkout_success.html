@@ -13,6 +13,8 @@
     </div>
 {% endblock %}
 
+{% block title %}Success{% endblock %}
+
 {% block content %}
     <div class="overlay"></div>
     <div class="container">
@@ -80,8 +82,12 @@
                 {% endif %}
 
                 <div class="my-5 text-center">
-                    {# Link to subscription_status without namespace #}
-                    <a href="{% url 'account_profile' %}" class="btn neon-button">Go to My Subscription Status</a>
+                    <a 
+                    href="{% url 'account_profile' %}" 
+                    class="btn neon-button"
+                    aria-label="link to profile page subscription status">
+                        Go to My Subscription Status
+                    </a>
                 </div>
             </div>
         </div>

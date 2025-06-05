@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Login - InfoCrumbs{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 <div class="container login-container gradient-border glow">
@@ -19,7 +19,12 @@
 
                     <p class="text-sm mt-3">
                         Don't have an account?
-                        <a href="{% url 'account_signup' %}" style="color: var(--neon-blue); text-decoration: none;">Sign up</a>
+                        <a 
+                        href="{% url 'account_signup' %}" 
+                        style="color: var(--neon-blue); text-decoration: none;"
+                        aria-label="link to sign up page">
+                            Sign up
+                        </a>
                     </p>
                 </form>
         </div>

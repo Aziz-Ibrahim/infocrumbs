@@ -15,8 +15,10 @@
         <div class="text-center text-white">
             <p>You are not subscribed to any plan yet.</p>
             <a href="{% url 'choose_plan' %}"
-                class="inline-block mt-4 px-4 py-2 bg-neon-green text-black font-bold rounded hover:bg-neon-blue transition">Choose
-                a Plan</a>
+                class="inline-block mt-4 px-4 py-2 bg-neon-green text-black font-bold rounded hover:bg-neon-blue transition"
+                aria-label="link to choose plan page">
+                    Choose a Plan
+            </a>
         </div>
     {% endif %}
 </div>

@@ -23,7 +23,10 @@
                                 {% if freq.discount > 0 %}
                                     <small class="text-muted">({{ freq.discount }}% off)</small>
                                 {% endif %}
-                                <a href="{% url 'checkout' plan.id freq.id %}" class="btn neon-button">Subscribe</a>
+                                <a 
+                                href="{% url 'checkout' plan.id freq.id %}" 
+                                class="btn neon-button"
+                                aria-label="link to checkout page">Subscribe</a>
                             </li>
                             {% endfor %}
                     </ul>

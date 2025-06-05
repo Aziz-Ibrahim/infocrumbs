@@ -10,14 +10,16 @@
         <p>
             Renews on: {{ user_subscription.end_date|date:"Y-m-d H:i" }}
         </p>
-        <a href="{% url 'choose_plan' %}" class="neon-button">
+        <a href="{% url 'choose_plan' %}" 
+        class="neon-button" aria-label="link to choose plan page">
             Change Plan
         </a>
     {% else %}
         <h3>
             You are not subscribed yet.
         </h3>
-        <a href="{% url 'choose_plan' %}" class="neon-button">
+        <a href="{% url 'choose_plan' %}" 
+        class="neon-button" aria-label="link to choose plan page">
             Subscribe Now
         </a>
     {% endif %}

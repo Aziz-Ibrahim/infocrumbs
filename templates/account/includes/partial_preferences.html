@@ -11,7 +11,8 @@
                     disabled
                     checked
                 >
-                <div class="topic-image" style="background-image: url('{{ topic.image.url }}')">
+                <div class="topic-image" 
+                style="background-image: url('{{ topic.image.url }}')">
                     <div class="tick-overlay">&#10004;</div>
                 </div>
                 <div class="topic-info text-center">
@@ -26,5 +27,10 @@
 </div>
 
 <div class="text-center my-4">
-    <a href="{% url 'set_preferences' %}" class="neon-button">Edit Topic Preferences</a>
+    <a 
+        href="{% url 'set_preferences' %}" 
+        class="neon-button"
+        aria-label="link to change topic preferences page">
+            Edit Topic Preferences
+    </a>
 </div>

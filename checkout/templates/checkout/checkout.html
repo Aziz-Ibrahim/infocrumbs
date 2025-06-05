@@ -45,13 +45,20 @@
                     </fieldset>
 
                     <div class="submit-button text-right mt-5 mb-2">
-                        <a href="{% url 'choose_plan' %}" class="btn btn-outline-black rounded-0">
+                        <a 
+                        href="{% url 'choose_plan' %}" 
+                        class="btn btn-outline-black rounded-0"
+                        aria-label="return to choose plan page">
                             <span class="icon">
                                 <i class="fas fa-chevron-left"></i>
                             </span>
-                            <span class="font-weight-bold">Choose another plan</span>
+                            <span class="font-weight-bold">
+                                Choose another plan
+                            </span>
                         </a>
-                        <button id="submit-button" class="neon-button"> Complete Subscription <i class="fas fa-lock"></i>
+                        <button 
+                        id="submit-button" 
+                        class="neon-button"> Complete Subscription <i class="fas fa-lock"></i>
                         </button>
                         <p class="small text-danger my-0">
                             <span class="icon">

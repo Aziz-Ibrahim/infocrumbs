@@ -10,9 +10,19 @@
         <p class="tagline">Summarized insights. Personalized for you.</p>
 
         {% if user.is_authenticated %}
-            <a href="{% url 'crumb_list' %}" class="neon-button">Explore Crumbs</a>
+            <a 
+            href="{% url 'crumb_list' %}" 
+            class="neon-button"
+            aria-label="link to crumbs list page">
+                Explore Crumbs
+            </a>
         {% else %}
-            <a href="{% url 'account_login' %}" class="neon-button">Get Started</a>
+            <a 
+            href="{% url 'account_login' %}" 
+            class="neon-button"
+            aria-label="link to log in page">
+                Get Started
+            </a>
         {% endif %}
     </section>
 </div>

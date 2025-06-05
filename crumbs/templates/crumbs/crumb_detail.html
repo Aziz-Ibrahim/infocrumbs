@@ -16,8 +16,28 @@
         <hr>
         <p>{{ crumb.summary }}</p>
         <ul class="list-unstyled listine">
-            <li class="list-inline-item"><p><a href="{{ crumb.url }}" target="_blank" aria-label="Read the full article from the sourecs, opens in a new teb">Read more</a></p></li>
-            <li class="list-inline-item"><p><a href="{% url 'crumb_list' %}" class="text-right" aria-label="Return to crumbs list page"><i class="fa-solid fa-circle-left"></i>Back</a></p></li>
+            <li 
+            class="list-inline-item">
+                <p>
+                    <a 
+                    href="{{ crumb.url }}" 
+                    target="_blank" 
+                    aria-label="Read the full article from the sourecs, opens in a new teb">
+                        Read more
+                    </a>
+                </p>
+            </li>
+            <li 
+            class="list-inline-item">
+                <p>
+                    <a 
+                    href="{% url 'crumb_list' %}" 
+                    class="text-right" 
+                    aria-label="Return to crumbs list page">
+                        <i class="fa-solid fa-circle-left"></i>Back
+                    </a>
+                </p>
+            </li>
         </ul>
         {% if is_saved %}
             <small class="text-muted">
