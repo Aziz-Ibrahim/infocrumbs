@@ -6,6 +6,8 @@ from pipeline.tasks.finnhub import fetch_finance_news
 from pipeline.tasks.thenewsapi import fetch_sports_news
 from pipeline.tasks.trivia import fetch_trivia_facts
 from pipeline.tasks import plants
+from pipeline.tasks.food import fetch_foodcrumbs
+from pipeline.tasks.technology import fetch_technology_news
 
 from pipeline.handlers.news_handler import handle_news_data
 from pipeline.handlers.music_handler import handle_music_data
@@ -13,6 +15,8 @@ from pipeline.handlers.finance_handler import handle_finance_crumbs
 from pipeline.handlers.sports_handler import save_sports_articles
 from pipeline.handlers.trivia_handler import handle_trivia_data
 from pipeline.handlers.plants_handler import handle_plant_data
+from pipeline.handlers.food_handler import handle_foodcrumbs
+from pipeline.handlers.technology_handler import handle_technology_news
 
 
 class Command(BaseCommand):
@@ -71,20 +75,42 @@ class Command(BaseCommand):
             self.style.SUCCESS(f"{created} trivia crumbs saved.")
             )
 
-        #Fetches and handles plants from 3 APIs
+        # Fetches and handles plants from 3 APIs
         self.stdout.write("Fetching plant-related info...")
 
         perenual = plants.fetch_perenual_guides()
         created = handle_plant_data("Perenual", perenual)
-        self.stdout.write(self.style.SUCCESS(f"{created} plant crumbs saved from Perenual."))
+        self.stdout.write(
+            self.style.SUCCESS(f"{created} plant crumbs saved from Perenual.")
+            )
 
         trefle = plants.fetch_trefle_plants()
         created = handle_plant_data("Trefle", trefle)
-        self.stdout.write(self.style.SUCCESS(f"{created} plant crumbs saved from Trefle."))
+        self.stdout.write(
+            self.style.SUCCESS(f"{created} plant crumbs saved from Trefle.")
+            )
 
         permapeople = plants.fetch_permapeople_plants()
         created = handle_plant_data("PermaPeople", permapeople)
-        self.stdout.write(self.style.SUCCESS(f"{created} plant crumbs saved from PermaPeople."))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"{created} plant crumbs saved from PermaPeople."
+                )
+            )
+        
+        # Fetches and handles food
+        self.stdout.write("Fetching food and drink recipes...")
+        recipes = fetch_foodcrumbs()
+        created = handle_foodcrumbs(recipes)
+        self.stdout.write(self.style.SUCCESS(f"{created} food crumbs saved."))
+
+        # Fetches and handles technology
+        self.stdout.write("Fetching technology articles...")
+        articles = fetch_technology_news()
+        created = handle_technology_news(articles)
+        self.stdout.write(
+            self.style.SUCCESS(f"{created} technology crumbs saved.")
+            )
 
         self.stdout.write(
             self.style.SUCCESS(f" Total crumbs added: {total_created}")
