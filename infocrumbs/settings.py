@@ -241,6 +241,10 @@ SPOONACULAR_API_URL = os.environ.get('SPOONACULAR_API_URL')
 MEDIASTACK_API_KEY = os.environ.get("MEDIASTACK_API_KEY")
 MEDIASTACK_TECHNOLOGY_URL = os.environ.get("MEDIASTACK_TECHNOLOGY_URL")
 
+# Environment News
+NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY')
+NEWSDATA_API_URL = os.environ.get('NEWSDATA_API_URL')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

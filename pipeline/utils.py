@@ -9,7 +9,7 @@ headers = {
 }
 
 
-def summarize_text(text, min_length=30, max_length=130):
+def summarize_text(text, min_length=20, max_length=100):
     """
     Sends text to Hugging Face's BART summarization model
     and returns the summary.
@@ -18,8 +18,8 @@ def summarize_text(text, min_length=30, max_length=130):
         return ""
 
     text = (text or "").strip()
-    if len(text) > 800:
-        text = text[:800] + "..."
+    if len(text) > 500:
+        text = text[:500] + "..."
 
     payload = {
         "inputs": text,
@@ -34,7 +34,7 @@ def summarize_text(text, min_length=30, max_length=130):
             HF_API_URL,
             headers=headers,
             json=payload,
-            timeout=30
+            timeout=15
             )
         response.raise_for_status()
         result = response.json()
