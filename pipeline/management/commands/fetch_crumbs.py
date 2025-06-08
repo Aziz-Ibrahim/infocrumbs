@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 
+from pipeline.tasks.environment import fetch_environment_news
 from pipeline.tasks.newsapi import fetch_newsapi_articles
 from pipeline.tasks.lastfm import fetch_lastfm_tracks
 from pipeline.tasks.finnhub import fetch_finance_news
@@ -9,6 +10,7 @@ from pipeline.tasks import plants
 from pipeline.tasks.food import fetch_foodcrumbs
 from pipeline.tasks.technology import fetch_technology_news
 
+from pipeline.handlers.environment_handler import handle_environment_articles
 from pipeline.handlers.news_handler import handle_news_data
 from pipeline.handlers.music_handler import handle_music_data
 from pipeline.handlers.finance_handler import handle_finance_crumbs
@@ -51,7 +53,7 @@ class Command(BaseCommand):
             )
         total_created += music_count
 
-        # Fetch and handle finance
+        # # Fetch and handle finance
         self.stdout.write("Fetching finance news from Finnhub...")
         finance_data = fetch_finance_news()
         finance_added = handle_finance_crumbs(finance_data)
@@ -111,6 +113,12 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f"{created} technology crumbs saved.")
             )
+
+        # Fetches and handles environment news
+        self.stdout.write("Fetching environment news...")
+        environment_articles = fetch_environment_news()
+        created = handle_environment_articles(environment_articles)
+        self.stdout.write(self.style.SUCCESS(f"{created} environment crumbs saved."))
 
         self.stdout.write(
             self.style.SUCCESS(f" Total crumbs added: {total_created}")

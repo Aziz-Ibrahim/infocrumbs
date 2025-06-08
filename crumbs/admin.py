@@ -10,5 +10,5 @@ class CrumbAdmin(admin.ModelAdmin):
         'published_at',
         'added_on'
         )
-    search_fields = ('title', 'summary', 'source')
+    search_fields = ('title', 'summary', 'source', "tags__name")
     list_filter = ('topic', 'source', 'published_at')

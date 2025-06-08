@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # required by allauth
+    'taggit',
 
     #Third-party apps
     'allauth',

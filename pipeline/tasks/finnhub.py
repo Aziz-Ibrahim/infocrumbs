@@ -27,7 +27,10 @@ def fetch_finance_news():
                 "summary": article.get("summary", "No summary available."),
                 "url": article["url"],
                 "source": article.get("source", "Finnhub"),
-                "published_at": datetime.fromtimestamp(article["datetime"], tz=timezone.utc).isoformat(),
+                "published_at": datetime.fromtimestamp(
+                    article["datetime"],
+                    tz=timezone.utc
+                    ).isoformat(),
                 "topic_slug": "finance"
             })
 
