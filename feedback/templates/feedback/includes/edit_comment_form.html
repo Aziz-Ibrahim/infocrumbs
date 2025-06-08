@@ -1,0 +1,5 @@
+<form class="edit-comment-form" data-id="{{ comment.id }}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="neon-button">Save</button>
+</form>

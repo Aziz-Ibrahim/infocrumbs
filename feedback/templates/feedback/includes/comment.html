@@ -1,0 +1,14 @@
+<div class="comment" id="comment-{{ comment.id }}">
+    <div class="comment-meta">
+        <strong>{{ comment.user.username }}</strong>
+        <span class="timestamp">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+    </div>
+    <p class="comment-content">{{ comment.content }}</p>
+
+    {% if user == comment.user %}
+    <div class="comment-actions">
+        <button class="edit-comment-btn" data-id="{{ comment.id }}">Edit</button>
+        <button class="delete-comment-btn" data-id="{{ comment.id }}">Delete</button>
+    </div>
+    {% endif %}
+</div>

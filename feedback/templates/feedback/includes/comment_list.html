@@ -1,0 +1,15 @@
+{% for comment in comments %}
+    <div class="comment" id="comment-{{ comment.id }}">
+        <p><strong>{{ comment.user.username }}</strong> — {{ comment.created_at|date:"M d, Y H:i" }}</p>
+        <p class="comment-content">{{ comment.content }}</p>
+
+        {% if comment.user == user %}
+            <div class="comment-actions">
+                <a href="#" class="edit-comment" data-id="{{ comment.id }}">Edit</a> |
+                <a href="#" class="delete-comment" data-id="{{ comment.id }}">Delete</a>
+            </div>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}

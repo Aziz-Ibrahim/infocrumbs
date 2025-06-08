@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -18,25 +18,26 @@ def add_comment(request, crumb_id):
     If the request is an AJAX request, it returns a JSON response
     with the comment details. Otherwise, it redirects to the Crumb detail page.
     """
-
     crumb = get_object_or_404(Crumb, id=crumb_id)
 
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_authenticated:
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.user = request.user
             comment.crumb = crumb
+            comment.user = request.user
             comment.save()
 
-            html = render(
-                request, "feedback/includes/comment.html", {"comment": comment}
-            )
-            return JsonResponse(
-                {"success": True, "html": html.content.decode("utf-8")}
-            )
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                comments = crumb.comments.order_by("-created_at")
+                return render(request, "feedback/includes/comment_list.html", {
+                    "comments": comments,
+                    "user": request.user
+                })
 
-    return JsonResponse({"success": False})
+            return redirect("crumb_detail", pk=crumb.id)
+
+    return HttpResponseBadRequest("Invalid comment or unauthenticated.")
 
 
 @login_required
@@ -56,14 +57,28 @@ def edit_comment(request, comment_id):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            html = render(
-                request, "feedback/includes/comment.html", {"comment": comment}
-            )
+
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "content": comment.content,
+                })
+
+            # fallback if not AJAX
+            return redirect("crumb_detail", pk=comment.crumb.id)
+
+        else:
             return JsonResponse(
-                {"success": True, "html": html.content.decode("utf-8")}
+                {"success": False, "errors": form.errors}, status=400
             )
 
-    return JsonResponse({"success": False})
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "feedback/includes/edit_comment_form.html", {
+            "form": CommentForm(instance=comment),
+            "comment": comment
+        })
+
+    return HttpResponseBadRequest("Invalid request.")
 
 
 @login_required
@@ -77,9 +92,8 @@ def delete_comment(request, comment_id):
     a JSON response indicating failure.
     """
     comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-
-    if request.method == "POST":
+    if request.method == 'POST' and \
+        request.headers.get('x-requested-with') == 'XMLHttpRequest':
         comment.delete()
-        return JsonResponse({"success": True})
-
-    return JsonResponse({"success": False})
+        return JsonResponse({'success': True})
+    return HttpResponseBadRequest("Invalid request")
