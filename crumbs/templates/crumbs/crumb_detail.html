@@ -7,7 +7,9 @@
 
 {% block content %}
     <div class="container crumb-container py-5 px-5 gradient-border glow">
-        <h2>{{ crumb.title }}</h2>
+        <div class="row">
+            <div class="col-12">
+                        <h2>{{ crumb.title }}</h2>
         <ul class="list-unstyled list-inline">
             <li class="list-inline-item"><small class="text-muted">Source: {{ crumb.source }}</small></li>
             <li class="list-inline-item"><p class="text-muted"><strong>Topic:</strong> {{ crumb.topic }}</p></li>
@@ -44,5 +46,39 @@
                 <i class="fas fa-star"></i> You saved this crumb
             </small>
         {% endif %}
+            </div>
+            <div class="col-6" id="comment-form">
+                <h4>Write a comment</h4>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'add_comment' crumb.id %}" method="post">
+                        {% csrf_token %}
+                        {{ comment_form.as_p }}
+                        <button type="submit" class="neon-button">Post Comment</button>
+                    </form>
+                {% else %}
+                    <p><a href="{% url 'account_login' %}" aria-label="link to log in page">Log in</a> to post a comment.</p>
+                {% endif %}
+            </div>
+            <div class="col-6" id="comments">
+                <h4>Comments</h4>
+                <div id="comments-section">
+                    {% for comment in comments %}
+                        <div class="comment">
+                            <p><strong>{{ comment.user.username }}</strong> — {{ comment.created_at|date:"M d, Y H:i" }}</p>
+                            <p>{{ comment.content }}</p>
+
+                            {% if comment.user == user %}
+                                <div class="comment-actions">
+                                    <a href="{% url 'edit_comment' comment.id %}" aria-label="Edit comment">Edit</a> |
+                                    <a href="{% url 'delete_comment' comment.id %}" aria-label="Delete comment">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p>No comments yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

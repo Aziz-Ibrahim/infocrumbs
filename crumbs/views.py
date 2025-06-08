@@ -3,7 +3,8 @@ from django.core.paginator import Paginator
 
 from preferences.models import UserPreference, Topic
 from subscriptions.models import UserSubscription
-from feedback.models import SavedCrumb
+from feedback.forms import CommentForm
+from feedback.models import Comment, SavedCrumb
 from .models import Crumb
 
 
@@ -24,20 +25,26 @@ def crumb_list(request):
         return redirect('account_login')
 
     # Enforce active subscription
-    subscription = UserSubscription.objects.filter(user=user, active=True).first()
+    subscription = UserSubscription.objects.filter(
+        user=user, active=True
+    ).first()
     if not subscription:
         return redirect('choose_plan')
 
     # Get user preferences
     pref_obj = UserPreference.objects.filter(user=user).first()
-    preferred_topics = pref_obj.topics.values_list('id', flat=True) if pref_obj else []
+    preferred_topics = pref_obj.topics.values_list(
+        'id', flat=True
+    ) if pref_obj else []
 
     # Limit topics for basic plan
     if subscription.plan and subscription.plan.name.lower() == "basic":
         preferred_topics = list(preferred_topics)[:2]
 
     # Get saved crumbs
-    saved_crumbs = SavedCrumb.objects.filter(user=user).values_list('crumb_id', flat=True)
+    saved_crumbs = SavedCrumb.objects.filter(user=user).values_list(
+        'crumb_id', flat=True
+    )
 
     # Filter crumbs by preferred topics
     crumbs = Crumb.objects.filter(topic__in=preferred_topics)
@@ -66,15 +73,12 @@ def crumb_detail(request, pk):
     """
 
     crumb = get_object_or_404(Crumb, pk=pk)
-    is_saved = False
+    comment_form = CommentForm()
+    comments = crumb.comments.select_related('user').order_by('-created_at')
 
-    if request.user.is_authenticated:
-        is_saved = SavedCrumb.objects.filter(
-            user=request.user,
-            crumb=crumb
-            ).exists()
-
-    return render(request, 'crumbs/crumb_detail.html', {
-        'crumb': crumb,
-        'is_saved': is_saved,
-    })
+    context = {
+        "crumb": crumb,
+        "comment_form": comment_form,
+        "comments": comments,
+    }
+    return render(request, "crumbs/crumb_detail.html", context)
