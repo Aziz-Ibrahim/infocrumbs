@@ -42,9 +42,13 @@ def crumb_list(request):
         preferred_topics = list(preferred_topics)[:2]
 
     # Get saved crumbs
-    saved_crumbs = SavedCrumb.objects.filter(user=user).values_list(
-        'crumb_id', flat=True
-    )
+    saved_ids = []
+    if request.user.is_authenticated:
+        saved_ids = SavedCrumb.objects.filter(
+            user=request.user
+            ).values_list(
+                'crumb_id', flat=True
+                )
 
     # Filter crumbs by preferred topics
     crumbs = Crumb.objects.filter(topic__in=preferred_topics)
@@ -60,7 +64,7 @@ def crumb_list(request):
 
     return render(request, 'crumbs/crumbs_list.html', {
         'page_obj': page_obj,
-        'saved_crumbs': saved_crumbs,
+        'saved_ids': saved_ids,
         'topics': topics,
         'selected_topic': int(selected_topic) if selected_topic else None,
     })
@@ -75,10 +79,15 @@ def crumb_detail(request, pk):
     crumb = get_object_or_404(Crumb, pk=pk)
     comment_form = CommentForm()
     comments = crumb.comments.select_related('user').order_by('-created_at')
+    is_saved = False
+
+    if request.user.is_authenticated:
+        is_saved = SavedCrumb.objects.filter(user=request.user, crumb=crumb).exists()
 
     context = {
         "crumb": crumb,
         "comment_form": comment_form,
         "comments": comments,
+        'is_saved': is_saved,
     }
     return render(request, "crumbs/crumb_detail.html", context)

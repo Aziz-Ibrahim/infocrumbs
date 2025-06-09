@@ -3,7 +3,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Comment
+from .models import Comment, SavedCrumb
 from .forms import CommentForm
 from crumbs.models import Crumb
 
@@ -97,3 +97,25 @@ def delete_comment(request, comment_id):
         comment.delete()
         return JsonResponse({'success': True})
     return HttpResponseBadRequest("Invalid request")
+
+
+@login_required
+def toggle_save_crumb(request, crumb_id):
+    """
+    Toggle saving a Crumb.
+    This view allows a user to save or unsave a Crumb.
+    Retrieves the Crumb by its ID and checks if the user has already saved it.
+    If the Crumb is already saved, it deletes the SavedCrumb entry and returns
+    a JSON response indicating that the Crumb is no longer saved.
+    If the Crumb is not saved, it creates a new SavedCrumb entry and returns
+    a JSON response indicating that the Crumb is now saved.
+    """
+    crumb = get_object_or_404(Crumb, id=crumb_id)
+    saved, created = SavedCrumb.objects.get_or_create(
+        user=request.user, crumb=crumb
+    )
+
+    if not created:
+        saved.delete()
+        return JsonResponse({"saved": False})
+    return JsonResponse({"saved": True})

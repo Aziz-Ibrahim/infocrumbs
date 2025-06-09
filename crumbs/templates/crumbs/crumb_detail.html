@@ -18,8 +18,7 @@
         <hr>
         <p>{{ crumb.summary }}</p>
         <ul class="list-unstyled listine">
-            <li 
-            class="list-inline-item">
+            <li class="list-inline-item">
                 <p>
                     <a 
                     href="{{ crumb.url }}" 
@@ -29,8 +28,7 @@
                     </a>
                 </p>
             </li>
-            <li 
-            class="list-inline-item">
+            <li class="list-inline-item">
                 <p>
                     <a 
                     href="{% url 'crumb_list' %}" 
@@ -40,12 +38,16 @@
                     </a>
                 </p>
             </li>
+            <li class="list-inline-item">
+                <button id="save-btn" class="btn btn-sm btn-outline-primary" data-id="{{ crumb.id }}">
+                    {% if is_saved %}
+                        <i class="fas fa-star"></i> Saved
+                    {% else %}
+                        <i class="far fa-star"></i> Save
+                    {% endif %}
+                </button>
+            </li>
         </ul>
-        {% if is_saved %}
-            <small class="text-muted">
-                <i class="fas fa-star"></i> You saved this crumb
-            </small>
-        {% endif %}
             </div>
             <div class="col-6" id="comment-form-container">
                 <h4>Write a comment</h4>
@@ -72,4 +74,5 @@
 
 {% block extra_js %}
     <script src="{% static 'js/comments.js' %}"></script>
+    <script src="{% static 'js/saved.js' %}"></script>
 {% endblock %}

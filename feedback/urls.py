@@ -8,4 +8,9 @@ urlpatterns = [
         'delete/<int:comment_id>/',
         views.delete_comment, name='delete_comment'
     ),
+    path(
+        'crumb/save/<int:crumb_id>/',
+        views.toggle_save_crumb,
+        name='toggle_save_crumb'
+    ),
 ]
