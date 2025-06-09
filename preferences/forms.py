@@ -1,7 +1,7 @@
 from django import forms
 
-from .models import UserPreference, Topic
 from subscriptions.models import UserSubscription
+from .models import UserPreference, Topic
 
 
 class UserPreferenceForm(forms.ModelForm):
@@ -17,44 +17,50 @@ class UserPreferenceForm(forms.ModelForm):
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
-        # Determine user's topic limit based on subscription
+        self.selected_topic_ids = set()
+        if self.instance and self.instance.pk:
+            self.selected_topic_ids = set(self.instance.topics.values_list(
+                'id', flat=True))
+
+        self.topic_limit = None
+
         try:
             subscription = self.user.usersubscription
-            # Check for specific 'Basic Plan Type' name
-            if subscription.plan.name.lower() == 'basic plan type':
+            if subscription.plan.name.lower() == 'basic':
+                self.topic_limit = 2
                 self.fields['topics'].help_text = (
-                    'You can select up to 2 topics.'
+                    f'You can select up to {self.topic_limit} topics with '
+                    'your Basic plan.'
                 )
-                self.fields['topics'].queryset = Topic.objects.all()
-            else:  # Covers premium or any other plan
+            else:
                 self.fields['topics'].help_text = (
                     'Select any topics you want.'
                 )
         except UserSubscription.DoesNotExist:
+            self.topic_limit = 2
             self.fields['topics'].help_text = (
-                'No active subscription. Default to basic.'
+                f'No active subscription found. You can select up to '
+                f'{self.topic_limit} topics.'
             )
 
     def clean_topics(self):
         """
         Custom clean method for 'topics' field to enforce
-        subscription-based topic limits.
+        subscription-based topic limits on the server-side.
         """
         topics = self.cleaned_data['topics']
+
+        current_limit = None
         try:
             subscription = self.user.usersubscription
-            # Explicitly check for 'Basic Plan Type' and its limit of 2
-            if subscription.plan.name.lower() == 'basic plan type':
-                if topics.count() > 2:
-                    raise forms.ValidationError(
-                        "Basic plan allows only 2 topics."
-                    )
-            # No specific over-limit validation for premium yet
-
+            if subscription.plan.name.lower() == 'basic':
+                current_limit = 2
         except UserSubscription.DoesNotExist:
-            # For users without a subscription, limit to 2 topics
-            if topics.count() > 2:
-                raise forms.ValidationError(
-                    "Without a subscription, you can only select 2 topics."
-                )
+            current_limit = 2
+
+        if current_limit is not None and topics.count() > current_limit:
+            raise forms.ValidationError(
+                f"You can select only {current_limit} topics with your "
+                "current plan."
+            )
         return topics

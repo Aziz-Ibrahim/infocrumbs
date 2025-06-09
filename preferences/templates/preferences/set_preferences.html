@@ -10,8 +10,30 @@
 <div class="preferences-container">
     <h2 class="text-center my-4">Choose Your Topics</h2>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data"
+          data-topic-limit="{{ form.topic_limit|default_if_none:'no_limit' }}">
         {% csrf_token %}
+
+        {# Display non-field errors #}
+        {% if form.non_field_errors %}
+            <div class="bg-transparent text-danger p-2 my-2 rounded" role="alert">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Display specific field errors for 'topics' #}
+        {% if form.topics.errors %}
+            <div class="bg-transparent text-red-500 p-2 my-2 rounded" role="alert">
+                {{ form.topics.errors }}
+            </div>
+        {% endif %}
+
+        {# Display help text for the topics field #}
+        {% if form.fields.topics.help_text %}
+            <p class="help-text text-muted text-center">{{ form.fields.topics.help_text }}</p>
+        {% endif %}
 
         <div class="topics-grid">
             {% for topic in form.fields.topics.queryset %}
@@ -20,7 +42,7 @@
                     type="checkbox"
                     name="topics"
                     value="{{ topic.id }}"
-                    {% if topic in form.initial.topics.all %}checked{% endif %}
+                    {% if topic.id in form.selected_topic_ids %}checked{% endif %}
                 >
                 <div class="topic-image" style="background-image: url('{{ topic.image.url }}')">
                     <div class="tick-overlay">&#10004;</div>
@@ -43,19 +65,33 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.topic-card input[type="checkbox"]').forEach(function (checkbox) {
+        const form = document.querySelector('form');
+        const topicLimitAttr = form.dataset.topicLimit;
+        const topicLimit = topicLimitAttr === 'no_limit' ? null : parseInt(topicLimitAttr);
+        const checkboxes = document.querySelectorAll('.topic-card input[type="checkbox"]');
+
+        checkboxes.forEach(function (checkbox) {
             const card = checkbox.closest('.topic-card');
 
-            // Initial state
+            // Apply 'selected' class if checkbox is checked on page load
             if (checkbox.checked) {
                 card.classList.add('selected');
             }
 
             checkbox.addEventListener('change', function () {
                 card.classList.toggle('selected', checkbox.checked);
+
+                // Client-side validation for topic limit
+                if (topicLimit !== null) {
+                    const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
+                    if (selectedCount > topicLimit) {
+                        this.checked = false; // Prevent selection
+                        card.classList.remove('selected'); // Remove selected class visually
+                        alert(`You can select only ${topicLimit} topics with your current plan.`);
+                    }
+                }
             });
         });
     });
 </script>
 {% endblock %}
-
