@@ -278,10 +278,20 @@ NEWSDATA_FOOD_DRINK_URL = (
 # Fashion
 NEWSAPI_FASHION_URL = (
     'https://newsapi.org/v2/everything?'
-    'q=fashion OR style OR trend OR designer OR runway OR apparel OR luxury fashion OR haute couture&' # Broad keywords
-    'language=en&' # Explicitly English
-    'sortBy=relevancy&' # Sort by relevance
-    'pageSize=25&' # Limit results per page (adjust as needed)
+    'q=fashion OR style OR trend OR designer OR runway OR apparel OR luxury fashion OR haute couture&'
+    'language=en&'
+    'sortBy=relevancy&'
+    'pageSize=25&'
+    f'apiKey={NEWS_API_KEY}'
+)
+
+# Cars and Transport
+NEWSAPI_CARS_TRANSPORT_URL = (
+    'https://newsapi.org/v2/everything?'
+    'q=cars OR automobile OR automotive OR transport OR transportation OR electric vehicle OR EV OR self-driving OR public transport OR train OR bus OR plane OR truck OR shipping OR vehicle OR traffic&'
+    'language=en&'
+    'sortBy=relevancy&'
+    'pageSize=25&'
     f'apiKey={NEWS_API_KEY}'
 )
 

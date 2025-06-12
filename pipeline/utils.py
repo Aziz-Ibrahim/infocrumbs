@@ -122,7 +122,10 @@ def tag_crumb_text(text):
             "fashion", "style", "trend", "designer", "runway",
             "apparel", "luxury fashion", "haute couture"
             ],
-            
+        "cars-transport": [
+            "car", "vehicle", "transport", "automotive", "driving",
+            "traffic", "road", "engine", "fuel"
+            ],
     }
 
     text_lower = text.lower()
