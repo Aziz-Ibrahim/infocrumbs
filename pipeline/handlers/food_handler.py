@@ -1,43 +1,96 @@
-from preferences.models import Topic
+# pipeline/handlers/food_drink_handler.py
+
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from django.utils.text import slugify
-from django.utils.timezone import now
+from django.utils.timezone import now as timezone_now
 
 from crumbs.models import Crumb
-from pipeline.utils import summarize_text
+from preferences.models import Topic
+from pipeline.utils import clean_text, summarize_text, tag_crumb_text
 
 
-def handle_foodcrumbs(recipes):
+def handle_food_drink_crumbs(crumb_data_list):
     """
-    Save random recipes as 'food and drinks' crumbs.
+    Handles food and drink related crumbs by creating or updating Crumb objects.
+    Each crumb is primarily associated with the 'food-and-drink' topic
+    and can receive additional tags based on its content.
+
+    Args:
+        crumb_data_list (list): List of dictionaries containing crumb data.
+
+    Returns:
+        int: Number of Crumb objects created.
     """
-    topic, _ = Topic.objects.get_or_create(name="food and drink", defaults={
-        "slug": slugify("food and drink")
-    })
+    food_drink_slug = "food-and-drink"
+    try:
+        food_drink_topic = Topic.objects.get(slug=food_drink_slug)
+    except Topic.DoesNotExist:
+        # Create the topic if it doesn't exist
+        food_drink_topic = Topic.objects.create(
+            name="food and drink",
+            slug=food_drink_slug
+        )
 
     created_count = 0
-    for recipe in recipes:
-        title = recipe.get("title", "").strip()
-        url = recipe.get("sourceUrl")
+    for item in crumb_data_list:
+        title = item.get("title", "")[:255]
+        url = item.get("url")
+        raw_summary = item.get("summary", "")
 
-        if not title or not url or \
-            Crumb.objects.filter(title=title, url=url).exists():
-                continue
+        if not title or not url:
+            print(f"Skipping food and drink crumb due to missing title or "
+                  f"URL: {item}")
+            continue
 
-        summary = recipe.get("summary") or recipe.get("instructions", "")
-        summarized = summarize_text(summary)
+        if Crumb.objects.filter(title=title, url=url).exists():
+            continue
 
         try:
-            Crumb.objects.create(
-                title=title[:255],
-                summary=summarized,
+            # 1. Clean the raw summary text
+            cleaned_content = clean_text(raw_summary)
+
+            # 2. Summarize the cleaned text
+            final_summary = summarize_text(cleaned_content) if \
+                cleaned_content else ""
+
+            # 3. Handle published_at: parse if string, make timezone-aware,
+            # else use now()
+            published_at = None
+            pub_date_str = item.get("published_at")
+            if pub_date_str:
+                parsed_dt = parse_datetime(pub_date_str)
+                if parsed_dt:
+                    if timezone.is_naive(parsed_dt):
+                        published_at = timezone.make_aware(
+                            parsed_dt, timezone.get_current_timezone())
+                    else:
+                        published_at = parsed_dt
+
+            if published_at is None:
+                published_at = timezone_now()
+
+            crumb = Crumb.objects.create(
+                title=title,
+                summary=final_summary,
                 url=url,
-                source="Spoonacular",
-                topic=topic,
-                published_at=now()
+                source=item.get("source", "Unknown Food & Drink Source"),
+                topic=food_drink_topic,  # Assign the primary topic
+                published_at=published_at,
             )
             created_count += 1
+
+            # 4. Use tag_crumb_text to find additional tags
+            text_for_tagging = f"{title} {cleaned_content}"
+            matched_topic_for_tag = tag_crumb_text(text_for_tagging)
+
+            if matched_topic_for_tag and \
+               matched_topic_for_tag != food_drink_topic:
+                crumb.tags.add(matched_topic_for_tag.name)
+
         except Exception as e:
-            print(f"Error saving food crumb: {e}")
+            print(f"Error saving food and drink crumb (Title: "
+                  f"{title[:50]}...): {e}")
             continue
 
     return created_count

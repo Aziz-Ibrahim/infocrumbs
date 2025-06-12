@@ -2,17 +2,15 @@
     {% if user_subscription %}
         <h3>Subscription Status</h3>
         <p>
-            You are subscribed to the <strong>{{ user_subscription.plan.name|capfirst }}</strong> plan.
+            You are subscribed to the <strong>{{ user_subscription.plan.name|capfirst }}</strong> plan. 
+            on {{ user_subscription.frequency.name }} basis.
         </p>
         <p>
-            Frequency: {{ user_subscription.frequency.name }}
-        </p>
-        <p>
-            Renews on: {{ user_subscription.end_date|date:"Y-m-d H:i" }}
+            You current subsription expires on: {{ user_subscription.end_date|date:"Y-m-d H:i" }} UTC.
         </p>
         <a href="{% url 'choose_plan' %}" 
         class="neon-button" aria-label="link to choose plan page">
-            Change Plan
+            Change/Renew Plan
         </a>
     {% else %}
         <h3>

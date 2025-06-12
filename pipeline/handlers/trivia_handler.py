@@ -1,40 +1,94 @@
-from django.utils.timezone import now
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from django.utils.text import slugify
+from django.utils.timezone import now as timezone_now
 
 from crumbs.models import Crumb
 from preferences.models import Topic
-from pipeline.utils import summarize_text
+from pipeline.utils import clean_text, summarize_text, tag_crumb_text
 
 
-def handle_trivia_data(fact_list):
+def handle_trivia_fun_crumbs(crumb_data_list):
     """
-    Handles trivia-related crumbs by creating or updating Crumb objects
-    based on the provided crumb data list. Each crumb is associated with
-    the 'trivia-and-fun' topic. If the topic does not exist, it will
-    print an error message and return 0.
-    :param crumb_data_list: List of dictionaries containing crumb data.
-    :return: Number of Crumb objects created.
+    Handles trivia and fun crumbs by creating or updating Crumb objects.
+    Each crumb is primarily associated with the 'trivia-and-fun' topic
+    and can receive additional tags based on its content.
+
+    Args:
+        crumb_data_list (list): List of dictionaries containing crumb data.
+
+    Returns:
+        int: Number of Crumb objects created.
     """
-    topic, _ = Topic.objects.get_or_create(name="trivia and fun", defaults={
-        "slug": slugify("trivia and fun")
-    })
+    trivia_fun_slug = "trivia-and-fun"
+    try:
+        trivia_fun_topic = Topic.objects.get(slug=trivia_fun_slug)
+    except Topic.DoesNotExist:
+        # Create the topic if it doesn't exist
+        trivia_fun_topic = Topic.objects.create(
+            name="trivia and fun",
+            slug=trivia_fun_slug
+        )
 
     created_count = 0
-    for fact in fact_list:
-        if Crumb.objects.filter(summary=fact["summary"]).exists():
+    for item in crumb_data_list:
+        title = item.get("title", "")[:255]
+        url = item.get("url")
+        raw_summary = item.get("summary", "")
+
+        if not title or not url:
+            print(f"Skipping trivia/fun crumb due to missing title or URL: "
+                  f"{item}")
+            continue
+
+        if Crumb.objects.filter(title=title, url=url).exists():
             continue
 
         try:
-            Crumb.objects.create(
-                title=fact["title"],
-                summary=summarize_text(fact["summary"]),
-                url=fact["url"],
-                source=fact["source"],
-                topic=topic,
-                published_at=now()
+            # 1. Clean the raw summary text
+            cleaned_content = clean_text(raw_summary)
+
+            # 2. Summarize the cleaned text
+            final_summary = summarize_text(cleaned_content) if \
+                cleaned_content else ""
+
+            # 3. Handle published_at: parse if string, make timezone-aware,
+            # else use now()
+            published_at = None
+            pub_date_str = item.get("published_at")
+            if pub_date_str:
+                parsed_dt = parse_datetime(pub_date_str)
+                if parsed_dt:
+                    if timezone.is_naive(parsed_dt):
+                        published_at = timezone.make_aware(
+                            parsed_dt, timezone.get_current_timezone())
+                    else:
+                        published_at = parsed_dt
+
+            if published_at is None:
+                published_at = timezone_now()
+
+            crumb = Crumb.objects.create(
+                title=title,
+                summary=final_summary,
+                url=url,
+                source=item.get("source", "Unknown Trivia/Fun Source"),
+                topic=trivia_fun_topic,  # Assign the primary topic
+                published_at=published_at,
             )
             created_count += 1
+
+            # 4. Use tag_crumb_text to find additional tags
+            text_for_tagging = f"{title} {cleaned_content}"
+            matched_topic_for_tag = tag_crumb_text(text_for_tagging)
+
+            if matched_topic_for_tag and \
+               matched_topic_for_tag != trivia_fun_topic:
+                crumb.tags.add(matched_topic_for_tag.name)
+
         except Exception as e:
-            print(f"Error saving trivia crumb: {e}")
+            print(f"Error saving trivia/fun crumb (Title: "
+                  f"{title[:50]}...): {e}")
+            continue
 
     return created_count

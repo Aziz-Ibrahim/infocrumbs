@@ -192,13 +192,35 @@ STRIPE_PRICE_LOOKUP = {
 HF_API_URL = os.environ.get('HF_API_URL')
 HF_API_TOKEN = os.environ.get('HF_API_TOKEN')
 
+# Environment News
+NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY')
+NEWSDATA_API_URL = (
+    'https://newsdata.io/api/1/latest?'
+    f'apikey={NEWSDATA_API_KEY}'
+    '&category=environment,top&language=en'
+)
+
 # News & Media APIs
 NEWS_API_KEY = os.environ.get('NEWS_API_KEY')
-NEWS_API_URL = os.environ.get('NEWS_API_URL')
+NEWS_API_URL = (
+    'https://newsapi.org/v2/top-headlines?'
+    'country=gb&'
+    f'apiKey={NEWS_API_KEY}'
+)
+NEWSDATA_WORLD_NEWS_URL = (
+    'https://newsdata.io/api/1/news?'
+    f'apikey={NEWSDATA_API_KEY}'
+    '&q=world news OR global events OR international affairs OR breaking news&category=top,politics,world&language=en'
+)
 
 # Music
-LASTFM_API_KEY = os.environ.get('LASTFM_API_KEY')
-LASTFM_API_URL = os.environ.get('LASTFM_API_URL')
+LASTFM_API_KEY = os.getenv('LASTFM_API_KEY')
+LASTFM_BASE_URL = "http://ws.audioscrobbler.com/2.0/"
+NEWSDATA_MUSIC_NEWS_URL = (
+    'https://newsdata.io/api/1/news?'
+    f'apikey={NEWSDATA_API_KEY}'  # Reusing the existing NewsData.io key
+    '&q=music OR album OR artist OR band OR song OR concert OR festival OR tour OR genre&category=music&language=en'
+)
 
 # Finance
 FINNHUB_API_KEY = os.environ.get('FINNHUB_API_KEY')
@@ -208,51 +230,50 @@ FINNHUB_API_URL = (
     f'token={FINNHUB_API_KEY}'
 )
 
-# Ninja API
-APININJA_API_KEY = os.environ.get('APININJA_API_KEY')
-APININJA_API_URL = os.environ.get('APININJA_API_URL')
-
-# Environment News
-NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY')
-NEWSDATA_API_URL = (
-    'https://newsdata.io/api/1/latest?'
-    f'apikey={NEWSDATA_API_KEY}'
-    '&category=environment,top&language=en'
-)
-
 # Sports
 THENEWS_API_KEY = os.environ.get('THENEWSAPI_API_KEY')
 THENEWSAPI_SPORTS_URL = os.environ.get('THENEWSAPI_SPORTS_URL')
-
 NEWSDATA_FITNESS_URL = (
     'https://newsdata.io/api/1/news?'
     f'apikey={NEWSDATA_API_KEY}'
     '&q=fitness OR gym OR workout OR health OR nutrition&category=health,sports&language=en'
 )
 
+# Technology
+MEDIASTACK_API_KEY = os.getenv('MEDIASTACK_API_KEY')
+MEDIASTACK_TECHNOLOGY_URL = (
+    'http://api.mediastack.com/v1/news?'
+    'categories=technology&'
+    'languages=en&'
+    f'access_key={MEDIASTACK_API_KEY}'
+)
+
 # Gardeining / Plants
 PERENUAL_API_KEY = os.environ.get('PERENUAL_API_KEY')
 PERENUAL_API_URL = os.environ.get('PERENUAL_API_URL')
 PERENUAL_GUIDE_BASE_URL = os.environ.get('PERENUAL_GUIDE_BASE_URL')
-
 TREFLE_API_KEY = os.environ.get('TREFLE_API_KEY')
 TREFLE_API_URL = os.environ.get('TREFLE_API_URL')
-
 PERMAPEOPLE_KEY_ID = os.environ.get('PERMAPEOPLE_KEY_ID')
 PERMAPEOPLE_KEY_SECRET = os.environ.get('PERMAPEOPLE_KEY_SECRET')
 PERMAPEOPLE_API_URL = os.environ.get('PERMAPEOPLE_API_URL')
 
 # Trivia / Fun
-USELESS_FACTS_API_URL = os.environ.get('USELESS_FACTS_API_URL')
-CHUCKNORRIS_API_URL = os.environ.get('CHUCKNORRIS_API_URL')
+USELESS_FACTS_API_URL = os.getenv('USELESS_FACTS_API_URL')
+CHUCKNORRIS_API_URL = os.getenv('CHUCKNORRIS_API_URL')
+OPEN_TRIVIA_API_URL = os.getenv('OPEN_TRIVIA_API_URL')
 
 # Food / Drink
-SPOONACULAR_API_KEY = os.environ.get('SPOONACULAR_API_KEY')
-SPOONACULAR_API_URL = os.environ.get('SPOONACULAR_API_URL')
-
-# Technology
-MEDIASTACK_API_KEY = os.environ.get("MEDIASTACK_API_KEY")
-MEDIASTACK_TECHNOLOGY_URL = os.environ.get("MEDIASTACK_TECHNOLOGY_URL")
+SPOONACULAR_API_KEY = os.getenv('SPOONACULAR_API_KEY')
+SPOONACULAR_API_URL = (
+    'https://api.spoonacular.com/recipes/random?'
+    f'apiKey={SPOONACULAR_API_KEY}'
+)
+NEWSDATA_FOOD_DRINK_URL = (
+    'https://newsdata.io/api/1/news?'
+    f'apikey={NEWSDATA_API_KEY}'
+    '&q=food OR drink OR recipe OR nutrition OR diet OR cooking OR restaurant OR trends&category=food&language=en'
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
