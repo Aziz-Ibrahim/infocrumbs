@@ -275,6 +275,16 @@ NEWSDATA_FOOD_DRINK_URL = (
     '&q=food OR drink OR recipe OR nutrition OR diet OR cooking OR restaurant OR trends&category=food&language=en'
 )
 
+# Fashion
+NEWSAPI_FASHION_URL = (
+    'https://newsapi.org/v2/everything?'
+    'q=fashion OR style OR trend OR designer OR runway OR apparel OR luxury fashion OR haute couture&' # Broad keywords
+    'language=en&' # Explicitly English
+    'sortBy=relevancy&' # Sort by relevance
+    'pageSize=25&' # Limit results per page (adjust as needed)
+    f'apiKey={NEWS_API_KEY}'
+)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

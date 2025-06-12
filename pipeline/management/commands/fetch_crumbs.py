@@ -10,6 +10,7 @@ from pipeline.tasks import (
     technology,
     food,
     trivia,
+    fashion,
     )
 from pipeline.handlers import (
     plants_handler,
@@ -21,6 +22,7 @@ from pipeline.handlers import (
     technology_handler,
     food_handler,
     trivia_handler,
+    fashion_handler,
     )
 
 class Command(BaseCommand):
@@ -216,6 +218,16 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f"{created_open_trivia} Open Trivia question "
                                "crumbs saved.")
+        )
+
+        # Fetches and handles NewsAPI.org Fashion News
+        self.stdout.write("Fetching fashion news from NewsAPI.org...")
+        fashion_data = fashion.fetch_newsapi_fashion_news()
+        created_fashion = fashion_handler.handle_fashion_crumbs(fashion_data)
+        total_created += created_fashion
+        self.stdout.write(
+            self.style.SUCCESS(f"{created_fashion} fashion crumbs saved from "
+                               "NewsAPI.org.")
         )
 
         # Print the total number of crumbs added

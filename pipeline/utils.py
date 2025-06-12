@@ -118,6 +118,11 @@ def tag_crumb_text(text):
         "trivia-and-fun": [
             "fact", "joke", "trivia", "laugh", "weird"
             ],
+        "fashion": [
+            "fashion", "style", "trend", "designer", "runway",
+            "apparel", "luxury fashion", "haute couture"
+            ],
+            
     }
 
     text_lower = text.lower()
