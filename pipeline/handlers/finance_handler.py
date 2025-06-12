@@ -1,37 +1,83 @@
 from django.utils.dateparse import parse_datetime
+from django.utils.text import slugify
+from django.utils.timezone import now as timezone_now
+from django.utils import timezone
 
-from pipeline.utils import summarize_text
 from crumbs.models import Crumb
 from preferences.models import Topic
+from pipeline.utils import summarize_text, clean_text, tag_crumb_text
 
 
 def handle_finance_crumbs(crumb_data_list):
     """
-    Handles finance-related crumbs by creating or updating Crumb objects
-    based on the provided crumb data list. Each crumb is associated with
-    the 'stock-crypto-finance' topic. If the topic does not exist, it will
-    print an error message and return 0.
-    :param crumb_data_list: List of dictionaries containing crumb data.
-    :return: Number of Crumb objects created.
+    Handles finance-related crumbs by creating or updating Crumb objects.
+    Each crumb is primarily associated with the 'stock-crypto-finance' topic
+    and can receive additional tags based on its content.
+
+    Args:
+        crumb_data_list (list): List of dictionaries containing crumb data.
+
+    Returns:
+        int: Number of Crumb objects created.
     """
-    topic = Topic.objects.filter(slug="stock-crypto-finance").first()
-    if not topic:
-        print("Topic 'finance' not found.")
-        return 0
+    finance_slug = "stock-crypto-finance"
+    try:
+        finance_topic = Topic.objects.get(slug=finance_slug)
+    except Topic.DoesNotExist:
+        finance_topic = Topic.objects.create(
+            name="stock, crypto & finance",
+            slug=finance_slug
+        )
 
     created_count = 0
-    for data in crumb_data_list:
-        crumb, created = Crumb.objects.get_or_create(
-            title=data["title"],
-            summary=summarize_text(data.get("summary") or data.get("description", "")),
-            url=data["url"],
-            defaults={
-                "source": data["source"],
-                "topic": topic,
-                "published_at": parse_datetime(data["published_at"]) if data["published_at"] else None,
-            }
-        )
-        if created:
+    for item in crumb_data_list:
+        title = item.get("title", "")[:255]
+        url = item.get("url")
+        raw_summary = item.get("summary", "")
+
+        if not title or not url:
+            print(f"Skipping finance crumb due to missing title or URL: {item}")
+            continue
+
+        if Crumb.objects.filter(title=title, url=url).exists():
+            continue
+
+        try:
+            cleaned_content = clean_text(raw_summary)
+            final_summary = summarize_text(cleaned_content) if cleaned_content else ""
+
+            published_at = None
+            pub_date_str = item.get("published_at")
+            if pub_date_str:
+                parsed_dt = parse_datetime(pub_date_str)
+                if parsed_dt:
+                    if timezone.is_naive(parsed_dt):
+                        published_at = timezone.make_aware(
+                            parsed_dt, timezone.get_current_timezone())
+                    else:
+                        published_at = parsed_dt
+            
+            if published_at is None:
+                published_at = timezone_now()
+
+            crumb = Crumb.objects.create(
+                title=title,
+                summary=final_summary,
+                url=url,
+                source=item.get("source", "Finnhub"),
+                topic=finance_topic,
+                published_at=published_at,
+            )
             created_count += 1
+
+            text_for_tagging = f"{title} {cleaned_content}"
+            matched_topic_for_tag = tag_crumb_text(text_for_tagging)
+            
+            if matched_topic_for_tag and matched_topic_for_tag != finance_topic:
+                crumb.tags.add(matched_topic_for_tag.name)
+
+        except Exception as e:
+            print(f"Error saving finance crumb (Title: {title[:50]}...): {e}")
+            continue
 
     return created_count

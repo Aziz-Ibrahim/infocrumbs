@@ -201,27 +201,39 @@ LASTFM_API_KEY = os.environ.get('LASTFM_API_KEY')
 LASTFM_API_URL = os.environ.get('LASTFM_API_URL')
 
 # Finance
-ALPHA_VANTAGE_API_KEY = os.environ.get('ALPHA_VANTAGE_API_KEY')
-ALPHA_VANTAGE_API_URL = os.environ.get('ALPHA_VANTAGE_API_URL')
-
 FINNHUB_API_KEY = os.environ.get('FINNHUB_API_KEY')
-FINNHUB_API_URL = os.environ.get('FINNHUB_API_URL')
+FINNHUB_API_URL = (
+    'https://finnhub.io/api/v1/news?'
+    'category=general&'
+    f'token={FINNHUB_API_KEY}'
+)
 
 # Ninja API
 APININJA_API_KEY = os.environ.get('APININJA_API_KEY')
 APININJA_API_URL = os.environ.get('APININJA_API_URL')
 
+# Environment News
+NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY')
+NEWSDATA_API_URL = (
+    'https://newsdata.io/api/1/latest?'
+    f'apikey={NEWSDATA_API_KEY}'
+    '&category=environment,top&language=en'
+)
+
 # Sports
 THENEWS_API_KEY = os.environ.get('THENEWSAPI_API_KEY')
 THENEWSAPI_SPORTS_URL = os.environ.get('THENEWSAPI_SPORTS_URL')
 
-SPORTS_API_KEY = os.environ.get('SPORTS_API_KEY')
-SPORTMONKS_API_KEY = os.environ.get('SPORTMONKS_API_KEY')
-SPORTMONKS_API_URL = os.environ.get('SPORTMONKS_API_URL')
+NEWSDATA_FITNESS_URL = (
+    'https://newsdata.io/api/1/news?'
+    f'apikey={NEWSDATA_API_KEY}'
+    '&q=fitness OR gym OR workout OR health OR nutrition&category=health,sports&language=en'
+)
 
 # Gardeining / Plants
-PARENUAL_API_KEY = os.environ.get('PARENUAL_API_KEY')
-PARENUAL_API_URL = os.environ.get('PARENUAL_API_URL')
+PERENUAL_API_KEY = os.environ.get('PERENUAL_API_KEY')
+PERENUAL_API_URL = os.environ.get('PERENUAL_API_URL')
+PERENUAL_GUIDE_BASE_URL = os.environ.get('PERENUAL_GUIDE_BASE_URL')
 
 TREFLE_API_KEY = os.environ.get('TREFLE_API_KEY')
 TREFLE_API_URL = os.environ.get('TREFLE_API_URL')
@@ -241,10 +253,6 @@ SPOONACULAR_API_URL = os.environ.get('SPOONACULAR_API_URL')
 # Technology
 MEDIASTACK_API_KEY = os.environ.get("MEDIASTACK_API_KEY")
 MEDIASTACK_TECHNOLOGY_URL = os.environ.get("MEDIASTACK_TECHNOLOGY_URL")
-
-# Environment News
-NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY')
-NEWSDATA_API_URL = os.environ.get('NEWSDATA_API_URL')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

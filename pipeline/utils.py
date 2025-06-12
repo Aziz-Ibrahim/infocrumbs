@@ -1,50 +1,64 @@
+# pipeline/utils.py
+
 import requests
+import json
 from django.conf import settings
 
-from preferences.models import Topic
+# Define constants for Hugging Face API
+HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+# Max characters to send for summarization. Adjust as needed.
+MAX_SUMMARY_INPUT_LENGTH = 1000
+# Timeout for the API request in seconds
+HF_API_TIMEOUT = 30
 
 
-HF_API_URL = settings.HF_API_URL
-HF_API_TOKEN = settings.HF_API_TOKEN
-
-headers = {
-    "Authorization": f"Bearer {HF_API_TOKEN}"
-}
-
-def summarize_text(text, min_length=20, max_length=100):
+def summarize_text(text):
     """
-    Sends text to Hugging Face's BART summarization model
-    and returns the summary.
+    Sends text to Hugging Face API for summarization.
+    Truncates text to MAX_SUMMARY_INPUT_LENGTH before sending.
+    Returns an empty string if summarization fails or times out.
     """
     if not text:
         return ""
 
-    text = (text or "").strip()
-    if len(text) > 500:
-        text = text[:500] + "..."
+    # Ensure API key is set
+    api_key = getattr(settings, 'HF_API_TOKEN', None)
+    if not api_key:
+        print("HuggingFace API key is not set in Django settings.")
+        return ""
 
-    payload = {
-        "inputs": text,
-        "parameters": {
-            "min_length": min_length,
-            "max_length": max_length
-        }
-    }
+    headers = {"Authorization": f"Bearer {api_key}"}
+
+    # Truncate text to avoid excessively long inputs
+    truncated_text = text[:MAX_SUMMARY_INPUT_LENGTH]
+
+    payload = {"inputs": truncated_text}
 
     try:
         response = requests.post(
-            HF_API_URL,
+            HUGGINGFACE_API_URL,
             headers=headers,
             json=payload,
-            timeout=15
-            )
-        response.raise_for_status()
+            timeout=HF_API_TIMEOUT  # Use the defined timeout
+        )
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
         result = response.json()
-        if isinstance(result, list) and "summary_text" in result[0]:
+
+        if result and isinstance(result, list) and result[0].get("summary_text"):
             return result[0]["summary_text"]
+        return ""  # Return empty if no summary text found
+    except requests.exceptions.Timeout:
+        print(f"HuggingFace summarization error: Read timed out. "
+              f"(timeout={HF_API_TIMEOUT}s)")
+        return ""  # Return empty string on timeout
+    except requests.exceptions.RequestException as e:
+        print(f"HuggingFace summarization API request error: {e}")
+        return ""  # Return empty string on other request errors
+    except json.JSONDecodeError as e:
+        print(f"HuggingFace summarization JSON decoding error: {e}")
         return ""
     except Exception as e:
-        print(f"HuggingFace summarization error: {e}")
+        print(f"Unexpected HuggingFace summarization error: {e}")
         return ""
 
 
@@ -55,6 +69,7 @@ def clean_text(text):
     """
     if not text:
         return ""
+    # Simple split and dedup by sentences. Consider more robust NLP for production.
     parts = text.strip().split('. ')
     seen = set()
     deduped = []
@@ -70,8 +85,10 @@ def tag_crumb_text(text):
     Attempt to match crumb text to a topic by checking for keywords.
     Returns the first matching Topic object, or None if no match is found.
     """
+    from preferences.models import Topic # Import here to avoid circular dependencies
+
     if not text:
-        return []
+        return None
 
     keywords_map = {
         "world-news": [
@@ -101,13 +118,12 @@ def tag_crumb_text(text):
         "trivia-and-fun": [
             "fact", "joke", "trivia", "laugh", "weird"
             ],
-        # Placeholder for any additional topics
     }
 
     text_lower = text.lower()
     for slug, keywords in keywords_map.items():
         if any(keyword in text_lower for keyword in keywords):
+            # Return the Topic object directly
             return Topic.objects.filter(slug=slug).first()
 
     return None
-

@@ -1,36 +1,84 @@
-from datetime import datetime
+from django.utils.dateparse import parse_datetime
+from django.utils.text import slugify
+from django.utils import timezone
+from django.utils.timezone import now as timezone_now
 
-from pipeline.utils import summarize_text
 from crumbs.models import Crumb
 from preferences.models import Topic
+from pipeline.utils import summarize_text, clean_text, tag_crumb_text
 
 
-def save_sports_articles(articles):
-    topic = Topic.objects.filter(slug="sports-and-fitness").first()
-    if not topic:
-        print("Topic 'sports and fitness' not found.")
-        return 0
+def handle_sports_crumbs(crumb_data_list):
+    """
+    Handles sports-related crumbs by creating or updating Crumb objects.
+    Each crumb is primarily associated with the 'sports-and-fitness' topic
+    and can receive additional tags based on its content.
+
+    Args:
+        crumb_data_list (list): List of dictionaries containing crumb data.
+
+    Returns:
+        int: Number of Crumb objects created.
+    """
+    sports_slug = "sports-and-fitness"
+    try:
+        sports_topic = Topic.objects.get(slug=sports_slug)
+    except Topic.DoesNotExist:
+        sports_topic = Topic.objects.create(
+            name="sports and fitness",
+            slug=sports_slug
+        )
 
     created_count = 0
-    for article in articles:
-        if Crumb.objects.filter(
-            title=article['title'],
-            url=article['url']
-        ).exists():
+    for item in crumb_data_list:
+        title = item.get("title", "")[:255]
+        url = item.get("url")
+        raw_summary = item.get("summary", "")
+
+        if not title or not url:
+            print(f"Skipping sports crumb due to missing title or URL: {item}")
+            continue
+
+        if Crumb.objects.filter(title=title, url=url).exists():
             continue
 
         try:
-            Crumb.objects.create(
-                title=article["title"][:255],
-                summary=summarize_text(article.get("summary") or article.get("description", "")),
-                url=article["url"],
-                source=article.get("source", "Unknown"),
-                topic=topic,
-                published_at=datetime.fromisoformat(article["published_at"].replace("Z", "+00:00")),
+            cleaned_content = clean_text(raw_summary)
+            final_summary = summarize_text(cleaned_content) if \
+                cleaned_content else ""
+
+            published_at = None
+            pub_date_str = item.get("published_at")
+            if pub_date_str:
+                parsed_dt = parse_datetime(pub_date_str)
+                if parsed_dt:
+                    if timezone.is_naive(parsed_dt):
+                        published_at = timezone.make_aware(
+                            parsed_dt, timezone.get_current_timezone())
+                    else:
+                        published_at = parsed_dt
+
+            if published_at is None:
+                published_at = timezone_now()
+
+            crumb = Crumb.objects.create(
+                title=title,
+                summary=final_summary,
+                url=url,
+                source=item.get("source", "Sports API"),
+                topic=sports_topic,
+                published_at=published_at,
             )
             created_count += 1
+
+            text_for_tagging = f"{title} {cleaned_content}"
+            matched_topic_for_tag = tag_crumb_text(text_for_tagging)
+
+            if matched_topic_for_tag and matched_topic_for_tag != sports_topic:
+                crumb.tags.add(matched_topic_for_tag.name)
+
         except Exception as e:
-            print(f"Error saving sports article: {e}")
+            print(f"Error saving sports crumb (Title: {title[:50]}...): {e}")
             continue
 
     return created_count
