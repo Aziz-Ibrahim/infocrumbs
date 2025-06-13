@@ -295,6 +295,16 @@ NEWSAPI_CARS_TRANSPORT_URL = (
     f'apiKey={NEWS_API_KEY}'
 )
 
+# DIY
+NEWSAPI_DIY_URL = (
+    'https://newsapi.org/v2/everything?'
+    'q=DIY OR "do it yourself" OR "home improvement" OR craft OR building OR remodel OR renovate OR fix OR repair OR woodworking OR gardening OR hacks OR tips OR guide OR tutorial&'
+    'language=en&'
+    'sortBy=relevancy&'
+    'pageSize=25&'
+    f'apiKey={NEWS_API_KEY}'
+)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
