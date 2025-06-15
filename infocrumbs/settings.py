@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from pathlib import Path
-import os
 
+import os
+import dj_database_url
+from pathlib import Path
 if os.path.exists('env.py'):
     import env
 
@@ -20,21 +21,22 @@ if os.path.exists('env.py'):
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m&om&9$k0u*tu+eaz6ydz=ie9e!+-d4u%o$n+(=jh@=o7f+mtw'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'infocrumbs-9d4b700e944a.herokuapp.com',
+]
 
 
 # Application definition
@@ -49,12 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',  # required by allauth
     'taggit',
 
-    #Third-party apps
-    'allauth',
-    'allauth.account',
-    'crispy_forms',
-    'crispy_bootstrap5',
-
     # Custom apps
     'accounts',
     'core',
@@ -64,6 +60,13 @@ INSTALLED_APPS = [
     'pipeline',
     'preferences',
     'subscriptions',
+
+    #Third-party apps
+    'allauth',
+    'allauth.account',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -72,23 +75,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-SITE_ID = 1
-
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Set of allowed login methods
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_FORMS = {
-    'signup': 'accounts.forms.CustomSignupForm'
-}
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-
-CRISPY_ALLOWED_TEMPLATE_PACK = 'bootstrap5'
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -99,6 +88,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'infocrumbs.urls'
+
+CRISPY_ALLOWED_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 TEMPLATES = [
     {
@@ -115,19 +107,34 @@ TEMPLATES = [
     },
 ]
 
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Set of allowed login methods
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm'
+}
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
 WSGI_APPLICATION = 'infocrumbs.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
+else: 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -164,9 +171,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
 # Stripe
