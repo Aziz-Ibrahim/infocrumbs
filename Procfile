@@ -1,1 +1,1 @@
-web: gunicorn infocrumbs.wsgi
+web: gunicorn infocrumbs.wsgi --log-file -
