@@ -5,10 +5,10 @@ from preferences.models import Topic
 
 
 class Crumb(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=1000)
     summary = models.TextField()
-    url = models.URLField()
-    source = models.CharField(max_length=255)
+    url = models.URLField(max_length=2000, unique=True)
+    source = models.CharField(max_length=500)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     tags = TaggableManager(blank=True)
     published_at = models.DateTimeField()
