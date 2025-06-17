@@ -25,7 +25,7 @@ def handle_environment_articles(articles):
     except Topic.DoesNotExist:
         # Create the topic if it doesn't exist
         environment_topic = Topic.objects.create(
-            name="Environment",
+            name="environment",
             slug=environment_slug
         )
 

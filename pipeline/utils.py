@@ -1,15 +1,14 @@
-# pipeline/utils.py
-
 import requests
 import json
 from django.conf import settings
+
 
 # Define constants for Hugging Face API
 HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 # Max characters to send for summarization. Adjust as needed.
 MAX_SUMMARY_INPUT_LENGTH = 1000
 # Timeout for the API request in seconds
-HF_API_TIMEOUT = 30
+HF_API_TIMEOUT = 90
 
 
 def summarize_text(text):
@@ -39,12 +38,15 @@ def summarize_text(text):
             HUGGINGFACE_API_URL,
             headers=headers,
             json=payload,
-            timeout=HF_API_TIMEOUT  # Use the defined timeout
+            timeout=HF_API_TIMEOUT
         )
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+        response.raise_for_status()
         result = response.json()
 
-        if result and isinstance(result, list) and result[0].get("summary_text"):
+        if result and isinstance(
+            result,
+            list
+            ) and result[0].get("summary_text"):
             return result[0]["summary_text"]
         return ""  # Return empty if no summary text found
     except requests.exceptions.Timeout:
@@ -69,7 +71,7 @@ def clean_text(text):
     """
     if not text:
         return ""
-    # Simple split and dedup by sentences. Consider more robust NLP for production.
+# Simple split and dedup by sentences. Consider more robust NLP for production.
     parts = text.strip().split('. ')
     seen = set()
     deduped = []
@@ -85,7 +87,7 @@ def tag_crumb_text(text):
     Attempt to match crumb text to a topic by checking for keywords.
     Returns the first matching Topic object, or None if no match is found.
     """
-    from preferences.models import Topic # Import here to avoid circular dependencies
+    from preferences.models import Topic
 
     if not text:
         return None

@@ -3,10 +3,10 @@
         "model": "preferences.topic",
         "pk": 1,
         "fields": {
-            "name": "arts & crafts",
-            "slug": "arts-crafts",
+            "name": "trivia and fun",
+            "slug": "trivia-and-fun",
             "description": "",
-            "image": "topics/arts.png"
+            "image": "topics/trivia.png"
         }
     },
     {
@@ -23,8 +23,8 @@
         "model": "preferences.topic",
         "pk": 3,
         "fields": {
-            "name": "AI & computing",
-            "slug": "ai-computing",
+            "name": "technology",
+            "slug": "technology",
             "description": "",
             "image": "topics/computing.png"
         }
@@ -113,8 +113,8 @@
         "model": "preferences.topic",
         "pk": 12,
         "fields": {
-            "name": "climate and weather",
-            "slug": "climate-and-weather",
+            "name": "environment",
+            "slug": "environment",
             "description": "",
             "image": "topics/weather.png"
         }
