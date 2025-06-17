@@ -1,4 +1,4 @@
-# InfoCrumbs: Your Personalized Content Dashboard
+# [InfoCrumbs](https://infocrumbs-9d4b700e944a.herokuapp.com/): Summarized insights. Personalized for you.
 
 ## Project Overview
 
