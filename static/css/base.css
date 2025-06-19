@@ -209,3 +209,17 @@ footer a:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px var(--neon-green);
 }
+
+
+/* profile page/preferences include */
+
+.dark-list-group {
+    background-color: var(--bg-alt);
+    color: var(--text-light);
+}
+
+.dark-list-group .list-group-item {
+    background-color: var(--bg-dark);
+    border-color: var(--border-gradient);
+    color: var(--text-light);
+}

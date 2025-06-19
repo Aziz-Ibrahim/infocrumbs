@@ -1,47 +1,32 @@
-
-
+{% load static %}
 <h3>Your Topic Preferences</h3>
 
-<div class="preferences-container"> 
-    <div class="topics-grid">
-        {% for topic in topics %}
-            <label class="topic-card">
-                <input
-                    type="checkbox"
-                    name="topics"
-                    value="{{ topic.id }}"
-                    disabled
-                    checked
-                >
-                <div class="topic-image" 
-                style="background-image: url('{{ topic.image.url }}')">
-                    <div class="tick-overlay">&#10004;</div>
-                </div>
-                <div class="topic-info text-center">
-                    <h5>{{ topic.name }}</h5>
-                    <p>{{ topic.description }}</p>
-                </div>
-            </label>
-        {% empty %}
-            <p>No topics selected yet.</p>
-        {% endfor %}
-    </div>
+<div class="list-group dark-list-group">
+    {% for topic in topics %}
+        <div class="list-group-item d-flex align-items-start">
+            <img 
+                src="{% static topic.image|default:'images/topics/default.jpg' %}" 
+                alt="{{ topic.name }}" 
+                class="me-3 rounded" 
+                style="width: 80px; height: 100px; object-fit: cover;"
+            >
+            <div class="flex-grow-1">
+                <p class="mb-1">{{ topic.name }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p>No topics selected yet.</p>
+    {% endfor %}
 </div>
 
 <div class="text-center my-4">
     {% if user_subscription %}
-        <a 
-            href="{% url 'set_preferences' %}" 
-            class="neon-button"
-            aria-label="link to change topic preferences page">
-                Edit Topic Preferences
+        <a href="{% url 'set_preferences' %}" class="neon-button">
+            Edit Topic Preferences
         </a>
     {% else %}
-        <a 
-            href="{% url 'choose_plan' %}" 
-            class="neon-button"
-            aria-label="link to change topic preferences page">
-                Edit Topic Preferences
+        <a href="{% url 'choose_plan' %}" class="neon-button">
+            Edit Topic Preferences
         </a>
     {% endif %}
 </div>
