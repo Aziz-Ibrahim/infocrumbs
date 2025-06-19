@@ -3,8 +3,10 @@
 {% load crispy_forms_tags %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/preferences.css' %}">
+<link rel="stylesheet" href="{% static 'preferences/css/preferences.css' %}">
 {% endblock %}
+
+{% block title %}Set Preferences{% endblock %}
 
 {% block content %}
 <div class="preferences-container">

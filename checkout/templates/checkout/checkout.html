@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+    <link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
 {% endblock %}
 
 {% block title %}Checkout - {{ plan.get_name_display }} Plan{% endblock %}
@@ -89,5 +89,5 @@
     {# Pass user data safely as JSON #}
     {{ request.user.get_full_name|default:request.user.username|json_script:"id_user_full_name" }}
     {{ request.user.email|json_script:"id_user_email" }}
-    <script src="{% static 'js/stripe_elements.js' %}"></script>
+    <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}

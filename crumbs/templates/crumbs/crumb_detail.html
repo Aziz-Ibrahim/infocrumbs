@@ -2,7 +2,11 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/crumbs.css' %}">
+    <link rel="stylesheet" href="{% static 'crumbs/css/crumbs.css' %}">
+{% endblock %}
+
+{% block title %}
+    {{ crumb.title }}
 {% endblock %}
 
 {% block content %}
@@ -73,6 +77,6 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/comments.js' %}"></script>
-    <script src="{% static 'js/saved.js' %}"></script>
+    <script src="{% static 'feedback/js/comments.js' %}"></script>
+    <script src="{% static 'feedback/js/saved.js' %}"></script>
 {% endblock %}
