@@ -46,7 +46,7 @@
                     value="{{ topic.id }}"
                     {% if topic.id in form.selected_topic_ids %}checked{% endif %}
                 >
-                <div class="topic-image" style="background-image: url('{{ topic.image.url }}')">
+                <div class="topic-image" style="background-image: url('{% static topic.image %}')">
                     <div class="tick-overlay">&#10004;</div>
                 </div>
                 <div class="topic-info text-center">

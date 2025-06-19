@@ -4,10 +4,17 @@ from django.utils.text import slugify
 
 
 class Topic(models.Model):
+    """
+    Model representing a topic that users can subscribe to.
+    Each topic has a name, a slug for URL purposes, a description, and 
+    an image.
+    The slug is automatically generated from the name and is unique.
+    If a slug already exists, it appends a number to make it unique.
+    """
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='topics/', blank=True, null=True)
+    image = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -22,8 +29,17 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
+
 class UserPreference(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    """
+    Model representing user preferences for topics.
+    Each user can have multiple topics they are interested in.
+    The user is linked to the Django user model.
+    The topics are stored as a many-to-many relationship.
+    """
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+        )
     topics = models.ManyToManyField(Topic)
 
     def __str__(self):
