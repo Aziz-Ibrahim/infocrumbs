@@ -7,7 +7,12 @@ from datetime import timedelta
 from .models import SubscriptionPlan, UserSubscription, SubscriptionFrequency
 from .utils import calculate_subscription_price
 
+
+@login_required
 def choose_plan(request):
+    """
+    Displays available subscription plans and their frequencies.
+    """
     plans = SubscriptionPlan.objects.all()
     frequencies = SubscriptionFrequency.objects.all()
 
@@ -27,8 +32,10 @@ def choose_plan(request):
                     'price': price,
                 })
             else:
-                print(f"Warning: Could not calculate price for plan '{plan.name}' and duration '{freq.duration_days}'")
-
+                print(
+                    f"Warning: Could'nt calculate price for plan '{plan.name}' "
+                    f"and duration '{freq.duration_days}'"
+                )
 
         plan_options.append({
             'id': plan.id,
@@ -44,6 +51,9 @@ def choose_plan(request):
 
 @login_required
 def subscribe(request, plan_id):
+    """
+    Handles the subscription process for a user.
+    """
     plan = get_object_or_404(SubscriptionPlan, id=plan_id)
     frequency_id = request.GET.get('frequency')
 
@@ -52,11 +62,13 @@ def subscribe(request, plan_id):
 
     frequency = get_object_or_404(SubscriptionFrequency, id=frequency_id)
 
-    final_price = calculate_subscription_price(plan.name, frequency.duration_days)
+    final_price = calculate_subscription_price(
+        plan.name,
+        frequency.duration_days
+    )
 
     if final_price is None:
         return redirect('choose_plan')
-
 
     context = {
         'plan': plan,
@@ -72,6 +84,9 @@ def subscribe(request, plan_id):
 
 @login_required
 def subscription_status(request):
+    """
+    Displays the current subscription status of the user.
+    """
     try:
         subscription = request.user.usersubscription
     except UserSubscription.DoesNotExist:

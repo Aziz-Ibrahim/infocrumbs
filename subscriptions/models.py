@@ -1,9 +1,13 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from datetime import timedelta
 
 
 class SubscriptionPlan(models.Model):
+    """
+    Represents a subscription plan with different options.
+    """
     PLAN_CHOICES = [
         ('basic', 'Basic'),
         ('premium', 'Premium'),
@@ -17,6 +21,9 @@ class SubscriptionPlan(models.Model):
 
 
 class SubscriptionFrequency(models.Model):
+    """
+    Represents the frequency of subscription billing.
+    """
     name = models.CharField(max_length=20, unique=True)
     duration_days = models.PositiveIntegerField()
     discount_percent = models.PositiveIntegerField(default=0)
@@ -26,9 +33,13 @@ class SubscriptionFrequency(models.Model):
 
 
 class UserSubscription(models.Model):
-    user = models.OneToOneField(
+    """
+    Represents a user's subscription to a plan with a specific frequency.
+    """
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='subscriptions'
     )
     plan = models.ForeignKey(
         SubscriptionPlan,
@@ -40,17 +51,40 @@ class UserSubscription(models.Model):
         on_delete=models.SET_NULL,
         null=True
     )
-    start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField()
+    start_date = models.DateTimeField(blank=True)
+    end_date = models.DateTimeField(blank=True)
     active = models.BooleanField(default=False)
     stripe_payment_intent_id = models.CharField(
         max_length=255, blank=True, null=True, unique=True
-        )
+    )
 
+    def save(self, *args, **kwargs):
+        # Duration of this subscription
+        duration = timedelta(days=self.frequency.duration_days)
 
-    def __str__(self):
-        return f"{self.user.username} - {self.plan.name}"
+        # Get user's most recent active subscription
+        latest_sub = UserSubscription.objects.filter(
+            user=self.user,
+            end_date__gte=timezone.now()
+        ).order_by('-end_date').first()
+
+        # Only override start/end if not set (e.g., on creation)
+        if not self.start_date or not self.end_date:
+            if latest_sub and latest_sub.plan == self.plan and \
+                latest_sub.frequency == self.frequency:
+                # Extend existing subscription
+                self.start_date = latest_sub.end_date
+            else:
+                # Start after most recent one ends, or now
+                self.start_date = latest_sub.end_date if \
+                    latest_sub else timezone.now()
+
+            self.end_date = self.start_date + duration
+
+        super().save(*args, **kwargs)
 
     def is_active(self):
         return self.active and self.end_date > timezone.now()
 
+    def __str__(self):
+        return f"{self.user.username} - {self.plan.name} ({self.frequency})"
