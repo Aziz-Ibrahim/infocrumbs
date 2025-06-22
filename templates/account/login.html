@@ -4,30 +4,35 @@
 
 {% block title %}Login{% endblock %}
 
-{% block content %}
-<div class="container login-container gradient-border glow">
-    <h2 class="text-light">
+{% block account_content %}
+    <h2 class="text-light text-center mb-4">
         Welcome Back
     </h2>
-    <div class="row">
-        <div class="col col-md-6 text-light login-form">
-                <form method="post" action="{% url 'account_login' %}">
-                    {% csrf_token %}
-                    {{ form|crispy }}
+    <div class="row justify-content-center"> {# Center the form column within the larger account container #}
+        {# Use col-12 for full width on small screens, col-lg-8 for wider on large screens #}
+        <div class="col-12 col-lg-8 text-light login-form">
+            <form method="post" action="{% url 'account_login' %}">
+                {% csrf_token %}
+                {{ form|crispy }}
 
-                    <button type="submit" class="neon-button">Log In</button>
+                <div class="d-grid gap-2 mt-3 mb-3"> {# d-grid for full-width button, mt-3 for spacing #}
+                    <button type="submit" class="neon-button btn btn-primary" aria-label="Log in to your account">Log In</button>
+                </div>
 
-                    <p class="text-sm mt-3">
-                        Don't have an account?
-                        <a 
-                        href="{% url 'account_signup' %}" 
-                        style="color: var(--neon-blue); text-decoration: none;"
-                        aria-label="link to sign up page">
-                            Sign up
-                        </a>
-                    </p>
-                </form>
+                <p class="text-center text-sm"> {# Added text-center #}
+                    Don't have an account?
+                    <a
+                    href="{% url 'account_signup' %}"
+                    class="link-light" {# Replaced inline style with Bootstrap class #}
+                    aria-label="Link to sign up page">
+                        Sign up
+                    </a>
+                </p>
+                {# Optional: Link to forgot password, common in login forms #}
+                <p class="text-center mt-2">
+                    <a href="{% url 'account_reset_password' %}" class="link-light" aria-label="Forgot your password?">Forgot password?</a>
+                </p>
+            </form>
         </div>
     </div>
-</div>
-{% endblock %}
+{% endblock account_content %}

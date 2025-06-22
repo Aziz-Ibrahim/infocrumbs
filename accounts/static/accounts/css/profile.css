@@ -2,10 +2,8 @@
 
 /* __Login Page__ */
 .login-container {
-    min-width: 950px;
     width: 100%;
     margin: 100px auto 60px;
-    /* offset header and footer */
     padding: 1rem;
     background-color: var(--bg-dark);
     border-radius: 8px;
@@ -31,7 +29,6 @@
 
 
 /* __Sign Up Page__ */
-/* ____Form group spacing and label styling____ */
 form .mb-3 {
     margin-bottom: 1rem;
 }
@@ -42,7 +39,6 @@ form label {
     margin-bottom: 0.5rem;
 }
 
-/* Input field styling */
 form input[type="text"],
 form input[type="email"],
 form input[type="password"],
@@ -62,7 +58,6 @@ form textarea {
         box-shadow 0.15s ease-in-out;
 }
 
-/* Focus state */
 form input:focus,
 form select:focus,
 form textarea:focus {
@@ -74,23 +69,85 @@ form textarea:focus {
 
 /* Profile Page */
 .account-container {
-    min-width: 950px;
     margin: 10px auto 60px;
-    /* offset header and footer */
     padding: 1rem;
 }
 
-.profile-tabs {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
+/* Base styles for vertical nav-pills sidebar */
+.nav-pills {
+    border-bottom: none; /* Bootstrap default removes horizontal border */
+    align-items: flex-start; /* Align items to the start in column layout */
+    padding: 0;
+    margin: 0;
 }
+
+.nav-pills .nav-item {
+    width: 100%;
+    margin-bottom: 0.5rem; /* Space between vertical tabs */
+}
+
+.nav-pills .nav-link {
+    display: block; /* Make the whole link clickable block */
+    width: 100%;
+    text-align: left; /* Align text to the left within vertical tabs */
+    border: 1px solid transparent; /* Ensure border is consistent */
+    transition: all 0.3s ease;
+    padding: 0.75rem 1rem; /* Standard padding */
+}
+
+/* Active tab styling for nav-pills */
+.nav-pills .nav-link.active {
+    background-color: var(--bg-light) !important;
+    color: var(--neon-green) !important;
+    border: 1px solid var(--neon-blue) !important; /* General border for active */
+    box-shadow: 0 0 8px var(--neon-blue);
+    font-weight: bold;
+    transform: none; /* No vertical transform for pills */
+}
+
+/* Hover style for non-active nav-pills */
+.nav-pills .nav-link:not(.active):hover {
+    color: var(--neon-orange) !important;
+    border-color: var(--neon-orange) !important;
+}
+
+/* Media query for medium devices (md) and up to define sidebar appearance */
+@media (min-width: 768px) {
+    .nav-pills {
+        flex-direction: column !important; /* Force column layout for sidebar */
+        border-right: 1px solid var(--border-gradient); /* Add a border to the right of the sidebar */
+        padding-right: 1rem; /* Space between sidebar and content */
+        margin-top: 0; /* Ensure tabs align with top of content */
+        align-self: flex-start; /* Align sidebar to the top of the flex container */
+    }
+
+    .nav-pills .nav-link {
+        padding: 0.75rem 1.25rem; /* Larger padding for larger screens */
+        border: 1px solid transparent; /* Reset border for vertical layout */
+    }
+
+    .nav-pills .nav-link.active {
+        border-right: 3px solid var(--neon-green) !important; /* Emphasize active with thicker right border */
+        border-left: 1px solid transparent; /* Reset left border */
+        box-shadow: none; /* Remove box-shadow to be cleaner on sidebar */
+    }
+
+    .nav-pills .nav-link:not(.active) {
+        border-right: 1px solid var(--border-gradient); /* Consistent right border for others */
+        border-left: none; /* Remove left border */
+    }
+    
+    /* Ensure content aligns with the top of the tabs when they are in a sidebar */
+    .profile-placeholder {
+        margin-top: 0 !important; 
+    }
+}
+
 
 .tab-btn {
     padding: 0.5rem 1rem;
     border: none;
-    background: var(--neon-accent);
+    background: var(--neon-blue);
     color: white;
     border-radius: 8px;
     cursor: pointer;
@@ -98,11 +155,11 @@ form textarea:focus {
 }
 
 .tab-btn:hover {
-    background: var(--neon-accent-dark);
+    background: var(--neon-purple);
 }
 
 .profile-placeholder {
-    margin-top: 2rem;
+    margin-top: 2rem; /* Default margin for smaller screens */
 }
 
 
@@ -111,15 +168,33 @@ form textarea:focus {
 .preferences-container {
     max-width: 1200px;
     margin: 100px auto 60px;
-    /* offset header and footer */
     padding: 1rem;
 }
 
 .topics-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 2rem;
 }
+
+@media (min-width: 576px) {
+    .topics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .topics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .topics-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 
 .topic-card {
     position: relative;
@@ -146,7 +221,6 @@ form textarea:focus {
 .topic-image {
     width: 100%;
     aspect-ratio: 1 / 1;
-    /* Ensures square tiles */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -171,7 +245,7 @@ form textarea:focus {
     border-radius: 50%;
     display: none;
     z-index: 2;
-    box-shadow: 0 0 10px var(--neon-accent);
+    box-shadow: 0 0 10px var(--neon-blue);
 }
 
 .topic-card.selected .tick-overlay {

@@ -8,89 +8,124 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block account_content %}
-<h2>My Account</h2>
+<h2 class="text-light mb-4">My Account</h2>
 
-<!-- User Details -->
-<section class="mb-4 p-3 rounded bg-dark text-light">
-    <h3>My Details</h3>
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
+<section class="mb-4 p-3 rounded bg-dark text-light border border-secondary" aria-labelledby="user-details-heading">
+    <h3 id="user-details-heading" class="mb-3">My Details</h3>
+    <div class="row">
+        <div class="col-12 col-md-6 mb-2">
+            <p class="mb-0"><strong>Username:</strong> {{ user.username }}</p>
+        </div>
+        <div class="col-12 col-md-6 mb-2">
+            <p class="mb-0"><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+        <div class="col-12 col-md-6 mb-2">
+            <p class="mb-0"><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+        <div class="col-12 col-md-6 mb-2">
+            <p class="mb-0"><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
+        </div>
+    </div>
 </section>
 
-<!-- Profile Tabs -->
-<ul class="nav nav-tabs mb-4" id="profileTab">
-    <li class="nav-item">
-        <a 
-        class="nav-link text-light bg-dark border-light" 
-        data-url="{% url 'load_subscription_partial' %}" 
-        href="#"
-        aria-label="open subscriptions tab"
-        >
-            Subscription
-        </a>
-    </li>
-    <li class="nav-item">
-        <a 
-        class="nav-link text-light bg-dark border-light" 
-        data-url="{% url 'load_preferences_partial' %}" 
-        href="#"
-        aria-label="open topic preferences tab">
-            Topic Preferences
-        </a>
-    </li>
-    <li class="nav-item">
-        <a 
-        class="nav-link text-light bg-dark border-light" 
-        data-url="{% url 'load_saved_crumbs_partial' %}" 
-        href="#"
-        aria-label="open saved crumbs tab">
-            Saved Crumbs
-        </a>
-    </li>
-    <li class="nav-item">
-        <a 
-        class="nav-link text-light bg-dark border-light" 
-        data-url="{% url 'load_comments_partial' %}" 
-        href="#"
-        aria-label="open your comment history tab">
-            Comment History
-        </a>
-    </li>
-    <li class="nav-item">
-        <a 
-        class="nav-link active text-light bg-dark border-light" 
-        data-url="{% url 'load_account_details_partial' %}" 
-        href="#"
-        aria-label="open chage details tab">
-            Edit Details
-        </a>
-    </li>
-</ul>
+<div class="row">
+    <div class="col-12 col-md-3 mb-4 mb-md-0">
+        <button class="btn btn-outline-light d-md-none w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#profileTabsCollapse" aria-expanded="false" aria-controls="profileTabsCollapse" aria-label="Toggle profile sections">
+            Select Section <i class="fas fa-chevron-down ms-2"></i>
+        </button>
 
-<!-- Placeholder for dynamic content -->
-<div id="profile-placeholder" class="profile-placeholder">
-    <p>Select a section to view more details.</p>
+        <div class="collapse d-md-block" id="profileTabsCollapse">
+            <ul class="nav nav-pills flex-column border border-secondary rounded p-2" id="profileTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a
+                    class="nav-link text-light bg-dark border-0 rounded-0 mb-1"
+                    data-url="{% url 'load_subscription_partial' %}"
+                    href="#"
+                    aria-label="Open subscriptions tab"
+                    aria-controls="subscription-pane"
+                    role="tab">
+                        Subscription
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                    class="nav-link text-light bg-dark border-0 rounded-0 mb-1"
+                    data-url="{% url 'load_preferences_partial' %}"
+                    href="#"
+                    aria-label="Open topic preferences tab"
+                    aria-controls="preferences-pane"
+                    role="tab">
+                        Topic Preferences
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                    class="nav-link text-light bg-dark border-0 rounded-0 mb-1"
+                    data-url="{% url 'load_saved_crumbs_partial' %}"
+                    href="#"
+                    aria-label="Open saved crumbs tab"
+                    aria-controls="saved-crumbs-pane"
+                    role="tab">
+                        Saved Crumbs
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                    class="nav-link text-light bg-dark border-0 rounded-0 mb-1"
+                    data-url="{% url 'load_comments_partial' %}"
+                    href="#"
+                    aria-label="Open your comment history tab"
+                    aria-controls="comments-pane"
+                    role="tab">
+                        Comment History
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                    class="nav-link active text-light bg-dark border-0 rounded-0 mb-1"
+                    data-url="{% url 'load_account_details_partial' %}"
+                    href="#"
+                    aria-label="Open account details editing tab"
+                    aria-controls="account-details-pane"
+                    role="tab">
+                        Edit Details
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-9">
+        <div id="profile-placeholder" class="profile-placeholder p-3 border border-secondary rounded overflow-x-auto" role="tabpanel">
+            <p>Select a section to view more details.</p>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const tabs = document.querySelectorAll(".nav-tabs .nav-link");
+    const tabs = document.querySelectorAll(".nav-pills .nav-link");
     const placeholder = document.getElementById("profile-placeholder");
+    const profileTabsCollapse = document.getElementById("profileTabsCollapse");
+
 
     tabs.forEach(tab => {
         tab.addEventListener("click", (e) => {
-            e.preventDefault();  // Prevent default anchor behavior
+            e.preventDefault();
 
-            // Remove active class from all tabs
             tabs.forEach(t => t.classList.remove("active"));
-
-            // Add active class to the clicked tab
             tab.classList.add("active");
 
-            // Load the content
+            if (profileTabsCollapse && !profileTabsCollapse.classList.contains('show')) {
+                const toggleButton = document.querySelector('[data-bs-target="#profileTabsCollapse"]');
+                if (toggleButton && window.innerWidth < 768) {
+                    toggleButton.click();
+                }
+            }
+
+
             const url = tab.dataset.url;
             fetch(url)
                 .then(response => response.json())
@@ -108,9 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // trigger the first tab on page load
     if (tabs.length > 0) {
-        tabs[0].click();
+        const activeTab = document.querySelector(".nav-pills .nav-link.active");
+        if (activeTab) {
+            activeTab.click();
+        } else {
+            tabs[0].click();
+        }
     }
 });
 </script>

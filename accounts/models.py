@@ -21,14 +21,17 @@ class CustomUser(AbstractUser):
         default='none',
     )
 
+    date_of_birth = models.DateField(null=True, blank=True)
+
     def __str__(self):
         return self.username
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                on_delete=models.CASCADE)
-    date_of_birth = models.DateField(null=True, blank=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     saved_crumbs = models.ManyToManyField(Crumb, blank=True)
     comment_history = models.ManyToManyField(Comment, blank=True)
     topic_preferences = models.ManyToManyField(Topic, blank=True)
