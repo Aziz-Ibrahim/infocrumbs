@@ -9,14 +9,13 @@
 {% block title %}Set Preferences{% endblock %}
 
 {% block content %}
-<div class="preferences-container">
-    <h2 class="text-center my-4">Choose Your Topics</h2>
+<div class="container preferences-container gradient-border glow rounded p-4 my-4">
+    <h2 class="text-center my-4 text-light">Choose Your Topics</h2>
 
     <form method="post" enctype="multipart/form-data"
           data-topic-limit="{{ form.topic_limit|default_if_none:'no_limit' }}">
         {% csrf_token %}
 
-        {# Display non-field errors #}
         {% if form.non_field_errors %}
             <div class="bg-transparent text-danger p-2 my-2 rounded" role="alert">
                 {% for error in form.non_field_errors %}
@@ -25,40 +24,42 @@
             </div>
         {% endif %}
 
-        {# Display specific field errors for 'topics' #}
         {% if form.topics.errors %}
             <div class="bg-transparent text-red-500 p-2 my-2 rounded" role="alert">
                 {{ form.topics.errors }}
             </div>
         {% endif %}
 
-        {# Display help text for the topics field #}
         {% if form.fields.topics.help_text %}
             <p class="help-text text-muted text-center">{{ form.fields.topics.help_text }}</p>
         {% endif %}
 
-        <div class="topics-grid">
+        {# Adjusted Bootstrap grid classes for more mobile-friendly layout #}
+        {# 1 column on extra-small (default), 2 on small/medium, 3 on large #}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-3 topics-grid-wrapper">
             {% for topic in form.fields.topics.queryset %}
-            <label class="topic-card">
-                <input
-                    type="checkbox"
-                    name="topics"
-                    value="{{ topic.id }}"
-                    {% if topic.id in form.selected_topic_ids %}checked{% endif %}
-                >
-                <div class="topic-image" style="background-image: url('{% static topic.image %}')">
-                    <div class="tick-overlay">&#10004;</div>
-                </div>
-                <div class="topic-info text-center">
-                    <h5>{{ topic.name }}</h5>
-                    <p>{{ topic.description }}</p>
-                </div>
-            </label>
+            <div class="col d-flex">
+                <label class="topic-card flex-grow-1">
+                    <input
+                        type="checkbox"
+                        name="topics"
+                        value="{{ topic.id }}"
+                        {% if topic.id in form.selected_topic_ids %}checked{% endif %}
+                    >
+                    <div class="topic-image" style="background-image: url('{% static topic.image %}')">
+                        <div class="tick-overlay">&#10004;</div>
+                    </div>
+                    <div class="topic-info text-center p-3">
+                        <h5 class="mb-1">{{ topic.name }}</h5>
+                        <p class="text-muted small">{{ topic.description }}</p>
+                    </div>
+                </label>
+            </div>
             {% endfor %}
         </div>
 
         <div class="text-center my-4">
-            <button type="submit" class="btn neon-button">Save Preferences</button>
+            <button type="submit" class="btn neon-button btn-lg">Save Preferences</button>
         </div>
     </form>
 </div>
@@ -75,7 +76,6 @@
         checkboxes.forEach(function (checkbox) {
             const card = checkbox.closest('.topic-card');
 
-            // Apply 'selected' class if checkbox is checked on page load
             if (checkbox.checked) {
                 card.classList.add('selected');
             }
@@ -83,12 +83,11 @@
             checkbox.addEventListener('change', function () {
                 card.classList.toggle('selected', checkbox.checked);
 
-                // Client-side validation for topic limit
                 if (topicLimit !== null) {
                     const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
                     if (selectedCount > topicLimit) {
-                        this.checked = false; // Prevent selection
-                        card.classList.remove('selected'); // Remove selected class visually
+                        this.checked = false;
+                        card.classList.remove('selected');
                         alert(`You can select only ${topicLimit} topics with your current plan.`);
                     }
                 }
