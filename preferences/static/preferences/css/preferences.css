@@ -4,10 +4,8 @@
     padding: 1rem;
 }
 
-.topics-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+.preferences-container .help-text {
+    color: var(--text-light) !important;
 }
 
 .topic-card {
@@ -52,13 +50,15 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    color: var(--neon-orange);
+    color: var(--neon-orange); /* This is already set correctly to neon-orange */
     font-weight: bold;
     font-size: 1.5rem;
     padding: 0.2rem 0.5rem;
     border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
     display: none;
     z-index: 2;
+    box-shadow: 0 0 10px var(--neon-orange);
 }
 
 .topic-card.selected .tick-overlay {

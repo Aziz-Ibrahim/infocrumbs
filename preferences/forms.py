@@ -43,7 +43,7 @@ class UserPreferenceForm(forms.ModelForm):
         except UserSubscription.DoesNotExist:
             self.topic_limit = 2
             self.fields['topics'].help_text = (
-                f'No active subscription found. You can select up to '
+                f'No active subscription found. Please subscribe'
                 f'{self.topic_limit} topics.'
             )
 
