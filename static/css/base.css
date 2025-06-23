@@ -40,8 +40,7 @@
         75deg,
         var(--neon-green),
         var(--neon-blue),
-        var(--neon-orange),
-        var(--neon-purple)
+        var(--neon-orange)
     );
 
     /* --- Typography --- */
@@ -103,6 +102,26 @@ body {
     background-origin: border-box;
 }
 
+.infocrumbs-title {
+    background-image: var(--text-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.infocrumbs-link {
+    background-image: var(--text-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+.infocrumbs-link:hover {
+    color: var(--neon-blue);
+}
+
 .text-light {
     color: var(--text-light) !important;
 }
@@ -146,17 +165,6 @@ body {
     background-color: var(--bg-dark);
     border-top: 1px solid var(--neon-blue);
     z-index: var(--z-index-dropdown);
-}
-
-footer a {
-    color: var(--text-light);
-    text-decoration: none;
-    transition: color var(--transition-speed);
-}
-
-footer a:hover {
-    color: var(--neon-green);
-    text-decoration: underline;
 }
 
 .site-main {

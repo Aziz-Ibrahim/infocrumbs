@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(response => response.json())
             .then(data => {
                 if (data.saved) {
-                    this.innerHTML = '<i class="fa-solid fa-star"></i> Saved';
+                    this.innerHTML = '<i class="fa-solid fa-bookmark"></i> Saved';
                 } else {
-                    this.innerHTML = '<i class="fa-regular fa-star"></i> Save';
+                    this.innerHTML = '<i class="fa-regular fa-bookmark"></i> Save';
                 }
             })
             .catch(err => {

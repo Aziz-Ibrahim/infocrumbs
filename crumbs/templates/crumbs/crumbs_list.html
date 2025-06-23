@@ -59,7 +59,10 @@ Crumbs List
                 </div>
             {% empty %}
                 <div class="col-12 text-center py-5">
-                    <p class="lead">No crumbs found. Please check your topic preferences or subscription status.</p>
+                    <p class="lead">You are not following this topic</p>
+                    <a href="{% url 'set_preferences' %}" class="neon-button">
+                        Edit Topic Preferences
+                    </a>
                 </div>
             {% endfor %}
         </div>

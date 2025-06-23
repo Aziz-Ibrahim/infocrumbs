@@ -4,26 +4,28 @@
 {% block title %}Welcome to InfoCrumbs{% endblock %}
 
 {% block content %}
-<div class="container welcome-container py-5 px-5 gradient-border glow">
-    <section class="welcome-section">
-        <h1 class="">Welcome to <span class="highlight glow-text">InfoCrumbs</span></h1>
-        <p class="tagline">Summarized insights. Personalized for you.</p>
+<section class="welcome-section d-flex align-items-center justify-content-center flex-grow-1">
+    <div class="container welcome-container py-5 px-3 px-md-5 my-4 text-center gradient-border glow rounded">
+        <h1 class="mb-3">Welcome to <span class="infocrumbs-title">InfoCrumbs</span></h1>
+        <p class="tagline lead mb-4">Summarized insights. Personalized for you.</p>
 
-        {% if user.is_authenticated %}
-            <a 
-            href="{% url 'crumb_list' %}" 
-            class="neon-button"
-            aria-label="link to crumbs list page">
-                Explore Crumbs
-            </a>
-        {% else %}
-            <a 
-            href="{% url 'account_login' %}" 
-            class="neon-button"
-            aria-label="link to log in page">
-                Get Started
-            </a>
-        {% endif %}
-    </section>
-</div>
+        <div class="d-grid col-8 col-md-6 col-lg-4 mx-auto">
+            {% if user.is_authenticated %}
+                <a
+                href="{% url 'crumb_list' %}"
+                class="neon-button btn btn-lg"
+                aria-label="Explore the list of crumbs personalized for you">
+                    Explore Crumbs
+                </a>
+            {% else %}
+                <a
+                href="{% url 'account_login' %}"
+                class="neon-button btn btn-lg"
+                aria-label="Get started by logging in or signing up">
+                    Get Started
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
 {% endblock %}

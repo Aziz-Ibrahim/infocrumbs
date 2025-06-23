@@ -25,9 +25,12 @@
             <li class="list-inline-item">
                 <p>
                     <a 
-                    href="{{ crumb.url }}" 
+                    href="{{ crumb.url }}"
+                    class="infocrumbs-link" 
                     target="_blank" 
-                    aria-label="Read the full article from the sourecs, opens in a new teb">
+                    aria-label="Read the full article from the sourecs, opens in a new teb"
+                    data-toggle="tooltip" 
+                    title="View full article | Opens in a new tab">
                         Read more
                     </a>
                 </p>
@@ -36,18 +39,23 @@
                 <p>
                     <a 
                     href="{% url 'crumb_list' %}" 
-                    class="text-right" 
-                    aria-label="Return to crumbs list page">
-                        <i class="fa-solid fa-circle-left"></i>Back
+                    class="infocrumbs-link text-right" 
+                    aria-label="Return to crumbs list page"
+                    data-toggle="tooltip" title="Return to crumbs list">
+                        <i class="fa-solid fa-circle-left"></i> Back
                     </a>
                 </p>
             </li>
             <li class="list-inline-item">
-                <button id="save-btn" class="btn btn-sm btn-outline-primary" data-id="{{ crumb.id }}">
+                <button 
+                id="save-btn" 
+                class="btn infocrumbs-link" 
+                data-id="{{ crumb.id }}"
+                data-toggle="tooltip" title="Save crumb">
                     {% if is_saved %}
-                        <i class="fas fa-star"></i> Saved
+                        <i class="fas fa-bookmark"></i> Saved
                     {% else %}
-                        <i class="far fa-star"></i> Save
+                        <i class="far fa-bookmark"></i> Save
                     {% endif %}
                 </button>
             </li>
