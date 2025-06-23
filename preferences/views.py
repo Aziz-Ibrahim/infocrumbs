@@ -1,8 +1,6 @@
-import datetime
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
+from django.utils.timezone import now
 
 from subscriptions.models import UserSubscription
 from .forms import UserPreferenceForm
@@ -17,31 +15,37 @@ def set_preferences(request):
     Requires an active subscription; redirects to 'choose_plan' if not.
     Handles both GET (display form) and POST (process form) requests.
     """
-    try:
-        user_subscription = request.user.usersubscription
-        if not user_subscription.active or \
-            user_subscription.end_date < timezone.now():
-                return redirect('choose_plan')
-    except UserSubscription.DoesNotExist:
+    # Get the latest valid subscription
+    user_subscription = UserSubscription.objects.filter(
+        user=request.user,
+        active=True,
+        end_date__gte=now()
+    ).order_by('-end_date').first()
+
+    if not user_subscription:
         return redirect('choose_plan')
 
+    # Get or create preferences object
+    user_preference_obj, _ = UserPreference.objects.get_or_create(
+        user=request.user
+    )
 
-    user_preference_obj, created = \
-        UserPreference.objects.get_or_create(user=request.user)
-
+    # Handle form
     if request.method == 'POST':
         form = UserPreferenceForm(
             request.POST,
             instance=user_preference_obj,
-            user=request.user
-            )
+            user=request.user,
+        )
         if form.is_valid():
             form.save()
             return redirect('home')
     else:
         form = UserPreferenceForm(
             instance=user_preference_obj,
-            user=request.user
-            )
+            user=request.user,
+        )
 
-    return render(request, 'preferences/set_preferences.html', {'form': form})
+    return render(request, 'preferences/set_preferences.html', {
+        'form': form,
+    })

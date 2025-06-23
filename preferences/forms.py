@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 from subscriptions.models import UserSubscription
 from .models import UserPreference, Topic
@@ -25,7 +26,10 @@ class UserPreferenceForm(forms.ModelForm):
         self.topic_limit = None
 
         try:
-            subscription = self.user.usersubscription
+            subscription = self.user.subscriptions.filter(
+                active=True,
+                end_date__gte=timezone.now()
+            ).order_by('-end_date').first()
             if subscription.plan.name.lower() == 'basic':
                 self.topic_limit = 2
                 self.fields['topics'].help_text = (
@@ -52,7 +56,10 @@ class UserPreferenceForm(forms.ModelForm):
 
         current_limit = None
         try:
-            subscription = self.user.usersubscription
+            subscription = self.user.subscriptions.filter(
+                active=True,
+                end_date__gte=timezone.now()
+            ).order_by('-end_date').first()
             if subscription.plan.name.lower() == 'basic':
                 current_limit = 2
         except UserSubscription.DoesNotExist:
