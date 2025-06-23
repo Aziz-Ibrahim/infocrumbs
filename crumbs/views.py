@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 
@@ -72,8 +73,8 @@ def crumb_list(request):
 
 def crumb_detail(request, pk):
     """
-    View to display the details of a specific crumb.
-    If the user is authenticated, check if the crumb is saved by the user.
+    View to display details of a specific crumb.
+    Includes comments and allows authenticated users to save crumbs.
     """
 
     crumb = get_object_or_404(Crumb, pk=pk)
@@ -81,8 +82,24 @@ def crumb_detail(request, pk):
     comments = crumb.comments.select_related('user').order_by('-created_at')
     is_saved = False
 
+    # Redirect unauthenticated users
+    if not request.user.is_authenticated:
+        return redirect('home')
+
+    # Enforce active subscription
+    subscription = UserSubscription.objects.filter(
+        user=request.user,
+        active=True,
+        end_date__gte=timezone.now()
+    ).first()
+    if not subscription:
+        return redirect('choose_plan')
+    
     if request.user.is_authenticated:
-        is_saved = SavedCrumb.objects.filter(user=request.user, crumb=crumb).exists()
+        is_saved = SavedCrumb.objects.filter(
+            user=request.user,
+            crumb=crumb
+        ).exists()
 
     context = {
         "crumb": crumb,
