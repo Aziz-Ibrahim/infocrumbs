@@ -1,6 +1,6 @@
 {% for comment in comments %}
-    <div class="comment" id="comment-{{ comment.id }}">
-        <p><strong>{{ comment.user.username }}</strong> — {{ comment.created_at|date:"M d, Y H:i" }}</p>
+    <div class="comment gradient-border p-1 m-1" id="comment-{{ comment.id }}">
+        <p><strong>{{ comment.user.username }}</strong> — <small> {{ comment.created_at|date:"M d, Y H:i" }}</small></p>
         <p class="comment-content">{{ comment.content }}</p>
 
         {% if comment.user == user %}
