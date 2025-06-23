@@ -5,17 +5,30 @@ from .models import Comment
 class CommentForm(forms.ModelForm):
     """
     Form for adding a comment to a Crumb.
-    This form includes a single field for the comment content.
-    It uses a Textarea widget for better user experience.
+    This form includes a single field for the comment content with
+    min/max length validation.
     """
+    # Define the comment_body field directly with min/max length
+    comment_body = forms.CharField(
+        label="",
+        min_length=5,
+        max_length=500,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Write your comment here ...',
+            'class': 'form-control'
+        }),
+        help_text="Your comment should be between 5 and 500 characters."
+    )
 
     class Meta:
         model = Comment
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={
-                'rows': 3,
-                'placeholder': 'Write your comment here...',
-                'class': 'form-control'
-            }),
-        }
+        fields = []
+
+    def save(self, commit=True):
+        comment = super().save(commit=False)
+        comment.content = self.cleaned_data['comment_body']
+        if commit:
+            comment.save()
+        return comment
+
