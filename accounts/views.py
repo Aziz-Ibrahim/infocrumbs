@@ -1,10 +1,12 @@
 from datetime import datetime
+from django.http import JsonResponse
+from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from django.http import JsonResponse
-from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from accounts.forms import UserUpdateForm
 from preferences.models import UserPreference
@@ -77,62 +79,141 @@ def account_update(request):
 @login_required
 def load_saved_crumbs_partial(request):
     """
-    Loads the user's saved crumbs for AJAX requests.
+    Loads the user's saved crumbs with pagination for AJAX requests.
+    Shows 5 items per page.
     """
-    saved_crumbs = SavedCrumb.objects.filter(
+    saved_crumbs_list = SavedCrumb.objects.filter(
         user=request.user
-        ).select_related('crumb')
-    html = render_to_string(
+    ).select_related('crumb').order_by('-saved_at')
+
+    paginator = Paginator(saved_crumbs_list, 3)
+    page_number = request.GET.get('page')
+
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    html_content = render_to_string(
         "account/includes/partial_saved_crumbs.html",
-        {"saved_crumbs": saved_crumbs},
+        {
+            "page_obj": page_obj,
+            "saved_crumbs": page_obj.object_list,
+        },
         request=request
     )
-    return JsonResponse({"html": html})
+
+    return JsonResponse({
+        "html": html_content,
+        "has_next_page": page_obj.has_next(),
+        # Call next_page_number() as a method
+        "next_page_number": (
+            page_obj.next_page_number() if page_obj.has_next() else None
+        ),
+    })
 
 
 @login_required
 def load_comments_partial(request):
     """
-    Loads the user's comment history for AJAX requests.
+    Loads the user's comment history with pagination for AJAX requests.
+    Shows 5 items per page.
     """
-    comments = Comment.objects.filter(user=request.user).select_related('crumb')
-    html = render_to_string(
+    comments_list = Comment.objects.filter(
+        user=request.user
+    ).select_related('crumb').order_by('-created_at')
+
+    paginator = Paginator(comments_list, 2)
+    page_number = request.GET.get('page')
+
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    html_content = render_to_string(
         "account/includes/partial_comments.html",
-        {"comments": comments},
+        {
+            "page_obj": page_obj,
+            "comments": page_obj.object_list,
+        },
         request=request
     )
-    return JsonResponse({"html": html})
+
+    return JsonResponse({
+        "html": html_content,
+        "has_next_page": page_obj.has_next(),
+        # Call next_page_number() as a method
+        "next_page_number": (
+            page_obj.next_page_number() if page_obj.has_next() else None
+        ),
+    })
 
 
-
-
-@login_required
 def load_preferences_partial(request):
-    """
-    Loads the user's topic preferences for AJAX requests.
-    """
+    # Ensure user is authenticated for this AJAX request
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {'error': 'Authentication required. Please log in.'},
+            status=401
+        )
+
+    topics_list = []
+    user_subscription = None
+
     try:
         user_preferences = UserPreference.objects.get(user=request.user)
-        topics = user_preferences.topics.all()
+        topics_list = user_preferences.topics.all().order_by('name')
     except UserPreference.DoesNotExist:
-        topics = []
+        topics_list = []
+    except Exception as e:
+        print(f"Error fetching user preferences or topics: {e}")
+        return JsonResponse(
+            {'error': 'An internal error occurred while retrieving preferences.'},
+            status=500)
 
-    user_subscription = UserSubscription.objects.filter(
-        user=request.user,
-        active=True,
-        end_date__gte=now()
-    )
+    try:
+        user_subscription = request.user.subscriptions.filter(
+            active=True,
+            end_date__gte=timezone.now()
+        ).first()
+    except Exception as e:
+        print(f"Error fetching user subscription: {e}")
+        pass
 
+    # Pagination for topics
+    paginator = Paginator(topics_list, 2)
+    page_number = request.GET.get('page')
 
-    html = render_to_string(
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    html_content = render_to_string(
         "account/includes/partial_preferences.html",
         {
-            "topics": topics,
+            "page_obj": page_obj,
+            "topics": page_obj.object_list,
             "user_subscription": user_subscription,
         },
         request=request
     )
-    return JsonResponse({"html": html})
+    
+    return JsonResponse({
+        "html": html_content,
+        "has_next_page": page_obj.has_next(),
+        # Call next_page_number() as a method
+        "next_page_number": (
+            page_obj.next_page_number() if page_obj.has_next() else None
+        ),
+    })
 
 
 @login_required

@@ -110,6 +110,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const placeholder = document.getElementById("profile-placeholder");
     const profileTabsCollapse = document.getElementById("profileTabsCollapse");
 
+    const loadTabContent = (url) => {
+        placeholder.innerHTML = `<div class="text-center py-5">
+                                    <div class="spinner-border text-light" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Loading content...</p>
+                                </div>`;
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = '{% url "account_login" %}?next=' + encodeURIComponent(window.location.pathname);
+                        return Promise.reject('Authentication required. Redirecting to login.');
+                    } else {
+                        return response.json().catch(() => {
+                            return { error: `Server error: ${response.status} ${response.statusText}` };
+                        }).then(errorData => {
+                            placeholder.innerHTML = `<p class="text-danger">Error: ${errorData.error || 'An unexpected server error occurred.'}</p>`;
+                            return Promise.reject(errorData);
+                        });
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.html) {
+                    placeholder.innerHTML = data.html;
+                    attachLoadMoreListeners();
+                } else {
+                    placeholder.innerHTML = "<p>No content available.</p>";
+                }
+            })
+            .catch(error => {
+                console.error("Error loading profile section:", error);
+                if (!placeholder.innerHTML.includes("Error:") && typeof error === 'string' && !error.includes("Redirecting")) {
+                     placeholder.innerHTML = "<p class='text-danger'>Failed to load section. Please try again.</p>";
+                }
+            });
+    };
 
     tabs.forEach(tab => {
         tab.addEventListener("click", (e) => {
@@ -118,35 +158,85 @@ document.addEventListener("DOMContentLoaded", () => {
             tabs.forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
 
-            if (profileTabsCollapse && !profileTabsCollapse.classList.contains('show')) {
+            if (profileTabsCollapse && window.innerWidth < 768 && profileTabsCollapse.classList.contains('show')) {
                 const toggleButton = document.querySelector('[data-bs-target="#profileTabsCollapse"]');
-                if (toggleButton && window.innerWidth < 768) {
+                if (toggleButton) {
                     toggleButton.click();
                 }
             }
 
-
             const url = tab.dataset.url;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.html) {
-                        placeholder.innerHTML = data.html;
-                    } else {
-                        placeholder.innerHTML = "<p>No content available.</p>";
-                    }
-                })
-                .catch(error => {
-                    placeholder.innerHTML = "<p>Error loading section.</p>";
-                    console.error("Error loading profile section:", error);
-                });
+            loadTabContent(url);
         });
     });
+
+    const attachLoadMoreListeners = () => {
+        document.querySelectorAll(".load-more-btn").forEach(button => {
+            button.removeEventListener("click", handleLoadMoreClick);
+            button.addEventListener("click", handleLoadMoreClick);
+        });
+    };
+
+    const handleLoadMoreClick = (e) => {
+        e.preventDefault();
+
+        const button = e.target;
+        const nextPage = button.dataset.nextPage;
+        const url = button.dataset.url;
+        const targetListSelector = button.dataset.targetList;
+        const targetList = document.querySelector(targetListSelector);
+
+        if (!targetList) {
+            console.error("Load More: Target list not found for selector:", targetListSelector);
+            return;
+        }
+
+        const originalButtonText = button.innerHTML; // Store original text
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`;
+
+        fetch(`${url}?page=${nextPage}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.html) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data.html;
+                    
+                    const newItemsContainer = tempDiv.querySelector(targetListSelector);
+                    if (newItemsContainer) {
+                        Array.from(newItemsContainer.children).forEach(item => {
+                            targetList.appendChild(item);
+                        });
+                    }
+                }
+
+                if (data.has_next_page) {
+                    button.dataset.nextPage = data.next_page_number;
+                    button.disabled = false;
+                    button.innerHTML = originalButtonText; // Restore original text
+                } else {
+                    button.remove();
+                }
+            })
+            .catch(error => {
+                console.error("Error loading more items:", error);
+                button.disabled = false;
+                button.innerHTML = `Error Loading. Try Again.`;
+                setTimeout(() => {
+                    button.innerHTML = originalButtonText; // Restore original text after a delay
+                }, 2000);
+            });
+    };
 
     if (tabs.length > 0) {
         const activeTab = document.querySelector(".nav-pills .nav-link.active");
         if (activeTab) {
-            activeTab.click();
+            loadTabContent(activeTab.dataset.url);
         } else {
             tabs[0].click();
         }

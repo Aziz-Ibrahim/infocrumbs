@@ -1,14 +1,28 @@
 <h3>Saved Crumbs</h3>
 
 {% if saved_crumbs %}
-    <ul class="saved-crumbs-list">
+    <ul class="saved-crumbs-list list-unstyled">
         {% for item in saved_crumbs %}
-            <li>
-                <strong>{{ item.crumb.title }}</strong><br>
-                <small>Saved at {{ item.saved_at|date:"M d, Y H:i" }}</small>
+            <li class="mb-2 p-2 border border-secondary rounded bg-dark">
+                <strong class="d-block">{{ item.crumb.title }}</strong>
+                <small class="text-muted">Saved at {{ item.saved_at|date:"M d, Y H:i" }}</small>
+                <a href="{% url 'crumb_detail' item.crumb.pk %}" class="btn infocrumbs-link ms-2" aria-label="View crumb titled {{ item.crumb.title }}">View</a>
             </li>
         {% endfor %}
     </ul>
+
+    {% if page_obj.has_next %}
+        <div class="text-center mt-3">
+            <button
+                class="btn infocrumbs-link load-more-btn"
+                data-next-page="{{ page_obj.next_page_number }}"
+                data-url="{% url 'load_saved_crumbs_partial' %}"
+                data-target-list=".saved-crumbs-list">
+                Load More Saved Crumbs
+            </button>
+        </div>
+    {% endif %}
 {% else %}
-    <p>No saved crumbs yet.</p>
+    <p class="text-center py-3">No saved crumbs yet.</p>
 {% endif %}
+

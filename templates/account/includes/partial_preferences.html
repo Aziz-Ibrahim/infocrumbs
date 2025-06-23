@@ -1,32 +1,48 @@
 {% load static %}
 <h3>Your Topic Preferences</h3>
 
-<div class="list-group dark-list-group">
-    {% for topic in topics %}
-        <div class="list-group-item d-flex align-items-start">
-            <img 
-                src="{% static topic.image|default:'images/topics/default.jpg' %}" 
-                alt="{{ topic.name }}" 
-                class="me-3 rounded" 
-                style="width: 80px; height: 100px; object-fit: cover;"
-            >
-            <div class="flex-grow-1">
-                <p class="mb-1">{{ topic.name }}</p>
+{% if topics %}
+    <div class="list-group dark-list-group topics-list">
+        {% for topic in topics %}
+            <div class="list-group-item d-flex align-items-center mb-2 p-2 rounded">
+                <img
+                    src="{% static topic.image|default:'images/topics/default.jpg' %}"
+                    alt="{{ topic.name }} topic icon"
+                    class="me-3 rounded topic-list-image"
+                    style="width: 80px; height: 100px; object-fit: cover;"
+                >
+                <div class="flex-grow-1">
+                    <p class="mb-1 fw-bold">{{ topic.name }}</p>
+                </div>
             </div>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_next %}
+        <div class="text-center mt-3">
+            <button
+                class="btn infocrumbs-link load-more-btn"
+                data-next-page="{{ page_obj.next_page_number }}"
+                data-url="{% url 'load_preferences_partial' %}"
+                data-target-list=".topics-list">
+                Load More Topics
+            </button>
         </div>
-    {% empty %}
-        <p>No topics selected yet.</p>
-    {% endfor %}
-</div>
+    {% endif %}
+
+{% else %}
+    <p class="text-center py-3">No topics selected yet.</p>
+{% endif %}
 
 <div class="text-center my-4">
     {% if user_subscription %}
-        <a href="{% url 'set_preferences' %}" class="neon-button">
+        <a href="{% url 'set_preferences' %}" class="neon-button btn btn-lg">
             Edit Topic Preferences
         </a>
     {% else %}
-        <a href="{% url 'choose_plan' %}" class="neon-button">
+        <a href="{% url 'choose_plan' %}" class="neon-button btn btn-lg">
             Edit Topic Preferences
         </a>
     {% endif %}
 </div>
+

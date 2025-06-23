@@ -1,15 +1,36 @@
 <h3>Your Comment History</h3>
 
 {% if comments %}
-    <ul class="comments-list">
+    <ul class="comments-list list-unstyled">
         {% for comment in comments %}
-            <li>
-                <strong>On "{{ comment.crumb.title }}":</strong><br>
-                {{ comment.content }}<br>
-                <small>{{ comment.created_at|date:"M d, Y H:i" }}</small>
+            <li class="mb-3 p-3 border border-secondary rounded bg-dark">
+                <p class="mb-1">
+                    <strong>On "
+                        <a href="{% url 'crumb_detail' comment.crumb.pk %}" 
+                        class="infocrumbs-link" 
+                        aria-label="View crumb titled {{ comment.crumb.title }}">
+                            {{ comment.crumb.title }}
+                        </a>":
+                    </strong>
+                </p>
+                <p class="mb-1 text-light text-muted">{{ comment.content }}</p>
+                <small class=" text-light text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
             </li>
         {% endfor %}
     </ul>
+
+    {% if page_obj.has_next %}
+        <div class="text-center mt-3">
+            <button
+                class="btn infocrumbs-link load-more-btn"
+                data-next-page="{{ page_obj.next_page_number }}"
+                data-url="{% url 'load_comments_partial' %}"
+                data-target-list=".comments-list">
+                Load More Comments
+            </button>
+        </div>
+    {% endif %}
 {% else %}
-    <p>No comments yet.</p>
+    <p class="text-center py-3">No comments yet.</p>
 {% endif %}
+
