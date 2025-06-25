@@ -1,0 +1,140 @@
+{% load i18n %}{% autoescape off %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your InfoCrumbs Subscription Confirmation!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0A0F2C; /* Matches --bg-dark */
+            color: #B3FFAB; /* Matches --text-light */
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #1A103D; /* Matches --bg-alt */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #39FF14; /* Neon green border */
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.7); /* Neon green glow */
+        }
+        .header {
+            background-color: #39FF14; /* Neon green */
+            padding: 20px;
+            text-align: center;
+            color: #0A0F2C; /* Dark text for contrast */
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #0A0F2C;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+            color: #B3FFAB;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .details-table th, .details-table td {
+            padding: 10px;
+            border-bottom: 1px solid #2A1F52; /* Lighter dark border */
+            text-align: left;
+        }
+        .details-table th {
+            color: #00F0FF; /* Neon blue for labels */
+            width: 35%;
+        }
+        .details-table td {
+            color: #B3FFAB; /* Text light for values */
+            font-weight: bold;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #00F0FF, #A020F0); /* Neon blue to purple */
+            color: #0A0F2C;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #80A89C;
+            border-top: 1px solid #2A1F52;
+        }
+        .footer a {
+            color: #00F0FF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Subscription Confirmed!</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{ user.get_full_name|default:user.get_username }},</p>
+            <p>Thank you for your recent subscription purchase with InfoCrumbs!</p>
+            <p>Your subscription is now active with the following details:</p>
+            <table class="details-table">
+                <tr>
+                    <th>Plan:</th>
+                    <td>{{ subscription.plan.name }}</td>
+                </tr>
+                <tr>
+                    <th>Frequency:</th>
+                    <td>{{ subscription.frequency.name }}</td>
+                </tr>
+                <tr>
+                    <th>Start Date:</th>
+                    <td>{{ subscription.start_date|date:"M d, Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <th>End Date:</th>
+                    <td>{{ subscription.end_date|date:"M d, Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <th>Price Paid:</th>
+                    <td>${{ subscription.price_paid|floatformat:2 }}</td>
+                </tr>
+            </table>
+            <p>You can manage your subscription and view your details anytime in your InfoCrumbs profile:</p>
+            <div class="button-container">
+                <a href="{{ profile_url }}" class="button">Go to My Profile</a>
+            </div>
+            <p>We're excited for you to get the most out of your personalized insights!</p>
+            <p>Best regards,<br>The InfoCrumbs Team</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            <p>If you have any questions, please reply to this email or visit our <a href="{{ site_domain }}/faq">FAQ</a>.</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endautoescape %}

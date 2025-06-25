@@ -1,0 +1,24 @@
+{% load i18n %}{% autoescape off %}
+Hello {{ user.get_full_name|default:user.get_username }},
+
+Thank you for your recent subscription purchase with InfoCrumbs!
+
+Your subscription is now active with the following details:
+
+Plan: {{ subscription.plan.name }}
+Frequency: {{ subscription.frequency.name }}
+Start Date: {{ subscription.start_date|date:"M d, Y H:i" }}
+End Date: {{ subscription.end_date|date:"M d, Y H:i" }}
+Price Paid: ${{ subscription.price_paid|floatformat:2 }}
+
+You can manage your subscription and view your details anytime in your InfoCrumbs profile:
+{{ profile_url }}
+
+We're excited for you to get the most out of your personalized insights!
+
+Best regards,
+The InfoCrumbs Team
+
+&copy; {% now "Y" %} {{ site_name }}. All rights reserved.
+If you have any questions, please reply to this email.
+{% endautoescape %}

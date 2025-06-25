@@ -1,0 +1,111 @@
+{% load i18n %}{% autoescape off %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Alert: InfoCrumbs Account Activity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0A0F2C;
+            color: #B3FFAB;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #1A103D;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #FF1493; /* Neon pink border for alerts */
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.7); /* Neon pink glow */
+        }
+        .header {
+            background-color: #FF1493; /* Neon pink */
+            padding: 20px;
+            text-align: center;
+            color: #0A0F2C;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #0A0F2C;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+            color: #B3FFAB;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .alert-text {
+            color: #FF6F00; /* Neon orange for warnings */
+            font-weight: bold;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #00F0FF, #A020F0);
+            color: #0A0F2C;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #80A89C;
+            border-top: 1px solid #2A1F52;
+        }
+        .footer a {
+            color: #00F0FF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Security Alert: Account Activity</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{ user.get_full_name|default:user.get_username }},</p>
+            <p>This is an automated security notification regarding recent activity on your InfoCrumbs account.</p>
+            <p>Your account's <span class="alert-text">{{ change_type }}</span> was performed at {% now "M d, Y H:i" %} from IP address: <span class="alert-text">{{ ip_address }}</span>.</p>
+            <p>If you made this change, you can safely ignore this email.</p>
+            <p class="alert-text">If you did NOT make this change, please take immediate action:</p>
+            <ol style="color: #B3FFAB;">
+                <li>Log in to your account and change your password immediately.</li>
+                <li>Review your account details for any unauthorized changes.</li>
+                <li>If you are unable to access your account, please contact our support team without delay.</li>
+            </ol>
+            <div class="button-container">
+                <a href="{{ login_history_url }}" class="button">Go to Login Page</a>
+            </div>
+            <p>We recommend regularly reviewing your account security settings.</p>
+            <p>For your security, we will continue to send these notifications for significant account changes.</p>
+            <p>Best regards,<br>The InfoCrumbs Team</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            <p>If you have any concerns, please reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endautoescape %}

@@ -107,6 +107,7 @@ TEMPLATES = [
 ]
 
 SITE_ID = 1
+SITE_URL = 'https://infocrumbs-9d4b700e944a.herokuapp.com'
 
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
@@ -119,6 +120,14 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 WSGI_APPLICATION = 'infocrumbs.wsgi.application'
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = "infocrumbs <infocrumbs.app@gmail.com>"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

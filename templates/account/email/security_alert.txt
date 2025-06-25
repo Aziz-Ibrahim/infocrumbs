@@ -1,0 +1,23 @@
+{% load i18n %}{% autoescape off %}
+Hello {{ user.get_full_name|default:user.get_username }},
+
+This is an automated security notification regarding recent activity on your InfoCrumbs account.
+
+Your account's {{ change_type }} was performed at {% now "M d, Y H:i" %} from IP address: {{ ip_address }}.
+
+If you made this change, you can safely ignore this email.
+
+If you did NOT make this change, please take immediate action:
+1. Log in to your account and change your password immediately: {{ login_history_url }}
+2. Review your account details for any unauthorized changes.
+3. If you are unable to access your account, please contact our support team without delay.
+
+We recommend regularly reviewing your account security settings.
+For your security, we will continue to send these notifications for significant account changes.
+
+Best regards,
+The InfoCrumbs Team
+
+&copy; {% now "Y" %} {{ site_name }}. All rights reserved.
+If you have any concerns, please reply to this email.
+{% endautoescape %}

@@ -1,0 +1,19 @@
+{% load i18n %}{% autoescape off %}
+Hello {{ user.get_full_name|default:user.get_username }},
+
+Just a friendly reminder that your InfoCrumbs subscription ({{ subscription.plan.name }} plan) is scheduled to expire in approximately 24 hours on {{ subscription.end_date|date:"M d, Y H:i" }}.
+
+Don't miss out on your personalized insights! Renew your subscription today to continue enjoying uninterrupted access:
+{{ choose_plan_url }}
+
+You can also check your subscription status in your profile at any time:
+{{ profile_url }}
+
+We hope you've been enjoying your experience with InfoCrumbs!
+
+Best regards,
+The InfoCrumbs Team
+
+&copy; {% now "Y" %} {{ site_name }}. All rights reserved.
+If you have any questions, please reply to this email.
+{% endautoescape %}

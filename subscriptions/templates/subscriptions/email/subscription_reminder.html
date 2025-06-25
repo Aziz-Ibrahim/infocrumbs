@@ -1,0 +1,107 @@
+{% load i18n %}{% autoescape off %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your InfoCrumbs Subscription is Ending Soon!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0A0F2C;
+            color: #B3FFAB;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #1A103D;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #FF6F00; /* Neon orange border */
+            box-shadow: 0 0 15px rgba(255, 111, 0, 0.7); /* Neon orange glow */
+        }
+        .header {
+            background-color: #FF6F00; /* Neon orange */
+            padding: 20px;
+            text-align: center;
+            color: #0A0F2C;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #0A0F2C;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+            color: #B3FFAB;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .highlight-text {
+            color: #FF1493; /* Neon pink for alerts */
+            font-weight: bold;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #00F0FF, #A020F0);
+            color: #0A0F2C;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #80A89C;
+            border-top: 1px solid #2A1F52;
+        }
+        .footer a {
+            color: #00F0FF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Subscription Ending Soon!</h1>
+        </div>
+        <div class="content">
+            <p>Hello {{ user.get_full_name|default:user.get_username }},</p>
+            <p>Just a friendly reminder that your InfoCrumbs subscription ({{ subscription.plan.name }} plan) is scheduled to expire in approximately <span class="highlight-text">24 hours</span> on {{ subscription.end_date|date:"M d, Y H:i" }}.</p>
+            <p>Don't miss out on your personalized insights! Renew your subscription today to continue enjoying uninterrupted access.</p>
+            <div class="button-container">
+                <a href="{{ choose_plan_url }}" class="button">Renew Your Subscription</a>
+            </div>
+            <p>You can also check your subscription status in your profile at any time:</p>
+            <div class="button-container">
+                <a href="{{ profile_url }}" class="button">Go to My Profile</a>
+            </div>
+            <p>We hope you've been enjoying your experience with InfoCrumbs!</p>
+            <p>Best regards,<br>The InfoCrumbs Team</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            <p>If you have any questions, please reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
+{% endautoescape %}
