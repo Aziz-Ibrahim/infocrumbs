@@ -8,7 +8,7 @@
     <h1 class="text-center mb-4">Choose Your Subscription Plan</h1>
     <div class="row g-4 justify-content-center">
         {% for plan in plans %}
-            <div class="card bg-dark text-light gradient-border m-2 p-4">
+            <div class="col-6 bg-dark text-light gradient-border m-2 p-4">
                     {% if plan.name == 'Premium' %}
                         <h3>{{ plan.name }} <i class="fa-regular fa-gem"></i></h3>
                     {% else %}
@@ -19,16 +19,22 @@
                 <p>Select renewal frequency</p>
                     <ul class="list-unstyled">
                             {% for freq in plan.frequencies %}
-                            <li class="p-2 d-flex justify-content-between">
-                                <p>{{ freq.name|default:"(empty Name)" }}</p>
-                                <p>£{{ freq.price }}</p>
-                                {% if freq.discount > 0 %}
-                                    <small class="text-muted">({{ freq.discount }}% off)</small>
-                                {% endif %}
-                                <a 
-                                href="{% url 'checkout' plan.id freq.id %}" 
-                                class="btn neon-button"
-                                aria-label="link to checkout page">Subscribe</a>
+                            <li class="p-2 d-flex row">
+                                <div class="col-3 d-flex align-items-start">
+                                    <p>{{ freq.name|default:"(empty Name)" }}</p>
+                                </div>
+                                <div class="col-6 d-flex justify-content-start align-items-center">
+                                    <p>£{{ freq.price }}</p>
+                                    {% if freq.discount > 0 %}
+                                        <small class="text-light text-sm">({{ freq.discount }}% off)</small>
+                                    {% endif %}
+                                </div>
+                                <div class="col-3 d-flex justify-content-end">
+                                    <a 
+                                    href="{% url 'checkout' plan.id freq.id %}" 
+                                    class="btn neon-button"
+                                    aria-label="link to checkout page">Subscribe</a>
+                                </div>
                             </li>
                             {% endfor %}
                     </ul>

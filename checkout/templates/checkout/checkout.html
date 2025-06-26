@@ -21,14 +21,7 @@
         {% if has_active_sub and is_different %}
             <div class="alert alert-warning bg-dark text-warning">
                 You already have an active subscription <br>
-                <small>{{active_sub}}</small>.
-                {% if eligible_for_refund %}
-                    <p>You can cancel your current plan and switch immediately. <br>
-                    <small>A refund will be issued to you bank details for the amout you previously paid</small></p>
-                    <button class="btn btn-danger">Cancel Current Plan</button>
-                {% else %}
-                    <p>Your new plan will start after your current one ends on {{ active_sub.end_date|date:"F j, Y" }}.</p>
-                {% endif %}
+                <p>Your new plan will start after your current one ends on {{ active_sub.end_date|date:"F j, Y" }}.</p>
             </div>
         {% endif %}
 
@@ -62,7 +55,7 @@
                     <div class="submit-button text-right mt-5 mb-2">
                         <a 
                         href="{% url 'choose_plan' %}" 
-                        class="btn btn-outline-black rounded-0"
+                        class="btn infocrumbs-link"
                         aria-label="return to choose plan page">
                             <span class="icon">
                                 <i class="fas fa-chevron-left"></i>
