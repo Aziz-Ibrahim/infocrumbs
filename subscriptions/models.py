@@ -57,27 +57,30 @@ class UserSubscription(models.Model):
     stripe_payment_intent_id = models.CharField(
         max_length=255, blank=True, null=True, unique=True
     )
+    last_reminder_sent = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # Duration of this subscription
+        """
+        Automatically sets start and end dates based on the latest
+        existing subscription of the same user.
+        """
         duration = timedelta(days=self.frequency.duration_days)
 
-        # Get user's most recent active subscription
+        # Get latest active or future-dated sub
         latest_sub = UserSubscription.objects.filter(
             user=self.user,
             end_date__gte=timezone.now()
         ).order_by('-end_date').first()
 
-        # Only override start/end if not set (e.g., on creation)
         if not self.start_date or not self.end_date:
             if latest_sub and latest_sub.plan == self.plan and \
-                latest_sub.frequency == self.frequency:
-                # Extend existing subscription
+                    latest_sub.frequency == self.frequency:
+                # Extend current sub
                 self.start_date = latest_sub.end_date
             else:
-                # Start after most recent one ends, or now
-                self.start_date = latest_sub.end_date if \
-                    latest_sub else timezone.now()
+                self.start_date = latest_sub.end_date if (
+                    latest_sub
+                ) else timezone.now()
 
             self.end_date = self.start_date + duration
 
@@ -86,5 +89,5 @@ class UserSubscription(models.Model):
     def is_active(self):
         return self.active and self.end_date > timezone.now()
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.user.username} - {self.plan.name} ({self.frequency})"

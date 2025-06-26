@@ -111,12 +111,12 @@ SITE_URL = 'https://infocrumbs-9d4b700e944a.herokuapp.com'
 
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Set of allowed login methods
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm'
 }
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 WSGI_APPLICATION = 'infocrumbs.wsgi.application'
 
