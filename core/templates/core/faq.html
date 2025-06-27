@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}InfoCrumbs FAQ{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/core.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container faq-container gradient-border p-3">
+    <h1 class="text-light">Frequently Asked Questions</h1> {# Ensure heading is light text #}
+
+    <div class="accordion" id="faqAccordion">
+        {# FAQ Item 1 #}
+        <div class="accordion-item bg-dark text-light"> {# Added bg-dark and text-light #}
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    What is InfoCrumbs?
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    InfoCrumbs is a platform designed to deliver summarized insights and personalized content tailored to your interests. We help you quickly grasp key information from various sources.
+                </div>
+            </div>
+        </div>
+
+        {# FAQ Item 2 #}
+        <div class="accordion-item bg-dark text-light"> {# Added bg-dark and text-light #}
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    How do I subscribe to a plan?
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    You can subscribe to our plans by navigating to the <a href="{% url 'choose_plan' %}" class="infocrumbs-link" aria-label="Navigate to subscription plans page">Subscription page</a>. We offer different tiers (Basic, Premium) with weekly, monthly, and annual frequencies to suit your needs.
+                </div>
+            </div>
+        </div>
+
+        {# FAQ Item 3 #}
+        <div class="accordion-item bg-dark text-light"> {# Added bg-dark and text-light #}
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Can I change my topic preferences?
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Yes, you can update your topic preferences anytime! Simply go to your <a href="{% url 'account_profile' %}" class="infocrumbs-link" aria-label="Go to your profile page to manage topic preferences">Profile page</a> and click on the 'Topic Preferences' tab to make changes.
+                </div>
+            </div>
+        </div>
+
+        {# FAQ Item 4 #}
+        <div class="accordion-item bg-dark text-light"> {# Added bg-dark and text-light #}
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    What if I encounter an issue or have a question not listed here?
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    If you have further questions or encounter any issues, please don't hesitate to <a href="{% url 'contact' %}" class="infocrumbs-link" aria-label="Contact our support team">contact our support team</a>. We're here to help!
+                </div>
+            </div>
+        </div>
+
+        {# Removed FAQ Item 5 as requested #}
+
+    </div>
+</div>
+{% endblock %}
