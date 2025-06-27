@@ -8,7 +8,7 @@
     <h1 class="text-center mb-4">Choose Your Subscription Plan</h1>
     <div class="row g-4 justify-content-center">
         {% for plan in plans %}
-            <div class="col-6 bg-dark text-light gradient-border m-2 p-4">
+            <div class="col-md-6 bg-dark text-light gradient-border m-2 p-4">
                     {% if plan.name == 'Premium' %}
                         <h3>{{ plan.name }} <i class="fa-regular fa-gem"></i></h3>
                     {% else %}

@@ -3,16 +3,45 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
 
+from subscriptions.models import UserSubscription, SubscriptionPlan
 from .forms import ContactForm
 
 
 # home
 def home(request):
     """
-    Renders the home page.
+    Renders the home page with dynamic call-to-action based on user's
+    subscription status.
     """
-    return render(request, 'core/home.html')
+    user_subscription_status = {
+        'is_subscribed': False,
+        'is_premium': False,
+        'has_active_sub_plan': None # Stores the name of active plan if any
+    }
+
+    if request.user.is_authenticated:
+        # Get the latest active subscription for the current user
+        active_subscription = UserSubscription.objects.filter(
+            user=request.user,
+            active=True,
+            end_date__gte=timezone.now()
+        ).order_by('-end_date').first()
+
+        if active_subscription:
+            user_subscription_status['is_subscribed'] = True
+            user_subscription_status['has_active_sub_plan'] = (
+                active_subscription.plan.name
+            )
+
+            if active_subscription.plan.name.lower() == 'premium':
+                user_subscription_status['is_premium'] = True
+    
+    context = {
+        'user_subscription_status': user_subscription_status,
+    }
+    return render(request, 'core/home.html', context)
 
 
 # About

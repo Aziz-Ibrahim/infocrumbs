@@ -1,31 +1,61 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Welcome to InfoCrumbs{% endblock %}
 
 {% block content %}
-<section class="welcome-section d-flex align-items-center justify-content-center flex-grow-1">
-    <div class="container welcome-container py-5 px-3 px-md-5 my-4 text-center gradient-border glow rounded">
-        <h1 class="mb-3">Welcome to <span class="infocrumbs-title">InfoCrumbs</span></h1>
-        <p class="tagline lead mb-4">Summarized insights. Personalized for you.</p>
+<div class="container py-5 text-center gradient-border glow">
+    <img src="{% static 'images/infocrumbs-icon.png' %}" alt="InfoCrumbs Logo" class="mb-3 img-fluid" style="max-width: 180px;"> {# Added img-fluid for responsiveness #}
+    <h1 class="display-5 mb-3"><strong class="infocrumbs-title">infocrombs</strong><br>Bite-sized Knowledge. Big Impact.</h1>
+    <p class="lead text-light">
+        InfoCrumbs delivers smart, summarised, and auto-tagged content from trusted APIs — so you stay sharp in minutes a day.
+    </p>
 
-        <div class="d-grid col-8 col-md-6 col-lg-4 mx-auto">
-            {% if user.is_authenticated %}
-                <a
-                href="{% url 'crumb_list' %}"
-                class="neon-button btn btn-lg"
-                aria-label="Explore the list of crumbs personalized for you">
-                    Explore Crumbs
-                </a>
-            {% else %}
-                <a
-                href="{% url 'account_login' %}"
-                class="neon-button btn btn-lg"
-                aria-label="Get started by logging in or signing up">
-                    Get Started
-                </a>
-            {% endif %}
+    <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+            <i class="fas fa-rocket fa-3x mb-3"></i>
+            <h4>Personalised Feed</h4>
+            <p>See more of what matters to you — save, comment, and interact.</p>
+        </div>
+
+        
+        <div class="col-md-4 mb-4">
+            <i class="fas fa-brain fa-3x mb-3"></i>
+            <h4>Smart Summaries</h4>
+            <p>Each crumb is distilled using AI so you get the essence, fast.</p>
+        </div>
+
+        
+        <div class="col-md-4 mb-4">
+            <i class="fas fa-tags fa-3x mb-3"></i>
+            <h4>Topic Tags</h4>
+            <p>Auto-organised by theme to match your preferences and interests.</p>
         </div>
     </div>
-</section>
+
+    {% if user.is_authenticated %}
+        {% if user_subscription_status.is_premium %}
+            <a href="{% url 'crumb_list' %}" class="btn neon-button mt-4 btn-lg">
+                Explore Crumbs <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        {% elif user_subscription_status.is_subscribed %}
+            <a href="{% url 'choose_plan' %}" class="btn neon-button mt-4 btn-lg">
+                Upgrade to Premium <i class="fas fa-arrow-up ms-2"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'choose_plan' %}" class="btn neon-button mt-4 btn-lg">
+                Subscribe Now <i class="fas fa-magic ms-2"></i>
+            </a>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'account_signup' %}" class="btn neon-button mt-4 btn-lg">
+            Join InfoCrumbs <i class="fas fa-user-plus ms-2"></i>
+        </a>
+    {% endif %}
+</div>
+
+<div class="container text-light text-center my-5">
+
+</div>
+
 {% endblock %}

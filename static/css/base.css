@@ -109,6 +109,22 @@ body {
     color: transparent;
 }
 
+.neon-button {
+    background: var(--button-gradient);
+    color: var(--text-dark);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform var(--transition-speed);
+}
+
+.neon-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--neon-green);
+}
+
 .infocrumbs-link {
     background-image: var(--text-gradient);
     background-clip: text;
@@ -201,21 +217,7 @@ body {
     margin-bottom: var(--spacing-lg);
 }
 
-.neon-button {
-    background: var(--button-gradient);
-    color: var(--text-dark);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: none;
-    border-radius: var(--border-radius-md);
-    text-decoration: none;
-    font-weight: bold;
-    transition: transform var(--transition-speed);
-}
 
-.neon-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px var(--neon-green);
-}
 
 /* profile page/preferences include */
 
