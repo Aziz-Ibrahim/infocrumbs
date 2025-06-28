@@ -15,24 +15,80 @@
             <form method="post" action="{% url 'account_signup' %}">
                 {% csrf_token %}
 
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <div class="row">
                     <!-- Left column -->
                     <div class="col-md-6">
                         <div class="mb-3">
                             {{ form.username.label_tag }}
                             {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.username.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.username.help_text }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="mb-3">
                             {{ form.first_name.label_tag }}
                             {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.first_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.first_name.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.first_name.help_text }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="mb-3">
                             {{ form.last_name.label_tag }}
                             {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.last_name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.last_name.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.last_name.help_text }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="mb-3">
                             {{ form.email.label_tag }}
                             {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.email.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.email.help_text }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -41,10 +97,34 @@
                         <div class="mb-3">
                             {{ form.date_of_birth.label_tag }}
                             {{ form.date_of_birth }}
+                            {% if form.date_of_birth.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.date_of_birth.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.date_of_birth.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.date_of_birth.help_text }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="mb-3 position-relative">
                             {{ form.password1.label_tag }}
                             {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.password1.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.password1.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.password1.help_text }}
+                                </div>
+                            {% endif %}
                             <i 
                             class="fa-regular fa-eye toggle-password mt-2" 
                             data-target="id_password1"></i>
@@ -52,6 +132,18 @@
                         <div class="mb-3 position-relative">
                             {{ form.password2.label_tag }}
                             {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger small">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if form.password2.help_text %}
+                                <div class="form-text text-light small">
+                                    {{ form.password2.help_text }}
+                                </div>
+                            {% endif %}
                             <i 
                             class="fa-regular fa-eye toggle-password mt-2" 
                             data-target="id_password2"></i>

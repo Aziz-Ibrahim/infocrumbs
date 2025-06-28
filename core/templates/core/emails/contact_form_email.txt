@@ -17,4 +17,4 @@ Best regards,
 Your InfoCrumbs Website Notification System
 
 © {% now "Y" %} {{ site_name }}. All rights reserved.
-FAQ: http://{{ site_domain }}/faq
+FAQ: https://infocrumbs-9d4b700e944a.herokuapp.com/faq
