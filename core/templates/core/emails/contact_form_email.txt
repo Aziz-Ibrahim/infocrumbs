@@ -1,0 +1,20 @@
+New Contact Form Submission - InfoCrumbs
+
+You have received a new message from the InfoCrumbs contact form.
+
+From Name: {{ name }}
+From Email: {{ email }}
+Subject: {{ subject }}
+
+Message:
+------------------------------------
+{{ message }}
+------------------------------------
+
+You can reply directly to this email to respond to the user.
+
+Best regards,
+Your InfoCrumbs Website Notification System
+
+© {% now "Y" %} {{ site_name }}. All rights reserved.
+FAQ: http://{{ site_domain }}/faq

@@ -14,27 +14,27 @@ InfoCrumbs is a sophisticated Django-based web application engineered to revolut
 
 3. [Installation and Setup](#installation-and-setup)
 
-   * [Prerequisites](#prerequisites)
+    * [Prerequisites](#prerequisites)
 
-   * [Cloning the Repository](#cloning-the-repository)
+    * [Cloning the Repository](#cloning-the-repository)
 
-   * [Virtual Environment Setup](#virtual-environment-setup)
+    * [Virtual Environment Setup](#virtual-environment-setup)
 
-   * [Install Dependencies](#install-dependencies)
+    * [Install Dependencies](#install-dependencies)
 
-   * [Environment Variables](#environment-variables)
+    * [Environment Variables](#environment-variables)
 
-   * [Database Setup](#database-setup)
+    * [Database Setup](#database-setup)
 
-   * [Create Superuser](#create-superuser)
+    * [Create Superuser](#create-superuser)
 
-   * [Populate Initial Data](#populate-initial-data)
+    * [Populate Initial Data](#populate-initial-data)
 
 4. [Running the Application](#running-the-application)
 
-   * [Development Server](#development-server)
+    * [Development Server](#development-server)
 
-   * [Running the Data Pipeline](#running-the-data-pipeline)
+    * [Running the Data Pipeline](#running-the-data-pipeline)
 
 5. [Testing](#testing)
 
@@ -52,17 +52,33 @@ InfoCrumbs is a sophisticated Django-based web application engineered to revolut
 
 * **Intelligent Content Aggregation**: Automated integration with diverse external APIs (Finnhub, Spoonacular, Mediastack) to fetch a wide array of content, from financial insights and cutting-edge tech news to curated recipes.
 
-* **Dynamic Data Pipeline (`pipeline` app)**: A custom-built, scheduled management command orchestrates the fetching, processing, and storage of content. This pipeline is designed for efficiency and extensibility, ensuring fresh "crumbs" are always available.
-
 * **Real-time Content Summarization**: Leveraging the Hugging Face Inference API, InfoCrumbs generates concise summaries for lengthy articles. This intelligent processing ensures users get essential information quickly, enhancing content digestibility.
 
-* **Granular User Preferences (`preferences` app)**: Users can define their specific interests by selecting preferred topics. The system intelligently manages these preferences, directly influencing the content delivered.
+* **Dynamic Data Pipeline (`pipeline` app)**: A custom-built, scheduled management command orchestrates the fetching, processing, and storage of content. This pipeline is designed for efficiency and extensibility, ensuring fresh "crumbs" are always available.
+
+* **Granular User Preferences (`preferences` app)**: Users can define their specific interests by selecting preferred topics. The system intelligently manages these preferences, directly influencing the content delivered. Includes a responsive topic selection form.
+
+* **Personalized User Profile**: A dynamic user profile page featuring AJAX-driven tabs for Subscriptions, Topic Preferences, Saved Crumbs, and Comment History, enhancing responsiveness and user experience.
 
 * **Flexible Subscription Tiers**: A robust subscription model empowers tiered access (Basic, Premium) to content. This includes dynamic topic limits and exclusive content features, providing a scalable business logic foundation.
 
-* **Secure User Authentication**: Full user registration, login, and profile management capabilities, ensuring a secure and personalized user journey.
+* **Secure User Authentication**: Full user registration, login, and profile management capabilities, ensuring a secure and personalized user journey, including email verification.
 
-* **Dynamic Access Control**: Critical views and features, such as topic preference management, are protected by intelligent redirects, ensuring only active, subscribed users can access privileged functionalities.
+* **Email Notification System**: Comprehensive transactional email support for key user interactions:
+    * **Welcome/Verification Emails**: Sent upon user registration (managed via `django-allauth`).
+    * **Subscription Confirmation**: Automated emails sent upon successful subscription purchase/renewal.
+    * **Subscription Expiry Reminders**: Proactive notifications sent when a subscription is nearing its end.
+    * **Security Alerts**: Automated emails for critical account changes (e.g., password change).
+
+* **"Troll-Proof" Comment System**: Implemented character limits (min/max) and refined form design for user comments to encourage constructive engagement.
+
+* **Enhanced User Support Pages**: Dedicated **FAQ** and **Contact Us** pages for comprehensive user assistance. The Contact form allows users to directly email `infocrumbs.app@gmail.com`.
+
+* **Dynamic Homepage CTA**: The main call-to-action button on the homepage intelligently adapts its text and destination based on the user's login and subscription status (e.g., "Join InfoCrumbs", "Upgrade to Premium", "Explore Crumbs").
+
+* **Responsive UI & Neon Theme**: A meticulously designed, responsive user interface utilizing Bootstrap 5 and a custom neon-inspired theme, ensuring an engaging visual experience across all devices.
+
+* **Dynamic Access Control**: Critical views and features, such as topic preference management and payment processing, are protected by intelligent redirects, ensuring only active, subscribed users can access privileged functionalities.
 
 ---
 
@@ -74,17 +90,21 @@ InfoCrumbs is built upon a modern, modular Django architecture, prioritizing cle
 
 * **Database**: **PostgreSQL (Recommended)** / SQLite (Development) - Provides reliable data storage, with flexibility for easy local setup (SQLite) and scalable deployment (PostgreSQL).
 
+* **Email Service**: **Brevo (formerly Sendinblue)** - Utilized for reliable transactional email delivery (welcome, confirmations, reminders, security alerts).
+
+* **Payment Gateway**: **Stripe** - Integrated for secure and seamless handling of subscription payments via webhooks.
+
 * **External APIs**:
 
-  * **Finnhub**: Utilized for real-time financial news, demonstrating integration with market data APIs.
+    * **Finnhub**: Utilized for real-time financial news, demonstrating integration with market data APIs.
 
-  * **Spoonacular**: Integrates rich food and drink recipe content, showcasing versatility in content types.
+    * **Spoonacular**: Integrates rich food and drink recipe content, showcasing versatility in content types.
 
-  * **Mediastack**: Powers technology news aggregation, highlighting broad news fetching capabilities.
+    * **Mediastack**: Powers technology news aggregation, highlighting broad news fetching capabilities.
 
-  * **Hugging Face Inference API**: A testament to advanced NLP integration for on-the-fly text summarization, tackling challenges like API timeouts for large text inputs.
+    * **Hugging Face Inference API**: A testament to advanced NLP integration for on-the-fly text summarization, tackling challenges like API timeouts for large text inputs.
 
-* **Frontend**: Standard Django Templates (HTML, CSS, JavaScript) - Ensures a direct, efficient rendering pipeline for dynamic content.
+* **Frontend**: Standard Django Templates (HTML, CSS, JavaScript) - Ensures a direct, efficient rendering pipeline for dynamic content, complemented by Bootstrap 5 for responsiveness.
 
 * **Development Tools**: `pip` (Python package management), `Git` (version control), `pytest` (testing).
 
@@ -144,6 +164,18 @@ FINNHUB_API_KEY='your_finnhub_api_key'
 SPOONACULAR_API_KEY='your_spoonacular_api_key'
 MEDIASTACK_API_KEY='your_mediastack_api_key'
 HUGGINGFACE_API_KEY='your_huggingface_api_key'
+
+# Email Service (Brevo/Sendinblue Example)
+EMAIL_HOST_USER='your_brevo_account_email@example.com'
+EMAIL_HOST_PASSWORD='YOUR_BREVO_SMTP_KEY_HERE'
+DEFAULT_FROM_EMAIL='InfoCrumbs <noreply@your-verified-domain.com>' # Must be a verified sender in Brevo
+
+# Stripe Webhooks (Crucial for payment confirmations)
+STRIPE_WH_SECRET='whsec_your_stripe_webhook_secret' # From Stripe Dashboard
+
+# Site URL (used for absolute URLs in emails, e.g., verification links)
+SITE_URL='http://127.0.0.1:8000' # Change to your production domain for deployment (e.g., https://www.infocrumbs.com)
+
 # Add any other environment-specific variables here
 ```
 
@@ -199,7 +231,7 @@ This command runs the `pipeline` app's tasks, populating your database with fres
 
 ## Testing: A Commitment to Quality
 
-InfoCrumbs boasts a comprehensive test suite covering models, forms, views, and critical business logic. This rigorous approach ensures code reliability, prevents regressions, and validates expected system behavior across various user scenarios and subscription states. Our iterative development process, including tackling complex issues like multi-hop redirects and dynamic form validation, has significantly strengthened the application's stability.
+InfoCrumbs boasts a comprehensive test suite covering models, forms, views, and critical business logic. This rigorous approach ensures code reliability, prevents regressions, and validates expected system behavior across various user scenarios and subscription states. Our iterative development process, including tackling complex issues like multi-hop redirects, dynamic form validation, and email sending, has significantly strengthened the application's stability.
 
 For detailed instructions on running the test suite and reviewing coverage, please consult the dedicated [TESTING.md](docs/TESTING.md) document.
 
@@ -211,15 +243,15 @@ For detailed instructions on running the test suite and reviewing coverage, plea
 
 * **PEP 8 Compliance (Python)**:
 
-  * \[Link to PEP 8 report/badge if available\]
+    * [Link to PEP 8 report/badge if available]
 
 * **JavaScript Linting (JSLint/ESLint)**:
 
-  * \[Link to JSLint/ESLint report/badge if available\]
+    * [Link to JSLint/ESLint report/badge if available]
 
 * **HTML/CSS Markup Checks**:
 
-  * \[Link to HTML/CSS validation reports if available\]
+    * [Link to HTML/CSS validation reports if available]
 
 ---
 

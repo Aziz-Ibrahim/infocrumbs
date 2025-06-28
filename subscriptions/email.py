@@ -4,6 +4,8 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Q
+from django.contrib.sites.models import Site
 
 from .models import UserSubscription
 
@@ -11,25 +13,22 @@ from .models import UserSubscription
 def send_subscription_confirmation_email(user, subscription):
     """
     Sends a subscription confirmation email to the user.
-
-    Args:
-        user (CustomUser): The user object to whom the email will be sent.
-        subscription (UserSubscription): The subscription object containing
-        details.
     """
     subject = 'InfoCrumbs Subscription Confirmation!'
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user.email]
 
-    # Context for the email templates
+    current_site = Site.objects.get_current()
+    site_domain = current_site.domain
+
     context = {
         'user': user,
         'subscription': subscription,
         'profile_url': f"{settings.SITE_URL}{reverse('account_profile')}",
         'site_name': 'InfoCrumbs',
+        'site_domain': site_domain,
     }
 
-    # Render HTML and plain text versions
     html_content = render_to_string(
         'subscriptions/email/subscription_confirmation.html', context
     )
@@ -49,58 +48,61 @@ def send_subscription_confirmation_email(user, subscription):
 
 def send_subscription_expiry_reminders():
     """
-    Sends email reminders to users whose subscriptions expire in 24-48 hours.
+    Sends 24-hour subscription expiry reminders to users.
     """
     now = timezone.now()
-    twenty_four = now + timedelta(hours=24)
-    forty_eight = now + timedelta(hours=48)
+    twenty_four_hours_from_now = now + timedelta(hours=24)
+    twenty_five_hours_from_now = now + timedelta(hours=25)
 
-    expiring_subs = UserSubscription.objects.filter(
+    expiring_subscriptions_candidates = UserSubscription.objects.filter(
         active=True,
-        end_date__gte=twenty_four,
-        end_date__lt=forty_eight
-    ).select_related('user')
+        end_date__gte=twenty_four_hours_from_now,
+        end_date__lt=twenty_five_hours_from_now,
+    ).select_related('user').order_by('end_date')
 
-    print(f"Found {expiring_subs.count()} subscriptions expiring soon.")
+    print(
+        f"DEBUG: Found {expiring_subscriptions_candidates.count()} "
+        "subscription candidates for reminder processing."
+    )
 
-    for sub in expiring_subs:
-        user = sub.user
+    current_site = Site.objects.get_current()
+    site_domain = current_site.domain
 
-        # Skip if user already has a queued subscription
-        has_queued_sub = UserSubscription.objects.filter(
+    for subscription_candidate in expiring_subscriptions_candidates:
+        user = subscription_candidate.user
+
+        has_newer_active_subscription = UserSubscription.objects.filter(
             user=user,
-            active=False,
-            start_date__gt=sub.end_date
-        ).exists()
-        if has_queued_sub:
+            active=True,
+            end_date__gt=subscription_candidate.end_date
+        ).exclude(pk=subscription_candidate.pk).exists()
+
+        if has_newer_active_subscription:
+            print(
+                f"DEBUG: Skipping reminder for {user.email} (Subscription ID: "
+                f"{subscription_candidate.pk}). "
+                "Newer active subscription found."
+            )
             continue
 
-        # Skip if reminder already sent in last 24h
-        if (
-            sub.last_reminder_sent and
-            timezone.now() - sub.last_reminder_sent < timedelta(hours=24)
-        ):
-            continue
-
-        context = {
-            'user': user,
-            'subscription': sub,
-            'profile_url': f"{settings.SITE_URL}{reverse('account_profile')}",
-            'choose_plan_url': f"{settings.SITE_URL}{reverse('choose_plan')}",
-            'site_name': 'InfoCrumbs',
-        }
-
-        subject = "Your InfoCrumbs Subscription Expires Soon!"
+        subject = 'Your InfoCrumbs Subscription Expires Soon!'
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [user.email]
 
+        context = {
+            'user': user,
+            'subscription': subscription_candidate,
+            'profile_url': f"{settings.SITE_URL}{reverse('account_profile')}",
+            'choose_plan_url': f"{settings.SITE_URL}{reverse('choose_plan')}",
+            'site_name': 'InfoCrumbs',
+            'site_domain': site_domain,
+        }
+
         html_content = render_to_string(
-            'subscriptions/email/subscription_reminder.html',
-            context
+            'subscriptions/email/subscription_reminder.html', context
         )
         text_content = render_to_string(
-            'subscriptions/email/subscription_reminder.txt',
-            context
+            'subscriptions/email/subscription_reminder.txt', context
         )
 
         msg = EmailMultiAlternatives(
@@ -110,13 +112,15 @@ def send_subscription_expiry_reminders():
             recipient_list
         )
         msg.attach_alternative(html_content, "text/html")
-
         try:
             msg.send()
-            sub.last_reminder_sent = timezone.now()
-            sub.save(update_fields=['last_reminder_sent'])
-            print(f"Reminder sent to {user.email}")
+            print(
+                f'DEBUG: Successfully sent reminder to {user.email} '
+                f'for subscription ending {subscription_candidate.end_date}.'
+            )
         except Exception as e:
-            print(f"Failed to send reminder to {user.email}: {e}")
+            print(
+                f'ERROR: Failed to send reminder to {user.email}: {e}'
+            )
 
-
+    print('DEBUG: Subscription expiry reminders sending process completed.')

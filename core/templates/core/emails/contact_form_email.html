@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission - InfoCrumbs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0A0F2C; /* Matches --bg-dark */
+            color: #B3FFAB; /* Matches --text-light */
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #1A103D; /* Matches --bg-alt */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #A020F0; /* Neon purple border */
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.7); /* Neon purple glow */
+        }
+        .header {
+            background-color: #A020F0; /* Neon purple */
+            padding: 20px;
+            text-align: center;
+            color: #B3FFAB; /* Light text for contrast */
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+            color: #B3FFAB;
+        }
+        .content p {
+            margin-bottom: 15px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .info-table th, .info-table td {
+            padding: 10px;
+            border-bottom: 1px solid #2A1F52;
+            text-align: left;
+        }
+        .info-table th {
+            color: #00F0FF; /* Neon blue for labels */
+            width: 30%;
+        }
+        .info-table td {
+            color: #B3FFAB;
+            font-weight: bold;
+            word-break: break-word; /* Handle long words */
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #80A89C;
+            border-top: 1px solid #2A1F52;
+        }
+        .footer a {
+            color: #00F0FF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>New Contact Form Submission</h1>
+        </div>
+        <div class="content">
+            <p>You have received a new message from the InfoCrumbs contact form.</p>
+            <table class="info-table">
+                <tr>
+                    <th>From Name:</th>
+                    <td>{{ name }}</td>
+                </tr>
+                <tr>
+                    <th>From Email:</th>
+                    <td><a href="mailto:{{ email }}" style="color: #00F0FF; text-decoration: none;">{{ email }}</a></td>
+                </tr>
+                <tr>
+                    <th>Subject:</th>
+                    <td>{{ subject }}</td>
+                </tr>
+            </table>
+            <p style="font-weight: bold; margin-top: 20px; color: #00F0FF;">Message:</p>
+            <p style="background-color: #0A0F2C; padding: 15px; border-radius: 5px; border: 1px solid #2A1F52;">
+                {{ message|linebreaksbr }}
+            </p>
+            <p>You can reply directly to this email to respond to the user.</p>
+            <p>Best regards,<br>Your InfoCrumbs Website Notification System</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            <p>View FAQ: <a href="http://{{ site_domain }}/faq" style="color: #00F0FF; text-decoration: none;">http://{{ site_domain }}/faq</a></p>
+        </div>
+    </div>
+</body>
+</html>

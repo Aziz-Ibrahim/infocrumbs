@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import logout
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.sites.models import Site
 
-from subscriptions.models import UserSubscription, SubscriptionPlan
+from subscriptions.models import UserSubscription
 from .forms import ContactForm
 
 
@@ -73,33 +74,50 @@ def contact_view(request):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
 
-            # Construct the email body
-            email_body = (
-                f"Name: {name}\n"
-                f"Email: {user_email}\n"
-                f"Subject: {subject}\n\n"
-                f"Message:\n{message}"
+            current_site = Site.objects.get_current()
+            site_domain = current_site.domain
+
+            context = {
+                'name': name,
+                'email': user_email,
+                'subject': subject,
+                'message': message,
+                'site_name': 'InfoCrumbs',
+                'site_domain': site_domain,
+            }
+
+            html_message_body = render_to_string(
+                'core/emails/contact_form_email.html', context
+            )
+            plain_message_body = render_to_string(
+                'core/emails/contact_form_email.txt', context
             )
 
             try:
-                send_mail(
+                email = EmailMultiAlternatives(
                     subject=f"Contact Form: {subject}",
-                    message=email_body,
+                    body=plain_message_body,
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=['infocrumbs.app@gmail.com'],
-                    fail_silently=False,
+                    to=['infocrumbs.app@gmail.com'],
+                    reply_to=[user_email],
                 )
+                
+                email.attach_alternative(html_message_body, "text/html")
+
+                email.send(fail_silently=False)
+
                 messages.success(
-                    request, 'Your message has been sent successfully!'
+                    request,
+                    'Your message has been sent successfully!'
                 )
                 return redirect('contact')
             except Exception as e:
                 messages.error(
                     request,
-                    'There was an error sending your message. Please '
-                    'try again later.'
+                    'There was an error sending your message. '
+                    'Please try again later.'
                 )
-                print(f"Error sending contact email: {e}")  # debugging
+                print(f"Error sending contact email: {e}")
         else:
             pass
     else:
