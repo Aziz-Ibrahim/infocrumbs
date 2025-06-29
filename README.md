@@ -12,7 +12,9 @@ InfoCrumbs is a sophisticated Django-based web application engineered to revolut
 
 2. [Technical Architecture & Stack](#technical-architecture--stack)
 
-3. [Installation and Setup](#installation-and-setup)
+3. [Entity-Relationship Diagram (ERD)](#entity-relationship-diagram)
+
+4. [Installation and Setup](#installation-and-setup)
 
     * [Prerequisites](#prerequisites)
 
@@ -30,21 +32,21 @@ InfoCrumbs is a sophisticated Django-based web application engineered to revolut
 
     * [Populate Initial Data](#populate-initial-data)
 
-4. [Running the Application](#running-the-application)
+5. [Running the Application](#running-the-application)
 
     * [Development Server](#development-server)
 
     * [Running the Data Pipeline](#running-the-data-pipeline)
 
-5. [Testing](#testing)
+6. [Testing](#testing)
 
-6. [Code Quality & Linting Reports](#code-quality--linting-reports)
+7. [Code Quality & Linting Reports](#code-quality--linting-reports)
 
-7. [Screenshots](#screenshots)
+8. [Screenshots](#screenshots)
 
-8. [Contributing](#contributing)
+9. [Contributing](#contributing)
 
-9. [License](#license)
+10. [License](#license)
 
 ---
 
@@ -110,7 +112,13 @@ InfoCrumbs is built upon a modern, modular Django architecture, prioritizing cle
 
 ---
 
-## Installation and Setup: A Developer's Guide
+## Entity Relationship Diagram
+
+For through explanation of Entity-Relationship Diagram (ERD)please refer to [ERD file](docs/ERD.md)
+
+---
+
+## Installation and Setup
 
 Getting InfoCrumbs running locally is straightforward, emphasizing best practices for development environments.
 
@@ -127,7 +135,10 @@ Getting InfoCrumbs running locally is straightforward, emphasizing best practice
 Start by cloning the project to your local machine:
 
 ```
-git clone [https://github.com/your-username/infocrumbs.git](https://github.com/your-username/infocrumbs.git)
+git clone 
+```
+[https://github.com/aziz-ibrahim/infocrumbs.git](https://github.com/aziz-ibrahim/infocrumbs.git)
+```
 cd infocrumbs
 ```
 
