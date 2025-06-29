@@ -88,9 +88,10 @@ body {
     color: var(--text-light);
     font-family: var(--font-primary);
     margin: 0;
+    margin-bottom: 70px; /* Space for footer */
     padding: 0;
     padding-top: 70px;
-    padding-bottom: 70px;
+    padding-bottom: 10px;
     overflow-y: auto;
 }
 
