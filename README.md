@@ -268,17 +268,62 @@ For detailed instructions on running the test suite and reviewing coverage, plea
 
 ## Screenshots
 
-*(Placeholder for visual documentation demonstrating the application's key features and user interface.)*
+Below are screenshots demonstrating the application's key features and responsive user interface across various screen sizes.
 
 * **Home Page**:
+    * Small: ![Home Page (Small)](docs/home-sm.png)
+    * Medium: ![Home Page (Medium)](docs/home-md.png)
+    * Large: ![Home Page (Large)](docs/home-lg.png)
 
-* **User Profile & Preferences Page**:
+* **About Page**:
+    * Small: ![About Page (Small)](docs/about-sm.png)
+    * Medium: ![About Page (Medium)](docs/about-md.png)
+    * Large: ![About Page (Large)](docs/about-lg.png)
 
-* **Topic Selection Form**:
+* **Contact Page**:
+    * Small: ![Contact Page (Small)](docs/contact-sm.png)
+    * Medium: ![Contact Page (Medium)](docs/contact-md.png)
+    * Large: ![Contact Page (Large)](docs/contact-lg.png)
 
-* **Content Display (Crumbs List)**:
+* **FAQ Page**:
+    * Small: ![FAQ Page (Small)](docs/faq-sm.png)
+    * Medium: ![FAQ Page (Medium)](docs/faq-md.png)
+    * Large: ![FAQ Page (Large)](docs/faq-lg.png)
 
-* **Admin Interface (Models)**:
+* **Sign Up Page**:
+    * Small: ![Sign Up Page (Small)](docs/profile-sm.png)
+    * Medium: ![Sign Up Page (Medium)](docs/profile-md.png)
+    * Large: ![Sign Up Page (Large)](docs/profile-lg.png)
+
+* **Profile Page**:
+    * Small: ![Profile Page (Small)](docs/profile-sm.png)
+    * Medium: ![Profile Page (Medium)](docs/profile-md.png)
+    * Large: ![Profile Page (Large)](docs/profile-lg.png)
+
+* **Crumbs List Page**:
+    * Small: ![Crumbs List Page (Small)](docs/list-sm.png)
+    * Medium: ![Crumbs List Page (Medium)](docs/list-md.png)
+    * Large: ![Crumbs List Page (Large)](docs/list-lg.png)
+
+* **Crumbs Detail Page**:
+    * Small: ![Crumbs Detail Page (Small)](docs/detail-sm.png)
+    * Medium: ![Crumbs Detail Page (Medium)](docs/detail-md.png)
+    * Large: ![Crumbs Detail Page (Large)](docs/detail-lg.png)
+
+* **Subscription Plans Page**:
+    * Small: ![Subscription Plans Page (Small)](docs/plan-sm.png)
+    * Medium: ![Subscription Plans Page (Medium)](docs/plan-md.png)
+    * Large: ![Subscription Plans Page (Large)](docs/plan-lg.png)
+
+* **Checkout Page**:
+    * Small: ![Checkout Page (Small)](docs/checkout-sm.png)
+    * Medium: ![Checkout Page (Medium)](docs/checkout-md.png)
+    * Large: ![Checkout Page (Large)](docs/checkout-lg.png)
+
+* **Topic Preferences Page**:
+    * Small: ![Topic Preferences Page (Small)](docs/topics-sm.png)
+    * Medium: ![Topic Preferences Page (Medium)](docs/topics-md.png)
+    * Large: ![Topic Preferences Page (Large)](docs/topics-lg.png)
 
 ---
 
