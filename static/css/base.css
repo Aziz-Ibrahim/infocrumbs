@@ -143,6 +143,10 @@ body {
     color: var(--text-light) !important;
 }
 
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
 .glow {
     box-shadow: var(--glow-effect);
 }
