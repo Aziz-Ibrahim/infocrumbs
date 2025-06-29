@@ -238,6 +238,27 @@ python manage.py fetch_crumbs
 
 This command runs the `pipeline` app's tasks, populating your database with fresh, summarized content.
 
+### Automated Tasks (Heroku Scheduler)
+
+In a production environment, InfoCrumbs leverages Heroku Scheduler to automate critical background tasks, ensuring data freshness and timely user communication. The following management commands are scheduled to run daily:
+
+
+```
+python manage.py fetch_crumbs
+```
+* Purpose: Fetches, processes, and summarizes new content from external APIs.
+
+* Schedule: Daily at midnight UTC.
+
+```
+python manage.py send_subscription_reminders
+```
+* Purpose: Dispatches subscription expiry reminder emails to users whose subscriptions are nearing their end.
+
+* Schedule: Daily at 09:00 UTC.
+
+These automated tasks ensure the application's content is always up-to-date and users are kept informed without manual intervention.
+
 ---
 
 ## Testing: A Commitment to Quality
