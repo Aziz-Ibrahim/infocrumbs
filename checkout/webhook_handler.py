@@ -99,7 +99,8 @@ class StripeWH_Handler:
         user_subscription_exists = False
         try:
             user_subscription = UserSubscription.objects.get(
-                stripe_payment_intent_id=pid)
+                stripe_payment_intent_id=pid
+            )
             user_subscription_exists = True
             if not user_subscription.active or \
                user_subscription.plan != plan or \

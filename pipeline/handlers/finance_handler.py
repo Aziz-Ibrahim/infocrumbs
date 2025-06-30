@@ -36,7 +36,9 @@ def handle_finance_crumbs(crumb_data_list):
         raw_summary = item.get("summary", "")
 
         if not title or not url:
-            print(f"Skipping finance crumb due to missing title or URL: {item}")
+            print(
+                f"Skipping finance crumb due to missing title or URL: {item}"
+            )
             continue
 
         if Crumb.objects.filter(title=title, url=url).exists():
@@ -44,7 +46,9 @@ def handle_finance_crumbs(crumb_data_list):
 
         try:
             cleaned_content = clean_text(raw_summary)
-            final_summary = summarize_text(cleaned_content) if cleaned_content else ""
+            final_summary = summarize_text(
+                cleaned_content
+            ) if cleaned_content else ""
 
             published_at = None
             pub_date_str = item.get("published_at")
@@ -56,7 +60,7 @@ def handle_finance_crumbs(crumb_data_list):
                             parsed_dt, timezone.get_current_timezone())
                     else:
                         published_at = parsed_dt
-            
+
             if published_at is None:
                 published_at = timezone_now()
 
@@ -72,8 +76,9 @@ def handle_finance_crumbs(crumb_data_list):
 
             text_for_tagging = f"{title} {cleaned_content}"
             matched_topic_for_tag = tag_crumb_text(text_for_tagging)
-            
-            if matched_topic_for_tag and matched_topic_for_tag != finance_topic:
+
+            if matched_topic_for_tag and \
+                matched_topic_for_tag != finance_topic:
                 crumb.tags.add(matched_topic_for_tag.name)
 
         except Exception as e:

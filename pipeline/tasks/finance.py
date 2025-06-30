@@ -33,7 +33,6 @@ def fetch_finnhub_general_news():
                 published_at_str = datetime.fromtimestamp(
                     datetime_unix, tz=timezone.utc).isoformat()
 
-
             if not title or not url:
                 continue
 

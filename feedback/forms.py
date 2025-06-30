@@ -22,6 +22,11 @@ class CommentForm(forms.ModelForm):
     )
 
     class Meta:
+        """
+        Meta class to define the model and fields for the form.
+        We use an empty fields list to indicate that we are overriding the
+        default fields with our custom field.
+        """
         model = Comment
         fields = []
 
@@ -31,4 +36,3 @@ class CommentForm(forms.ModelForm):
         if commit:
             comment.save()
         return comment
-

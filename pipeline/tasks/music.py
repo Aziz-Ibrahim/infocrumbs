@@ -42,7 +42,6 @@ def fetch_lastfm_top_artists_bios(limit=10):
             if not artist_name:
                 continue
 
-            # Add a small delay to respect Last.fm rate limits (5 requests/second)
             time.sleep(0.2)
 
             artist_info_url = (
@@ -56,10 +55,15 @@ def fetch_lastfm_top_artists_bios(limit=10):
             artist_detail_data = info_response.json()
 
             bio_summary = ""
-            if artist_detail_data.get("artist", {}).get("bio", {}).get("summary"):
-                # Last.fm bios often have a trailing "Read more" link, remove it
-                bio_summary = artist_detail_data["artist"]["bio"]["summary"].split(
-                    '<a href="https://www.last.fm/music/')[0].strip()
+            if artist_detail_data.get(
+                "artist",
+                {}
+            ).get("bio", {}).get("summary"):
+                bio_summary = (
+                    artist_detail_data["artist"]["bio"]["summary"].split(
+                        '<a href="https://www.last.fm/music/'
+                    )[0].strip()
+                )
 
             # Last.fm doesn't provide a direct published_at for artist bios.
             published_at = None

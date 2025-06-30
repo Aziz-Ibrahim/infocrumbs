@@ -34,7 +34,7 @@ def checkout_subscription(request, plan_id, frequency_id):
     This view creates a Stripe PaymentIntent for the purchase and checks if 
     the user has an active subscription. If they do, and the new selection 
     differs from their current plan/frequency, it determines if the user is 
-    eligible for an immediate switch (e.g. within 24 hours of original purchase) 
+    eligible for an immediate switch (within 24 hours of original purchase)
     or must wait until the current plan ends.
     """
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
@@ -68,8 +68,11 @@ def checkout_subscription(request, plan_id, frequency_id):
         return redirect('choose_plan')
     else:
         if not stripe_public_key:
-            messages.warning(request, "Stripe public key is missing. "
-                                "Did you forget to set it in your environment?")
+            messages.warning(
+                request,
+                "Stripe public key is missing. Did you forget to set it in "
+                "your environment?"
+            )
 
         stripe_total = round(final_price * 100)
 

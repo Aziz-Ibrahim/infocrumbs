@@ -94,7 +94,7 @@ def crumb_detail(request, pk):
     ).first()
     if not subscription:
         return redirect('choose_plan')
-    
+
     if request.user.is_authenticated:
         is_saved = SavedCrumb.objects.filter(
             user=request.user,

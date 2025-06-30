@@ -15,7 +15,8 @@ def handle_plant_data(source, data_list):
     based on its content.
 
     :param source: The original source name (e.g., "Perenual", "Trefle").
-    :param data_list: List of dictionaries containing crumb data from a fetcher.
+    :param data_list: List of dictionaries containing crumb data from a
+    fetcher.
     :return: Number of Crumb objects created.
     """
     # Ensure the primary 'plants-and-gardening' topic exists
@@ -42,10 +43,10 @@ def handle_plant_data(source, data_list):
         try:
             # 1. Get raw summary/description
             raw_summary = item.get("summary") or item.get("description", "")
-            
+
             # 2. Clean the raw summary text
             cleaned_content = clean_text(raw_summary)
-            
+
             # 3. Summarize the cleaned text
             # Ensure text is not empty before summarizing to avoid API errors
             final_summary = summarize_text(
@@ -62,7 +63,7 @@ def handle_plant_data(source, data_list):
                 summary=final_summary,
                 url=item["url"],
                 source=item.get("source", source),
-                topic=plant_topic, # Assign the primary topic for plants
+                topic=plant_topic,  # Assign the primary topic for plants
                 published_at=published_at
             )
             created_count += 1
@@ -71,8 +72,7 @@ def handle_plant_data(source, data_list):
             # Combine title and relevant content for comprehensive tagging
             text_for_tagging = f"{item['title']} {cleaned_content}"
             matched_topic_for_tag = tag_crumb_text(text_for_tagging)
-            
-            # If tag_crumb_text returns a Topic object and it's not the primary topic,
+
             # add its name as an additional tag.
             if matched_topic_for_tag and matched_topic_for_tag != plant_topic:
                 crumb.tags.add(matched_topic_for_tag.name)

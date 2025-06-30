@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from datetime import datetime, timezone # Ensure timezone is imported
+from datetime import datetime, timezone
 
 
 def fetch_thenewsapi_sports():
@@ -71,10 +71,10 @@ def fetch_newsdata_fitness():
         crumbs = []
         for article in data.get("results", []):
             title = article.get("title")
-            url = article.get("link") # NewsData.io uses 'link' for URL
+            url = article.get("link")  # NewsData.io uses 'link' for URL
             summary = article.get("description")
-            source = article.get("source_id") # NewsData.io uses 'source_id'
-            published_at_str = article.get("pubDate") # NewsData.io uses 'pubDate'
+            source = article.get("source_id")  # NewsData.io uses 'source_id'
+            published_at_str = article.get("pubDate")
 
             if not title or not url:
                 continue

@@ -33,8 +33,8 @@ def choose_plan(request):
                 })
             else:
                 print(
-                    f"Warning: Could'nt calculate price for plan '{plan.name}' "
-                    f"and duration '{freq.duration_days}'"
+                    f"Warning: Could'nt calculate price for plan '{plan.name}'"
+                    f" and duration '{freq.duration_days}'"
                 )
 
         plan_options.append({

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.contrib.sites.models import Site
 
+
 def send_security_alert_email(user, change_type, ip_address=None):
     """
     Sends a security alert email to the user.
@@ -39,12 +40,3 @@ def send_security_alert_email(user, change_type, ip_address=None):
         )
     msg.attach_alternative(html_content, "text/html")
     msg.send()
-
-# You'll need to call this from your password change signal or profile update view.
-# Example:
-# from django.dispatch import receiver
-# from django.contrib.auth.signals import user_password_changed
-# @receiver(user_password_changed)
-# def password_changed_security_alert(sender, user, request, **kwargs):
-#     ip_address = request.META.get('REMOTE_ADDR') if request else None
-#     send_security_alert_email(user, "password changed", ip_address)

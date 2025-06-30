@@ -1,5 +1,3 @@
-# pipeline/handlers/food_drink_handler.py
-
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.text import slugify
@@ -12,7 +10,8 @@ from pipeline.utils import clean_text, summarize_text, tag_crumb_text
 
 def handle_food_drink_crumbs(crumb_data_list):
     """
-    Handles food and drink related crumbs by creating or updating Crumb objects.
+    Handles food and drink related crumbs by creating or updating Crumb
+    objects.
     Each crumb is primarily associated with the 'food-and-drink' topic
     and can receive additional tags based on its content.
 

@@ -15,7 +15,10 @@ class ContactForm(forms.Form):
     )
     email = forms.EmailField(
         widget=forms.EmailInput(
-            attrs={'placeholder': 'Your Email Address', 'class': 'form-control'}
+            attrs={
+                'placeholder': 'Your Email Address',
+                'class': 'form-control'
+            }
         ),
         help_text="We'll use this to reply to you."
     )
@@ -37,4 +40,3 @@ class ContactForm(forms.Form):
         "assist you better.",
         min_length=10  # Minimum characters for a message
     )
-

@@ -52,7 +52,6 @@ class LikedCrumb(models.Model):
 
     def __str__(self):
         return f"{self.user.username} liked {self.crumb.title}"
-    
 
 
 class Comment(models.Model):

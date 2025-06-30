@@ -4,7 +4,7 @@ import datetime
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
-from django.core.files.uploadedfile import SimpleUploadedFile # New import for dummy image
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from accounts.models import CustomUser
 from subscriptions.models import SubscriptionPlan, UserSubscription
@@ -12,7 +12,10 @@ from .models import UserPreference, Topic
 from .forms import UserPreferenceForm
 
 # Define a minimal dummy image content for tests
-DUMMY_IMAGE_CONTENT = b'GIF89a\x01\x00\x01\x00\x00\xff\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;'
+DUMMY_IMAGE_CONTENT = (
+    b'GIF89a\x01\x00\x01\x00\x00\xff\x00\x00,'
+    b'\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;'
+)
 
 
 class UserPreferenceFormTest(TestCase):
@@ -26,10 +29,38 @@ class UserPreferenceFormTest(TestCase):
             password='password123'
         )
         # Create Topics with dummy images
-        self.topic1 = Topic.objects.create(name='Topic A', image=SimpleUploadedFile("topic_a.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
-        self.topic2 = Topic.objects.create(name='Topic B', image=SimpleUploadedFile("topic_b.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
-        self.topic3 = Topic.objects.create(name='Topic C', image=SimpleUploadedFile("topic_c.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
-        self.topic4 = Topic.objects.create(name='Topic D', image=SimpleUploadedFile("topic_d.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
+        self.topic1 = Topic.objects.create(
+            name='Topic A',
+            image=SimpleUploadedFile(
+                "topic_a.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
+        self.topic2 = Topic.objects.create(
+            name='Topic B',
+            image=SimpleUploadedFile(
+                "topic_b.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
+        self.topic3 = Topic.objects.create(
+            name='Topic C',
+            image=SimpleUploadedFile(
+                "topic_c.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
+        self.topic4 = Topic.objects.create(
+            name='Topic D',
+            image=SimpleUploadedFile(
+                "topic_d.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
 
         self.basic_plan = SubscriptionPlan.objects.create(
             name='basic',
@@ -50,8 +81,10 @@ class UserPreferenceFormTest(TestCase):
             end_date=self.future_end_date
         )
         form = UserPreferenceForm(user=self.user)
-        self.assertIn(f'You can select up to {self.basic_plan.topic_limit} topics.',
-                      form.fields['topics'].help_text)
+        self.assertIn(
+            f'You can select up to {self.basic_plan.topic_limit} topics.',
+            form.fields['topics'].help_text
+        )
 
     def test_form_initialization_premium_subscription(self):
         """
@@ -62,8 +95,10 @@ class UserPreferenceFormTest(TestCase):
             end_date=self.future_end_date
         )
         form = UserPreferenceForm(user=self.user)
-        self.assertIn(f'You can select up to {self.premium_plan.topic_limit} topics.',
-                      form.fields['topics'].help_text)
+        self.assertIn(
+            f'You can select up to {self.premium_plan.topic_limit} topics.',
+            form.fields['topics'].help_text
+        )
 
     def test_form_valid_basic_subscription_max_topics(self):
         """
@@ -80,7 +115,8 @@ class UserPreferenceFormTest(TestCase):
 
     def test_form_valid_premium_subscription_many_topics(self):
         """
-        Premium subscription form should be valid with many topics (up to limit).
+        Premium subscription form should be valid with many
+        topics (up to limit).
         """
         UserSubscription.objects.create(
             user=self.user, plan=self.premium_plan, active=True,
@@ -90,14 +126,24 @@ class UserPreferenceFormTest(TestCase):
         premium_topics_data = []
         for i in range(self.premium_plan.topic_limit):
             # Ensure new topics also have dummy images
-            premium_topics_data.append(Topic.objects.create(name=f'Premium Topic {i}', image=SimpleUploadedFile(f"prem_topic_{i}.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif")).id)
+            premium_topics_data.append(
+                Topic.objects.create(
+                    name=f'Premium Topic {i}',
+                    image=SimpleUploadedFile(
+                        f"prem_topic_{i}.gif",
+                        DUMMY_IMAGE_CONTENT,
+                        content_type="image/gif"
+                    )
+                ).id
+            )
 
         data = {'topics': premium_topics_data}
         form = UserPreferenceForm(data=data, user=self.user)
         self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data['topics'].count(),
-                         self.premium_plan.topic_limit)
-
+        self.assertEqual(
+            form.cleaned_data['topics'].count(),
+            self.premium_plan.topic_limit
+        )
 
     def test_form_invalid_basic_subscription_over_limit(self):
         """
@@ -122,18 +168,28 @@ class UserPreferenceFormTest(TestCase):
             user=self.user, plan=self.premium_plan, active=True,
             end_date=self.future_end_date
         )
-        # Create topics to exceed the premium limit (e.g., 13 topics for limit 12)
         extra_topics = []
         for i in range(self.premium_plan.topic_limit + 1):
             # Ensure new topics also have dummy images
-            extra_topics.append(Topic.objects.create(name=f'Extra Topic {i}', image=SimpleUploadedFile(f"extra_topic_{i}.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif")))
+            extra_topics.append(
+                Topic.objects.create(
+                    name=f'Extra Topic {i}',
+                    image=SimpleUploadedFile(
+                        f"extra_topic_{i}.gif",
+                        DUMMY_IMAGE_CONTENT,
+                        content_type="image/gif"
+                    )
+                )
+            )
 
         data = {'topics': [t.id for t in extra_topics]}
         form = UserPreferenceForm(data=data, user=self.user)
         self.assertFalse(form.is_valid())
-        self.assertIn(f'{self.premium_plan.get_name_display()} plan allows only '
-                      f'{self.premium_plan.topic_limit} topics.',
-                      form.errors['topics'][0])
+        self.assertIn(
+            f'{self.premium_plan.get_name_display()} plan allows only '
+            f'{self.premium_plan.topic_limit} topics.',
+            form.errors['topics'][0]
+        )
 
 
 class SetPreferencesViewTest(TestCase):
@@ -148,9 +204,30 @@ class SetPreferencesViewTest(TestCase):
             password='password123'
         )
         # Create Topics with dummy images
-        self.topic1 = Topic.objects.create(name='Coding', image=SimpleUploadedFile("topic_coding.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
-        self.topic2 = Topic.objects.create(name='Design', image=SimpleUploadedFile("topic_design.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
-        self.topic3 = Topic.objects.create(name='Marketing', image=SimpleUploadedFile("topic_marketing.gif", DUMMY_IMAGE_CONTENT, content_type="image/gif"))
+        self.topic1 = Topic.objects.create(
+            name='Coding',
+            image=SimpleUploadedFile(
+                "topic_coding.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
+        self.topic2 = Topic.objects.create(
+            name='Design',
+            image=SimpleUploadedFile(
+                "topic_design.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
+        self.topic3 = Topic.objects.create(
+            name='Marketing',
+            image=SimpleUploadedFile(
+                "topic_marketing.gif",
+                DUMMY_IMAGE_CONTENT,
+                content_type="image/gif"
+            )
+        )
 
         self.basic_plan = SubscriptionPlan.objects.create(
             name='basic',
@@ -211,21 +288,28 @@ class SetPreferencesViewTest(TestCase):
         """
         self.client.logout()  # Log out the user
         response = self.client.get(self.set_preferences_url)
-        self.assertRedirects(response, reverse('account_login') + '?next=' + self.set_preferences_url)
+        self.assertRedirects(
+            response,
+            reverse(
+                'account_login'
+            ) + '?next=' + self.set_preferences_url
+        )
 
     def test_set_preferences_view_redirects_if_no_subscription(self):
         """
-        Test that the set_preferences view redirects to choose_plan if no active subscription.
+        Test that the set_preferences view redirects to choose_plan if no
+        active subscription.
         """
         # Delete the subscription created in setUp for this specific test
-        self.user_subscription.delete() # Using the stored instance for deletion
+        self.user_subscription.delete()  # Using the stored instance to delete
 
         response = self.client.get(self.set_preferences_url)
         self.assertRedirects(response, reverse('choose_plan'))
 
     def test_set_preferences_view_updates_existing_preference(self):
         """
-        Test that existing preferences are updated rather than new ones created.
+        Test that existing preferences are updated rather than
+        new ones created.
         """
         # UserSubscription is already created in setUp for this user
         # Set an initial preference using the stored self.user_preference

@@ -23,7 +23,7 @@ class CrumbModelTest(TestCase):
         """
         self.unique_topic_name = 'TestTopicForCrumbModel'
         self.topic = Topic.objects.create(name=self.unique_topic_name)
-    
+
     def test_crumb_creation(self):
         """
         Ensure a Crumb can be created and its fields are set correctly.
@@ -77,8 +77,10 @@ class CrumbListViewTest(TestCase):
         self.topic3 = Topic.objects.create(name='HealthTopic')
 
         self.crumb1_tech = Crumb.objects.create(
-            title='Tech Crumb 1', summary='S1', url='http://t1.com',
-            source='Tech Source', topic=self.topic1, published_at=timezone.now()
+            title='Tech Crumb 1',
+            summary='S1', url='http://t1.com',
+            source='Tech Source',
+            topic=self.topic1, published_at=timezone.now()
         )
         self.crumb2_finance = Crumb.objects.create(
             title='Finance Crumb 1', summary='S2', url='http://f1.com',
@@ -119,8 +121,8 @@ class CrumbListViewTest(TestCase):
 
     def test_crumb_list_redirects_user_without_subscription(self):
         """
-        Ensure authenticated users without an active subscription are redirected
-        to the choose_plan page.
+        Ensure authenticated users without an active subscription are
+        redirected to the choose_plan page.
         """
         self.client.login(username='testuser', password='password123')
         response = self.client.get(reverse('crumb_list'))
@@ -233,7 +235,10 @@ class CrumbListViewTest(TestCase):
         response = self.client.get(reverse('crumb_list'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.crumb1_tech.id, response.context['saved_crumbs'])
-        self.assertNotIn(self.crumb2_finance.id, response.context['saved_crumbs'])
+        self.assertNotIn(
+            self.crumb2_finance.id,
+            response.context['saved_crumbs']
+        )
 
     def test_crumb_list_pagination(self):
         """
@@ -292,7 +297,12 @@ class CrumbDetailViewTest(TestCase):
         """
         Ensure crumb_detail view renders successfully for an existing crumb.
         """
-        response = self.client.get(reverse('crumb_detail', args=[self.crumb.pk]))
+        response = self.client.get(
+            reverse(
+                'crumb_detail',
+                args=[self.crumb.pk]
+            )
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'crumbs/crumb_detail.html')
         self.assertEqual(response.context['crumb'], self.crumb)
@@ -316,7 +326,12 @@ class CrumbDetailViewTest(TestCase):
         SavedCrumb.objects.create(user=self.user, crumb=self.crumb)
         self.client.login(username='testuser', password='password123')
 
-        response = self.client.get(reverse('crumb_detail', args=[self.crumb.pk]))
+        response = self.client.get(
+            reverse(
+                'crumb_detail',
+                args=[self.crumb.pk]
+            )
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['is_saved'])
 
@@ -327,6 +342,11 @@ class CrumbDetailViewTest(TestCase):
         """
         self.client.login(username='testuser', password='password123')
 
-        response = self.client.get(reverse('crumb_detail', args=[self.crumb.pk]))
+        response = self.client.get(
+            reverse(
+                'crumb_detail',
+                args=[self.crumb.pk]
+            )
+        )
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['is_saved'])

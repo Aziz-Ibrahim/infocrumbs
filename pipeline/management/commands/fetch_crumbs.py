@@ -29,6 +29,7 @@ from pipeline.handlers import (
     diy_handler,
     )
 
+
 class Command(BaseCommand):
     help = 'Fetches crumbs from various sources and adds them to the database.'
 
@@ -43,16 +44,18 @@ class Command(BaseCommand):
         created_perenual = plants_handler.handle_plant_data(
             "Perenual", perenual_data)
         self.stdout.write(
-            self.style.SUCCESS(f"{created_perenual} plant crumbs saved from "
-                               "Perenual.")
+            self.style.SUCCESS(
+                f"{created_perenual} plant crumbs saved from Perenual."
+            )
         )
 
         trefle_data = plants.fetch_trefle_plants()
         created_trefle = plants_handler.handle_plant_data(
             "Trefle", trefle_data)
         self.stdout.write(
-            self.style.SUCCESS(f"{created_trefle} plant crumbs saved from "
-                                "Trefle.")
+            self.style.SUCCESS(
+                f"{created_trefle} plant crumbs saved from Trefle."
+            )
         )
 
         permapeople_data = plants.fetch_permapeople_plants()
@@ -71,8 +74,9 @@ class Command(BaseCommand):
             environment_articles
             )
         self.stdout.write(
-            self.style.SUCCESS(f"{created_environment} environment crumbs "
-                               "saved.")
+            self.style.SUCCESS(
+                f"{created_environment} environment crumbs saved."
+            )
         )
 
         total_created = sum([
@@ -86,8 +90,10 @@ class Command(BaseCommand):
             thenewsapi_sports_data)
         total_created += created_thenewsapi
         self.stdout.write(
-            self.style.SUCCESS(f"{created_thenewsapi} general sports crumbs "
-                               "saved from TheNewsAPI.")
+            self.style.SUCCESS(
+                f"{created_thenewsapi} general sports crumbs saved "
+                "from TheNewsAPI."
+            )
         )
 
         # Fetches and handles NewsData.io Fitness news
@@ -98,8 +104,10 @@ class Command(BaseCommand):
             newsdata_fitness_data)
         total_created += created_newsdata_fitness
         self.stdout.write(
-            self.style.SUCCESS(f"{created_newsdata_fitness} fitness crumbs "
-                               "saved from NewsData.io.")
+            self.style.SUCCESS(
+                f"{created_newsdata_fitness} fitness crumbs saved from "
+                "NewsData.io."
+            )
         )
 
         # Fetches and handles Finnhub General News
@@ -108,8 +116,9 @@ class Command(BaseCommand):
         created_finance = finance_handler.handle_finance_crumbs(finnhub_data)
         total_created += created_finance
         self.stdout.write(
-            self.style.SUCCESS(f"{created_finance} finance crumbs saved from "
-                               "Finnhub.")
+            self.style.SUCCESS(
+                f"{created_finance} finance crumbs saved from Finnhub."
+            )
         )
 
         # Fetches and handles NewsData.io World News
@@ -119,8 +128,10 @@ class Command(BaseCommand):
             newsdata_world_news_data)
         total_created += created_newsdata_world_news
         self.stdout.write(
-            self.style.SUCCESS(f"{created_newsdata_world_news} world news "
-                               "crumbs saved from NewsData.io.")
+            self.style.SUCCESS(
+                f"{created_newsdata_world_news} world news crumbs saved from "
+                "NewsData.io."
+            )
         )
 
         # Fetches and handles NewsAPI.org World News
@@ -131,8 +142,10 @@ class Command(BaseCommand):
             newsapi_world_news_data)
         total_created += created_newsapi_world_news
         self.stdout.write(
-            self.style.SUCCESS(f"{created_newsapi_world_news} world news "
-                               "crumbs saved from NewsAPI.org.")
+            self.style.SUCCESS(
+                f"{created_newsapi_world_news} world news crumbs saved from "
+                "NewsAPI.org."
+            )
         )
 
         # Fetches and handles Last.fm Artist Bios
@@ -142,8 +155,10 @@ class Command(BaseCommand):
             lastfm_artist_data)
         total_created += created_lastfm_artists
         self.stdout.write(
-            self.style.SUCCESS(f"{created_lastfm_artists} music (artist bio) "
-                               "crumbs saved from Last.fm.")
+            self.style.SUCCESS(
+                f"{created_lastfm_artists} music (artist bio) crumbs saved "
+                "from Last.fm."
+            )
         )
 
         # Fetches and handles NewsData.io Music News
@@ -153,8 +168,10 @@ class Command(BaseCommand):
             newsdata_music_data)
         total_created += created_newsdata_music
         self.stdout.write(
-            self.style.SUCCESS(f"{created_newsdata_music} music news crumbs "
-                               "saved from NewsData.io.")
+            self.style.SUCCESS(
+                f"{created_newsdata_music} music news crumbs saved from "
+                "NewsData.io."
+            )
         )
 
         # Fetches and handles Mediastack Technology News
@@ -164,8 +181,9 @@ class Command(BaseCommand):
             mediastack_tech_data)
         total_created += created_tech
         self.stdout.write(
-            self.style.SUCCESS(f"{created_tech} technology crumbs saved from "
-                               "Mediastack.")
+            self.style.SUCCESS(
+                f"{created_tech} technology crumbs saved from Mediastack."
+            )
         )
 
         # Fetches and handles Spoonacular random recipes
@@ -176,8 +194,10 @@ class Command(BaseCommand):
             )
         total_created += created_spoonacular
         self.stdout.write(
-            self.style.SUCCESS(f"{created_spoonacular} food & drink (recipe) "
-                               "crumbs saved from Spoonacular.")
+            self.style.SUCCESS(
+                f"{created_spoonacular} food & drink (recipe) crumbs saved "
+                "from Spoonacular."
+            )
         )
 
         # Fetches and handles NewsData.io Food & Drink News
@@ -187,8 +207,10 @@ class Command(BaseCommand):
             newsdata_food_drink_data)
         total_created += created_newsdata_food_drink
         self.stdout.write(
-            self.style.SUCCESS(f"{created_newsdata_food_drink} food & drink "
-                               "news crumbs saved from NewsData.io.")
+            self.style.SUCCESS(
+                f"{created_newsdata_food_drink} food & drink news crumbs "
+                "saved from NewsData.io."
+            )
         )
 
         # Fetches and handles Useless Facts
@@ -198,8 +220,9 @@ class Command(BaseCommand):
             useless_facts_data)
         total_created += created_useless_facts
         self.stdout.write(
-            self.style.SUCCESS(f"{created_useless_facts} useless fact crumbs "
-                               "saved.")
+            self.style.SUCCESS(
+                f"{created_useless_facts} useless fact crumbs saved."
+            )
         )
 
         # Fetches and handles Chuck Norris Jokes
@@ -209,8 +232,9 @@ class Command(BaseCommand):
             chuck_norris_data)
         total_created += created_chuck_norris
         self.stdout.write(
-            self.style.SUCCESS(f"{created_chuck_norris} Chuck Norris joke "
-                               "crumbs saved.")
+            self.style.SUCCESS(
+                f"{created_chuck_norris} Chuck Norris joke crumbs saved."
+            )
         )
 
         # Fetches and handles Open Trivia questions
@@ -220,8 +244,9 @@ class Command(BaseCommand):
             open_trivia_data)
         total_created += created_open_trivia
         self.stdout.write(
-            self.style.SUCCESS(f"{created_open_trivia} Open Trivia question "
-                               "crumbs saved.")
+            self.style.SUCCESS(
+                f"{created_open_trivia} Open Trivia question crumbs saved."
+            )
         )
 
         # Fetches and handles NewsAPI.org Fashion News
@@ -230,20 +255,29 @@ class Command(BaseCommand):
         created_fashion = fashion_handler.handle_fashion_crumbs(fashion_data)
         total_created += created_fashion
         self.stdout.write(
-            self.style.SUCCESS(f"{created_fashion} fashion crumbs saved from "
-                               "NewsAPI.org.")
+            self.style.SUCCESS(
+                f"{created_fashion} fashion crumbs saved from NewsAPI.org."
+            )
         )
 
         # Fetches and handles NewsAPI.org Cars & Transport News
-        self.stdout.write("Fetching cars and transport news "
-                          "from NewsAPI.org...")
-        cars_transport_data = cars_transport.fetch_newsapi_cars_transport_news()
-        created_cars_transport = cars_transport_handler.handle_cars_transport_crumbs(
-            cars_transport_data)
+        self.stdout.write(
+            "Fetching cars and transport news from NewsAPI.org..."
+        )
+        cars_transport_data = (
+            cars_transport.fetch_newsapi_cars_transport_news()
+        )
+        created_cars_transport = (
+            cars_transport_handler.handle_cars_transport_crumbs(
+                cars_transport_data
+            )
+        )
         total_created += created_cars_transport
         self.stdout.write(
-            self.style.SUCCESS(f"{created_cars_transport} cars & transport "
-                               "crumbs saved from NewsAPI.org.")
+            self.style.SUCCESS(
+                f"{created_cars_transport} cars & transport crumbs saved from "
+                "NewsAPI.org."
+            )
         )
 
         # Fetches and handles NewsAPI.org DIY News
@@ -252,8 +286,9 @@ class Command(BaseCommand):
         created_diy = diy_handler.handle_diy_crumbs(diy_data)
         total_created += created_diy
         self.stdout.write(
-            self.style.SUCCESS(f"{created_diy} DIY crumbs saved from "
-                               "NewsAPI.org.")
+            self.style.SUCCESS(
+                f"{created_diy} DIY crumbs saved from NewsAPI.org."
+            )
         )
 
         # Print the total number of crumbs added

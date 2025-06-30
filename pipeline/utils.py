@@ -4,7 +4,9 @@ from django.conf import settings
 
 
 # Define constants for Hugging Face API
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HUGGINGFACE_API_URL = (
+    "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+)
 # Max characters to send for summarization. Adjust as needed.
 MAX_SUMMARY_INPUT_LENGTH = 1000
 # Timeout for the API request in seconds
@@ -46,12 +48,14 @@ def summarize_text(text):
         if result and isinstance(
             result,
             list
-            ) and result[0].get("summary_text"):
+        ) and result[0].get("summary_text"):
             return result[0]["summary_text"]
         return ""  # Return empty if no summary text found
     except requests.exceptions.Timeout:
-        print(f"HuggingFace summarization error: Read timed out. "
-              f"(timeout={HF_API_TIMEOUT}s)")
+        print(
+            f"HuggingFace summarization error: Read timed out."
+            f"(timeout={HF_API_TIMEOUT}s)"
+        )
         return ""  # Return empty string on timeout
     except requests.exceptions.RequestException as e:
         print(f"HuggingFace summarization API request error: {e}")

@@ -125,7 +125,7 @@ def fetch_open_trivia(amount=5):
 
             title = f"{category} ({difficulty.capitalize()}) Trivia"
             summary = f"Question: {question}\nAnswer: {correct_answer}"
-            
+
             crumbs.append({
                 "title": title[:255],
                 "summary": summary,

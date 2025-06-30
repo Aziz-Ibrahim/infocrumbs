@@ -18,6 +18,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
+
 @receiver(post_save, sender=CustomUser)
 def save_user_profile(sender, instance, **kwargs):
     """
@@ -29,11 +30,13 @@ def save_user_profile(sender, instance, **kwargs):
 
 User = get_user_model()
 
+
 # --- Signal for User Changes (Password & Profile Details) ---
 @receiver(pre_save, sender=User)
 def track_user_changes_pre_save(sender, instance, **kwargs):
     """
-    Stores the original field values of a User instance (including password hash)
+    Stores the original field values of a User instance
+    (including password hash)
     before it's saved. This allows comparison in post_save.
     """
     if instance.pk:
@@ -47,6 +50,7 @@ def track_user_changes_pre_save(sender, instance, **kwargs):
         except sender.DoesNotExist:
             pass
 
+
 @receiver(post_save, sender=User)
 def user_changes_security_alert(sender, instance, created, **kwargs):
     """
@@ -59,7 +63,7 @@ def user_changes_security_alert(sender, instance, created, **kwargs):
     changed_fields = []
     password_changed = False
 
-    request = kwargs.get('request', None) 
+    request = kwargs.get('request', None)
     ip_address = None
     if request:
         x_forwarded_for = request.META.get('X-Forwarded-For')
@@ -84,7 +88,7 @@ def user_changes_security_alert(sender, instance, created, **kwargs):
         '__original_last_name'
     ) and instance.__original_last_name != instance.last_name:
         changed_fields.append("last name")
-    
+
     if hasattr(
         instance,
         '__original_password_hash'
@@ -110,12 +114,12 @@ def user_changes_security_alert(sender, instance, created, **kwargs):
             change_description = (
                 f"profile details ({', '.join(changed_fields)}) updated"
             )
-        
+
         try:
             send_security_alert_email(instance, change_description, ip_address)
             print(
-                f"DEBUG: Security alert email sent for {change_description} to "
-                f"{instance.email}."
+                f"DEBUG: Security alert email sent for {change_description} "
+                f"to {instance.email}."
             )
         except Exception as e:
             print(

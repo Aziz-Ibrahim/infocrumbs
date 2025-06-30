@@ -4,6 +4,8 @@
 
 InfoCrumbs is a sophisticated Django-based web application engineered to revolutionize how users consume digital content. In today's overwhelming information landscape, InfoCrumbs cuts through the noise by delivering **personalized news and articles**—or "crumbs"—directly tailored to individual interests and tiered subscription plans. This project showcases a robust backend data pipeline, dynamic content summarization, and a meticulously designed user experience, built with scalability and maintainability in mind.
 
+A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.com/)
+
 ---
 
 ## Table of Contents
@@ -42,11 +44,15 @@ InfoCrumbs is a sophisticated Django-based web application engineered to revolut
 
 7. [Code Quality & Linting Reports](#code-quality--linting-reports)
 
-8. [Screenshots](#screenshots)
+8. [Wireframes](#wireframes)
 
-9. [Contributing](#contributing)
+9. [Screenshots](#screenshots)
 
-10. [License](#license)
+10. [Future Improvements](#future-improvements)
+
+11. [Contributing](#contributing)
+
+12. [License](#license)
 
 ---
 
@@ -274,8 +280,8 @@ For detailed instructions on running the test suite and reviewing coverage, plea
 *(Placeholder for evidence of adherence to coding standards and best practices.)*
 
 * **PEP 8 Compliance (Python)**:
-
-    * [Link to PEP 8 report/badge if available]
+A comprehensive review of all Python files within the project was conducted using Code Institute's PEP 8 linter tool. The detailed report, including screenshots of the linter output for each file, is available below, demonstrating a strong commitment to Python's style guide.
+    * [View PEP 8 Compliance Report (PDF)](docs/infocrumbs-pep8-check.pdf)
 
 * **JavaScript Linting (JSLint/ESLint)**:
 
@@ -287,6 +293,12 @@ For detailed instructions on running the test suite and reviewing coverage, plea
 
 ---
 
+## Wireframes
+The application's design process began with detailed wireframes, outlining the layout and user flow for all pages across different device sizes (small, medium, and large). These visual blueprints guided the development of the responsive user interface.
+
+* [View Wireframes (PDF):](docs/infocrumbs-wireframes.pdf)
+
+---
 ## Screenshots
 
 Below are screenshots demonstrating the application's key features and responsive user interface across various screen sizes.
@@ -348,9 +360,27 @@ Below are screenshots demonstrating the application's key features and responsiv
 
 ---
 
+## Future Improvements
+
+InfoCrumbs is continuously evolving. Here are some key features and enhancements planned for future development:
+
+* Enhanced Content Recommendation (Liked Crumb Feature):
+  - Goal: To significantly improve the content recommendation algorithm.
+  - Mechanism: Leverage user "likes" (captured by the existing `LikedCrumb` model in the `feedback` app) to understand individual preferences at a deeper level. This data will be used to fine-tune the content delivery, ensuring users receive even more relevant and engaging "crumbs." Research into collaborative filtering and content-based recommendation algorithms is ongoing.
+
+* Comprehensive Automated Testing for API Integrations:
+   - Goal: Expand the test suite to include robust automated testing for all components interacting with external APIs.
+   - Focus Areas: Prioritize testing for the `pipeline` app (ensuring reliable data fetching, processing, and summarization from Finnhub, Spoonacular, Mediastack, and Hugging Face) and the `checkout` app (verifying seamless interaction with Stripe's API and webhooks). This will enhance system stability and data integrity.
+
+* Transition to a Modern React Frontend:
+  - Goal: Evolve the user interface into a dynamic and highly interactive Single Page Application (SPA).
+  - Preparation: The groundwork has been laid with the inclusion of `api_urls.py` and `api_views.py` files in relevant Django apps. These API endpoints are designed to serve data to a decoupled frontend, facilitating a smooth transition to a React-based UI for improved responsiveness, user experience, and development scalability.
+
+---
+
 ## Contributing
 
-We welcome contributions to InfoCrumbs! Please feel free to open issues, suggest enhancements, or submit pull requests.
+I welcome contributions to InfoCrumbs! Please feel free to open issues, suggest enhancements, or submit pull requests.
 
 ---
 

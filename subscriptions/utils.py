@@ -1,5 +1,6 @@
 from .models import SubscriptionPlan, SubscriptionFrequency
 
+
 def calculate_subscription_price(plan_name, duration_days):
     """
     Calculates the subscription price based on plan name and duration.
@@ -17,7 +18,7 @@ def calculate_subscription_price(plan_name, duration_days):
             )
         discount_percent = frequency.discount_percent
     except SubscriptionFrequency.DoesNotExist:
-        discount_percent = 0 # No discount if frequency not found
+        discount_percent = 0  # No discount if frequency not found
 
     MONTH_DAYS = 30
     number_of_billing_units = duration_days / MONTH_DAYS

@@ -80,7 +80,6 @@ class CoreViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)  # Expect a redirect
         self.assertRedirects(response, reverse('account_login'))
 
-
     def test_logout_redirect(self):
         """
         Test that the /logout/ URL redirects through allauth logout

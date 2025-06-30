@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 from django.core import mail  # For testing emails at a later stage
-from django.core.exceptions import ValidationError # Import ValidationError explicitly
+from django.core.exceptions import ValidationError
 
 # Import models from other apps that are linked to
 # Profile for testing relationships
@@ -21,6 +21,7 @@ from subscriptions.models import (
 
 # Get the custom user model as defined in settings.AUTH_USER_MODEL
 CustomUser = get_user_model()
+
 
 class CustomUserModelTest(TestCase):
     """Test the CustomUser model and its methods."""
@@ -90,7 +91,8 @@ class CustomUserModelTest(TestCase):
         user = CustomUser.objects.create_user(
             username='weeklyuser',
             email='weekly@example.com',
-            password='p',subscription_type='weekly'
+            password='p',
+            subscription_type='weekly'
             )
         self.assertEqual(user.subscription_type, 'weekly')
 
@@ -105,7 +107,7 @@ class CustomUserModelTest(TestCase):
         with self.assertRaisesMessage(
             ValidationError,
             "Value 'invalid_type' is not a valid choice."
-            ):
+        ):
             user_invalid.full_clean()
 
 
@@ -135,7 +137,6 @@ class ProfileModelTest(TestCase):
             name="Test Topic",
             slug="test-topic"
             )
-
 
     def test_profile_creation_via_signal(self):
         """Test that a profile is automatically created
@@ -192,8 +193,14 @@ class AccountViewsTest(TestCase):
         self.profile, created = Profile.objects.get_or_create(user=self.user)
 
         # Create dummy data for related models
-        self.crumb1 = Crumb.objects.create(title="Crumb 1", content="Content 1")
-        self.crumb2 = Crumb.objects.create(title="Crumb 2", content="Content 2")
+        self.crumb1 = Crumb.objects.create(
+            title="Crumb 1",
+            content="Content 1"
+        )
+        self.crumb2 = Crumb.objects.create(
+            title="Crumb 2",
+            content="Content 2"
+        )
         self.saved_crumb1 = SavedCrumb.objects.create(
             user=self.user,
             crumb=self.crumb1
@@ -234,21 +241,19 @@ class AccountViewsTest(TestCase):
         # Log in the user for subsequent tests that require authentication
         self.client.login(username='viewtestuser', password='password123')
 
-
     def test_profile_view_requires_login(self):
         """Test that profile_view redirects unauthenticated users."""
         self.client.logout()  # Ensure logged out
         response = self.client.get(reverse('account_profile'))
-        self.assertEqual(response.status_code, 302) # Redirect
+        self.assertEqual(response.status_code, 302)  # Redirect
         # Redirects to Allauth login
         self.assertIn('/accounts/login/', response.url)
 
     def test_profile_view_loads_for_authenticated_user(self):
         """Test that profile_view loads correctly for authenticated users."""
         response = self.client.get(reverse('account_profile'))
-        self.assertEqual(response.status_code, 200) # OK
+        self.assertEqual(response.status_code, 200)  # OK
         self.assertTemplateUsed(response, 'account/profile.html')
-
 
     def test_load_account_details_partial(self):
         """Test loading of account details partial via AJAX."""
@@ -269,7 +274,6 @@ class AccountViewsTest(TestCase):
             html
             )
 
-
     def test_account_update_post_redirects(self):
         """Test that account_update redirects after a successful POST."""
         response = self.client.post(reverse('account_update'), {
@@ -280,7 +284,6 @@ class AccountViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)
         # Redirect to profile
         self.assertRedirects(response, reverse('account_profile'))
-
 
     def test_account_update_updates_user_data(self):
         """Test that account_update correctly updates user data."""
@@ -308,7 +311,6 @@ class AccountViewsTest(TestCase):
             "Account details updated successfully."
             )
 
-
     def test_account_update_only_updates_provided_fields(self):
         """Test that account_update only updates fields that are provided."""
         self.user.first_name = "InitialFirst"
@@ -330,7 +332,6 @@ class AccountViewsTest(TestCase):
             'viewtest@example.com'
             )  # Should remain unchanged
 
-
     def test_load_saved_crumbs_partial(self):
         """Test loading of saved crumbs partial via AJAX."""
         response = self.client.get(reverse('load_saved_crumbs_partial'))
@@ -347,10 +348,9 @@ class AccountViewsTest(TestCase):
             self.crumb1.title
             )  # An alternative way to check content
 
-
     def test_load_saved_crumbs_partial_no_crumbs(self):
         """Test loading saved crumbs when none are saved."""
-        SavedCrumb.objects.filter(user=self.user).delete()  # Clear saved crumbs
+        SavedCrumb.objects.filter(user=self.user).delete()
         response = self.client.get(reverse('load_saved_crumbs_partial'))
         self.assertEqual(response.status_code, 200)
         html = response.json()['html']
@@ -367,7 +367,6 @@ class AccountViewsTest(TestCase):
         self.assertIn(self.comment2.text, html)
         self.assertContains(response, self.comment1.text)
 
-
     def test_load_comments_partial_no_comments(self):
         """Test loading comments when none exist for the user."""
         Comment.objects.filter(user=self.user).delete()  # Clear comments
@@ -375,7 +374,6 @@ class AccountViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         html = response.json()['html']
         self.assertIn("No comments yet.", html)
-
 
     def test_load_preferences_partial(self):
         """Test loading of preferences partial via AJAX."""
@@ -390,7 +388,6 @@ class AccountViewsTest(TestCase):
             )  # Check if the topic name is in the HTML
         self.assertNotContains(response, self.topic2.name)  # topic2 not added
 
-
     def test_load_preferences_partial_no_preferences(self):
         """Test loading preferences when user has no preferences set."""
         self.user_preference.topics.clear()  # Clear topics
@@ -399,7 +396,6 @@ class AccountViewsTest(TestCase):
         html = response.json()['html']
         self.assertIn("No topics selected", html)
         self.assertNotIn(self.topic1.name, html)
-
 
     def test_load_subscription_partial(self):
         """Test loading of subscription partial via AJAX."""
@@ -412,7 +408,6 @@ class AccountViewsTest(TestCase):
         self.assertIn(self.frequency.name, html)
         self.assertIn(str(self.user_subscription.start_date), html)
         self.assertIn(str(self.user_subscription.end_date), html)
-
 
     def test_load_subscription_partial_no_subscription(self):
         """Test loading subscription when user has no active subscription."""

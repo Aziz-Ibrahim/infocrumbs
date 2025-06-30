@@ -74,7 +74,7 @@ def fetch_newsapi_world_news():
             url = article.get("url")
             summary = article.get("description")
             source_name = article.get("source", {}).get("name")
-            published_at_str = article.get("publishedAt") # ISO 8601 format
+            published_at_str = article.get("publishedAt")  # ISO 8601 format
 
             if not title or not url:
                 continue
