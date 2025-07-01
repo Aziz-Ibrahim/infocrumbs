@@ -283,9 +283,10 @@ For detailed instructions on running the test suite and reviewing coverage, plea
 A comprehensive review of all Python files within the project was conducted using Code Institute's PEP 8 linter tool. The detailed report, including screenshots of the linter output for each file, is available below, demonstrating a strong commitment to Python's style guide.
     * [View PEP 8 Compliance Report (PDF)](docs/infocrumbs-pep8-check.pdf)
 
-* **JavaScript Linting (JSLint/ESLint)**:
+* **JavaScript Linting (JSHint)**:
+All JavaScript files have been thoroughly checked for quality and adherence to best practices using JSHint. The comprehensive report, including linter output, is provided to ensure robust and maintainable frontend scripting.
 
-    * [Link to JSLint/ESLint report/badge if available]
+    * [View JSHint Compliance Report (PDF)](docs/infocrumbs-jshint-report.pdf)
 
 * **HTML/CSS Markup Checks**:
 

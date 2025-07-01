@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Error saving crumb:", err);
             });
         });
-    };
+    }
 
     function getCSRFToken() {
         return document.querySelector('[name=csrfmiddlewaretoken]').value;
