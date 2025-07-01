@@ -277,8 +277,6 @@ For detailed instructions on running the test suite and reviewing coverage, plea
 
 ## Code Quality & Linting Reports
 
-*(Placeholder for evidence of adherence to coding standards and best practices.)*
-
 * **PEP 8 Compliance (Python)**:
 A comprehensive review of all Python files within the project was conducted using Code Institute's PEP 8 linter tool. The detailed report, including screenshots of the linter output for each file, is available below, demonstrating a strong commitment to Python's style guide.
     * [View PEP 8 Compliance Report (PDF)](docs/infocrumbs-pep8-check.pdf)
@@ -289,8 +287,8 @@ All JavaScript files have been thoroughly checked for quality and adherence to b
     * [View JSHint Compliance Report (PDF)](docs/infocrumbs-jshint-report.pdf)
 
 * **HTML/CSS Markup Checks**:
-
-    * [Link to HTML/CSS validation reports if available]
+The project's HTML and CSS files have undergone rigorous validation to ensure adherence to web standards, promoting cross-browser compatibility and accessibility. The detailed validation report highlights compliance and provides explanations for accepted warnings related to modern CSS features and external imports.
+    * [View HTML/CSS Validation Report (PDF)](docs/infocrumbs-markup-validation-report.pdf)
 
 ---
 

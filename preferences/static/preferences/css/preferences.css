@@ -31,8 +31,9 @@
 }
 
 .topic-image {
+    display: block;
     width: 100%;
-    aspect-ratio: 1 / 1; /* Ensures square tiles */
+    aspect-ratio: 1 / 1;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

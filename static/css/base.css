@@ -233,6 +233,5 @@ body {
 
 .dark-list-group .list-group-item {
     background-color: var(--bg-dark);
-    border-color: var(--border-gradient);
     color: var(--text-light);
 }

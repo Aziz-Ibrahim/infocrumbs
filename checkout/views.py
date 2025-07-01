@@ -149,11 +149,33 @@ def cache_checkout_data(request):
 
 def checkout_success(request, payment_intent_id):
     """
-    Renders the success page after a successful payment.
-    This view would typically retrieve payment details using payment_intent_id
-    and display confirmation to the user.
+    Handles successful checkouts, displaying subscription details.
     """
-    return render(
-        request, 'checkout/checkout_success.html',
-        {'payment_intent_id': payment_intent_id}
+    subscription = get_object_or_404(
+        UserSubscription,
+        stripe_payment_intent_id=payment_intent_id,
+        user=request.user
+    )
+
+    # Mark the subscription as active if it's not already
+    if not subscription.active:
+        subscription.active = True
+        subscription.save()
+        messages.success(
+            request,
+            f'Successfully activated your {subscription.plan.name} '
+            'subscription!'
         )
+    else:
+        messages.info(
+            request,
+            f'Your {subscription.plan.name} subscription is already active.'
+        )
+
+    context = {
+        'subscription': subscription,
+        'plan': subscription.plan,
+        'frequency': subscription.frequency,
+        'from_checkout': True,
+    }
+    return render(request, 'checkout/checkout_success.html', context)

@@ -21,10 +21,10 @@
         <div class="row">
             <div class="col">
                 <hr>
-                <h2 class="logo-font mb-4">Subscription Confirmed!</h2>
+                <h2 class="logo-font mb-4 text-light">Subscription Confirmed!</h2>
                 <hr>
                 {% if subscription %}
-                    <p class="text-black">Your subscription information is below.</p>
+                    <p class="text-muted">Your subscription information is below.</p>
                     <div class="order-confirmation-wrapper p-2 border">
                         <div class="row">
                             <div class="col">
@@ -34,51 +34,51 @@
 
                         <div class="row">
                             <div class="col-12 col-md-4">
-                                <p class="mb-0 text-black font-weight-bold">Plan</p>
+                                <p class="mb-0 text-muted font-weight-bold">Plan</p>
                             </div>
                             <div class="col-12 col-md-8 text-md-right">
-                                <p class="mb-0">{{ subscription.plan.get_name_display }}</p>
+                                <p class="text-light mb-0">{{ subscription.plan.get_name_display }}</p>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12 col-md-4">
-                                <p class="mb-0 text-black font-weight-bold">Renewal Frequency</p>
+                                <p class="mb-0 text-muted font-weight-bold">Renewal Frequency</p>
                             </div>
                             <div class="col-12 col-md-8 text-md-right">
-                                <p class="mb-0">{{ subscription.frequency.name }}</p>
+                                <p class="text-light mb-0">{{ subscription.frequency.name }}</p>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12 col-md-4">
-                                <p class="mb-0 text-black font-weight-bold">Start Date</p>
+                                <p class="mb-0 text-muted font-weight-bold">Start Date</p>
                             </div>
                             <div class="col-12 col-md-8 text-md-right">
-                                <p class="mb-0">{{ subscription.start_date|date:"d M Y H:i" }}</p>
+                                <p class="text-light mb-0">{{ subscription.start_date|date:"d M Y H:i" }}</p>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12 col-md-4">
-                                <p class="mb-0 text-black font-weight-bold">End Date</p>
+                                <p class="mb-0 text-muted font-weight-bold">End Date</p>
                             </div>
                             <div class="col-12 col-md-8 text-md-right">
-                                <p class="mb-0">{{ subscription.end_date|date:"d M Y H:i" }}</p>
+                                <p class="text-light mb-0">{{ subscription.end_date|date:"d M Y H:i" }}</p>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12 col-md-4">
-                                <p class="mb-0 text-black font-weight-bold">Payment ID</p>
+                                <p class="mb-0 text-muted font-weight-bold">Payment ID</p>
                             </div>
                             <div class="col-12 col-md-8 text-md-right">
-                                <p class="mb-0">{{ payment_intent_id }}</p>
+                                <p class="text-light mb-0">{{ payment_intent_id }}</p>
                             </div>
                         </div>
                     </div>
                 {% else %}
-                    <p class="text-black">There was an issue retrieving your subscription details. Please check your email for confirmation or contact support.</p>
+                    <p class="text-muted">There was an issue retrieving your subscription details. Please check your email for confirmation or contact support.</p>
                 {% endif %}
 
                 <div class="my-5 text-center">

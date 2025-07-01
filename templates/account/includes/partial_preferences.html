@@ -4,7 +4,7 @@
 {% if topics %}
     <div class="list-group dark-list-group topics-list">
         {% for topic in topics %}
-            <div class="list-group-item d-flex align-items-center mb-2 p-2 rounded">
+            <div class="list-group-item d-flex align-items-center border-gradient">
                 <img
                     src="{% static topic.image|default:'images/topics/default.jpg' %}"
                     alt="{{ topic.name }} topic icon"

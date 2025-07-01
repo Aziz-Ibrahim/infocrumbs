@@ -34,26 +34,27 @@
             <p class="help-text text-muted text-center">{{ form.fields.topics.help_text }}</p>
         {% endif %}
 
-        {# Adjusted Bootstrap grid classes for more mobile-friendly layout #}
-        {# 1 column on extra-small (default), 2 on small/medium, 3 on large #}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-3 topics-grid-wrapper">
             {% for topic in form.fields.topics.queryset %}
             <div class="col d-flex">
-                <label class="topic-card flex-grow-1">
+                <div class="topic-card flex-grow-1" data-topic-id="{{ topic.id }}">
                     <input
                         type="checkbox"
                         name="topics"
                         value="{{ topic.id }}"
+                        id="topic_{{ topic.id }}"
                         {% if topic.id in form.selected_topic_ids %}checked{% endif %}
+                        class="visually-hidden"
                     >
+                    <label for="topic_{{ topic.id }}" class="visually-hidden">Select {{ topic.name }}</label>
                     <div class="topic-image" style="background-image: url('{% static topic.image %}')">
-                        <div class="tick-overlay">&#10004;</div>
+                        <span class="tick-overlay">&#10004;</span>
                     </div>
                     <div class="topic-info text-center p-3">
                         <h5 class="mb-1">{{ topic.name }}</h5>
                         <p class="text-muted small">{{ topic.description }}</p>
                     </div>
-                </label>
+                </div>
             </div>
             {% endfor %}
         </div>
@@ -71,28 +72,58 @@
         const form = document.querySelector('form');
         const topicLimitAttr = form.dataset.topicLimit;
         const topicLimit = topicLimitAttr === 'no_limit' ? null : parseInt(topicLimitAttr);
-        const checkboxes = document.querySelectorAll('.topic-card input[type="checkbox"]');
+        const topicCards = document.querySelectorAll('.topic-card');
 
-        checkboxes.forEach(function (checkbox) {
-            const card = checkbox.closest('.topic-card');
+        topicCards.forEach(function (card) {
+            const checkbox = card.querySelector('input[type="checkbox"]');
 
             if (checkbox.checked) {
                 card.classList.add('selected');
             }
 
-            checkbox.addEventListener('change', function () {
+            card.addEventListener('click', function (event) {
+                if (event.target === checkbox) {
+                    return;
+                }
+
+                checkbox.checked = !checkbox.checked;
+
                 card.classList.toggle('selected', checkbox.checked);
 
                 if (topicLimit !== null) {
                     const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
                     if (selectedCount > topicLimit) {
+                        checkbox.checked = false;
+                        card.classList.remove('selected');
+                        displayCustomAlert(`You can select only ${topicLimit} topics with your current plan.`);
+                    }
+                }
+            });
+
+            checkbox.addEventListener('change', function() {
+                card.classList.toggle('selected', checkbox.checked);
+                if (topicLimit !== null) {
+                    const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
+                    if (selectedCount > topicLimit) {
                         this.checked = false;
                         card.classList.remove('selected');
-                        alert(`You can select only ${topicLimit} topics with your current plan.`);
+                        displayCustomAlert(`You can select only ${topicLimit} topics with your current plan.`);
                     }
                 }
             });
         });
+
+        function displayCustomAlert(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.classList.add('custom-alert', 'alert', 'alert-warning', 'fixed-top', 'text-center', 'py-2');
+            alertDiv.style.zIndex = '1050';
+            alertDiv.textContent = message;
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000); // Remove after 3 seconds
+        }
     });
 </script>
 {% endblock %}
