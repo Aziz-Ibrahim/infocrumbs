@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.utils.timezone import now
+import time # Import time module for sleep
 
 from subscriptions.models import (
     SubscriptionPlan,
@@ -31,9 +32,9 @@ def checkout_subscription(request, plan_id, frequency_id):
     """
     Display the checkout page for a selected subscription plan and frequency.
 
-    This view creates a Stripe PaymentIntent for the purchase and checks if 
-    the user has an active subscription. If they do, and the new selection 
-    differs from their current plan/frequency, it determines if the user is 
+    This view creates a Stripe PaymentIntent for the purchase and checks if
+    the user has an active subscription. If they do, and the new selection
+    differs from their current plan/frequency, it determines if the user is
     eligible for an immediate switch (within 24 hours of original purchase)
     or must wait until the current plan ends.
     """
@@ -83,7 +84,7 @@ def checkout_subscription(request, plan_id, frequency_id):
                 metadata={
                     'plan_id': plan.id,
                     'frequency_id': frequency.id,
-                    'username': request.user.username if \
+                    'username': request.user.username if
                         request.user.is_authenticated else 'AnonymousUser',
                 }
             )
@@ -144,18 +145,86 @@ def cache_checkout_data(request):
     to update PaymentIntent metadata before payment confirmation.
     For now, it just returns a 200 status.
     """
-    return HttpResponse(status=200)
+    # The original request.POST['client_secret'] will be 'pi_XXX_secret'
+    # We need to extract 'pi_XXX'
+    try:
+        pid_full = request.POST.get('client_secret')
+        if not pid_full or '_secret' not in pid_full:
+            messages.error(request, "Invalid client secret provided.")
+            return HttpResponse(status=400) # Return 400 for bad input
+
+        pid = pid_full.split('_secret')[0]
+        plan_id = request.POST.get('plan_id')
+        frequency_id = request.POST.get('frequency_id')
+
+        # Modify the PaymentIntent with the metadata
+        stripe.PaymentIntent.modify(
+            pid,
+            metadata={
+                'user_id': request.user.id, # Ensure user is authenticated
+                'plan_id': str(plan_id),
+                'frequency_id': str(frequency_id),
+                'username': request.user.username,
+            }
+        )
+        return HttpResponse(status=200)
+    except stripe.error.StripeError as e:
+        messages.error(
+            request, "Sorry, your payment cannot be processed right now. "
+            "Please try again later."
+        )
+        return HttpResponse(content=e, status=400)
+    except Exception as e:
+        messages.error(
+            request, "Sorry, your payment cannot be processed right now. "
+            "Please try again later."
+        )
+        return HttpResponse(content=e, status=400)
 
 
+@login_required
 def checkout_success(request, payment_intent_id):
     """
     Handles successful checkouts, displaying subscription details.
+    Implements a retry mechanism to account for webhook processing delays.
     """
-    subscription = get_object_or_404(
-        UserSubscription,
-        stripe_payment_intent_id=payment_intent_id,
-        user=request.user
-    )
+    subscription = None
+    retries = 0
+    max_retries = 5 # Maximum number of attempts to find the subscription
+    retry_delay = 1 # seconds to wait between retries
+
+    while retries < max_retries:
+        try:
+            subscription = UserSubscription.objects.get(
+                stripe_payment_intent_id=payment_intent_id,
+                user=request.user
+            )
+            # If found, break the loop
+            break
+        except UserSubscription.DoesNotExist:
+            # If not found, increment retries and wait
+            retries += 1
+            if retries < max_retries:
+                time.sleep(retry_delay)
+            else:
+                # If max retries reached, handle the error
+                messages.error(
+                    request,
+                    "We couldn't find your subscription details immediately. "
+                    "Please check your profile or contact support if it "
+                    "doesn't appear shortly."
+                )
+                return redirect('account_profile') # Redirect to profile
+
+    # If subscription is still None after loop, something went wrong
+    if not subscription:
+        messages.error(
+            request,
+            "An unexpected error occurred while retrieving your subscription. "
+            "Please check your profile or contact support."
+        )
+        return redirect('account_profile')
+
 
     # Mark the subscription as active if it's not already
     if not subscription.active:
