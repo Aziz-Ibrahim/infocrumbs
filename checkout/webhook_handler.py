@@ -39,10 +39,10 @@ class StripeWH_Handler:
         intent = event.data.object
         pid = intent.id  # Stripe Payment Intent ID
 
-        # Extract metadata for subscription details
-        plan_id = intent.metadata.plan_id
-        frequency_id = intent.metadata.frequency_id
-        username = intent.metadata.username
+        plan_id = intent.metadata.get('plan_id')
+        frequency_id = intent.metadata.get('frequency_id')
+        username = intent.metadata.get('username')
+        final_price = intent.amount / 100  # Stripe amount is in cents
 
         # Retrieve related Django objects
         try:
@@ -50,10 +50,11 @@ class StripeWH_Handler:
             frequency = SubscriptionFrequency.objects.get(id=frequency_id)
         except (
             SubscriptionPlan.DoesNotExist, SubscriptionFrequency.DoesNotExist
-        ):
+        ) as e:
             print(
                 f"Webhook Error: Plan (ID: {plan_id}) or Frequency (ID: "
-                f"{frequency_id}) not found for PaymentIntent {pid}."
+                f"{frequency_id}) not found for PaymentIntent "
+                f"{pid}. Error: {e}"
             )
             return HttpResponse(
                 content=(
@@ -67,10 +68,10 @@ class StripeWH_Handler:
         if username and username != 'AnonymousUser':
             try:
                 user = User.objects.get(username=username)
-            except User.DoesNotExist:
+            except User.DoesNotExist as e:
                 print(
                     f"Webhook Error: User '{username}' not found for "
-                    f"PaymentIntent {pid}."
+                    f"PaymentIntent {pid}. Error: {e}"
                 )
                 return HttpResponse(
                     content=(
@@ -93,81 +94,30 @@ class StripeWH_Handler:
                 status=400
             )
 
-        start_date = now()
-        end_date = start_date + timedelta(days=frequency.duration_days)
-
-        user_subscription_exists = False
         try:
-            user_subscription = UserSubscription.objects.get(
-                stripe_payment_intent_id=pid
-            )
-            user_subscription_exists = True
-            if not user_subscription.active or \
-               user_subscription.plan != plan or \
-               user_subscription.frequency != frequency or \
-               user_subscription.end_date < end_date:
-                user_subscription.active = True
-                user_subscription.plan = plan
-                user_subscription.frequency = frequency
-                user_subscription.start_date = start_date
-                user_subscription.end_date = end_date
-                user_subscription.save()
-            print(
-                f"Webhook Success: PaymentIntent {pid} already processed. "
-                f"UserSubscription updated/verified."
+            subscription, created = UserSubscription.objects.update_or_create(
+                stripe_payment_intent_id=pid,  # Use PID as the unique lookup
+                defaults={
+                    'user': user,
+                    'plan': plan,
+                    'frequency': frequency,
+                    'active': True,  # Mark as active
+                }
             )
 
-            send_subscription_confirmation_email(user, user_subscription)
-            print(
-                f"Sent confirmation email to {user.email} for subscription "
-                f"ID {user_subscription.pk}"
+            # Update user's premium status and subscription type
+            user.is_premium = (plan.name == 'premium')
+            user.subscription_type = frequency.name
+            user.save()
+
+            # Send confirmation email with the final price
+            send_subscription_confirmation_email(
+                user,
+                subscription,
+                final_price
             )
 
-            return HttpResponse(
-                content=(
-                    f'Webhook received: {event["type"]} | SUCCESS: '
-                    f'Verified subscription already in database for PI: {pid}'
-                ),
-                status=200
-            )
-        except UserSubscription.DoesNotExist:
-            pass
-
-        try:
-            user_subscription = UserSubscription.objects.get(user=user)
-            user_subscription.plan = plan
-            user_subscription.frequency = frequency
-            user_subscription.start_date = start_date
-            user_subscription.end_date = end_date
-            user_subscription.active = True
-            user_subscription.stripe_payment_intent_id = pid
-            user_subscription.save()
-            message_content = (
-                f'SUCCESS: Existing user subscription updated for PI: {pid}.'
-            )
-            print(
-                f"Webhook Success: User {user.username}'s existing "
-                f"subscription updated for PI: {pid}."
-            )
-
-            send_subscription_confirmation_email(user, user_subscription)
-            print(
-                f"Sent confirmation email to {user.email} for subscription "
-                f"ID {user_subscription.pk}"
-            )
-
-        except UserSubscription.DoesNotExist:
-            # No existing subscription for the user, create a new one.
-            try:
-                user_subscription = UserSubscription.objects.create(
-                    user=user,
-                    plan=plan,
-                    frequency=frequency,
-                    start_date=start_date,
-                    end_date=end_date,
-                    active=True,
-                    stripe_payment_intent_id=pid,
-                )
+            if created:
                 message_content = (
                     f'SUCCESS: New user subscription created for PI: {pid}.'
                 )
@@ -175,30 +125,40 @@ class StripeWH_Handler:
                     f"Webhook Success: New user subscription created for "
                     f"{user.username} for PI: {pid}."
                 )
-
-                send_subscription_confirmation_email(user, user_subscription)
+            else:
+                message_content = (
+                    f'SUCCESS: Existing user subscription updated/verified '
+                    f'for PI: {pid}.'
+                )
                 print(
-                    f"Sent confirmation email to {user.email} for subscription "
-                    f"ID {user_subscription.pk}"
+                    f"Webhook Success: User {user.username}'s subscription "
+                    f"updated/verified for PI: {pid}."
                 )
 
-            except Exception as e:
-                print(
-                    f"Webhook Error: Failed to create new subscription for "
-                    f"user {user.username} for PI {pid}: {e}"
-                )
-                return HttpResponse(
-                    content=(
-                        f'Webhook received: {event["type"]} | ERROR creating '
-                        f'new subscription: {e}. PI: {pid}'
-                    ),
-                    status=500
-                )
+            print(
+                f"Sent confirmation email to {user.email} for subscription "
+                f"ID {subscription.pk}"
+            )
 
-        return HttpResponse(
-            content=f'Webhook received: {event["type"]} | {message_content}',
-            status=200,
-        )
+            return HttpResponse(
+                content=(
+                    f'Webhook received: {event["type"]} | {message_content}'
+                ),
+                status=200
+            )
+
+        except Exception as e:
+            print(
+                f"Webhook Error: Failed to create/update subscription for "
+                f"user {user.username} for PI {pid}: {e}"
+            )
+            return HttpResponse(
+                content=(
+                    f'Webhook received: {event["type"]} | '
+                    f'ERROR creating/updating subscription: {e}. PI: {pid}'
+                ),
+                status=500
+            )
 
     def handle_payment_intent_payment_failed(self, event):
         """
@@ -207,19 +167,23 @@ class StripeWH_Handler:
         """
         intent = event.data.object
         pid = intent.id
-        username = intent.metadata.username
+        username = intent.metadata.get('username') # Use .get() for safety
 
         print(f"Payment failed for PaymentIntent {pid}. User: {username}")
 
         if username and username != 'AnonymousUser':
             try:
                 user = User.objects.get(username=username)
-                user_subscription = UserSubscription.objects.get(user=user)
+                # Try to find the specific subscription by PI ID if possible,
+                # otherwise by user.
+                user_subscription = UserSubscription.objects.get(
+                    stripe_payment_intent_id=pid, user=user
+                )
                 user_subscription.active = False
                 user_subscription.save()
                 print(
-                    f"User {username}'s subscription marked inactive due to "
-                    f"failed payment for PI: {pid}."
+                    f"User {username}'s subscription (PI: {pid}) marked "
+                    f"inactive due to failed payment."
                 )
             except User.DoesNotExist:
                 print(
@@ -228,14 +192,14 @@ class StripeWH_Handler:
                 )
             except UserSubscription.DoesNotExist:
                 print(
-                    f"Webhook Info: No subscription found for user {username} "
-                    f"to deactivate for PI: {pid}."
+                    f"Webhook Info: No matching subscription found for user "
+                    f"{username} and PI {pid} to deactivate."
                 )
             except Exception as e:
                 print(
                     f"Webhook Error: Error attempting to deactivate "
                     f"subscription for user {username} for PI {pid}: {e}"
-                    )
+                )
 
         return HttpResponse(
             content=(

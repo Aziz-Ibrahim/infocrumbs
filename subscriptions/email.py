@@ -10,9 +10,10 @@ from django.contrib.sites.models import Site
 from .models import UserSubscription
 
 
-def send_subscription_confirmation_email(user, subscription):
+def send_subscription_confirmation_email(user, subscription, final_price):
     """
     Sends a subscription confirmation email to the user.
+    Includes subscription details and the actual price paid.
     """
     subject = 'InfoCrumbs Subscription Confirmation!'
     from_email = settings.DEFAULT_FROM_EMAIL
@@ -24,6 +25,8 @@ def send_subscription_confirmation_email(user, subscription):
     context = {
         'user': user,
         'subscription': subscription,
+        'plan': subscription.plan,
+        'final_price': final_price,
         'profile_url': f"{settings.SITE_URL}{reverse('account_profile')}",
         'site_name': 'InfoCrumbs',
         'site_domain': site_domain,

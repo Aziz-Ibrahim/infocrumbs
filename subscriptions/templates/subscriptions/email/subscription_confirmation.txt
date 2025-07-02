@@ -9,7 +9,6 @@ Plan: {{ subscription.plan.name }}
 Frequency: {{ subscription.frequency.name }}
 Start Date: {{ subscription.start_date|date:"M d, Y H:i" }}
 End Date: {{ subscription.end_date|date:"M d, Y H:i" }}
-Price Paid: ${{ subscription.price_paid|floatformat:2 }}
 
 You can manage your subscription and view your details anytime in your InfoCrumbs profile:
 {{ profile_url }}
