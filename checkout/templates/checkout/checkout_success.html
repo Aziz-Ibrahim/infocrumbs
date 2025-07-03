@@ -17,7 +17,7 @@
 
 {% block content %}
     <div class="overlay"></div>
-    <div class="container">
+    <div class="container gradient-border">
         <div class="row">
             <div class="col">
                 <hr>
@@ -81,14 +81,26 @@
                     <p class="text-muted">There was an issue retrieving your subscription details. Please check your email for confirmation or contact support.</p>
                 {% endif %}
 
-                <div class="my-5 text-center">
-                    <a 
-                    href="{% url 'account_profile' %}" 
-                    class="btn neon-button"
-                    aria-label="link to profile page subscription status">
-                        Go to My Subscription Status
-                    </a>
-                </div>
+<div class="my-5 text-center">
+    <a 
+        href="{% url 'set_preferences' %}" 
+        class="btn neon-button mb-2"
+        aria-label="Choose your preferred topics">
+        Choose Topics to Follow
+    </a>
+
+    <p class="text-light mb-2">
+        <span class="infocrumbs-title">Already set your preferences?</span>
+    </p>
+
+    <a
+        href="{% url 'crumb_list' %}"
+        class="btn neon-button"
+        aria-label="Explore Crumbs now">
+        Explore <strong>Crumbs</strong>
+    </a>
+</div>
+
             </div>
         </div>
     </div>

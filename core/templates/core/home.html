@@ -33,14 +33,57 @@
         </div>
     </div>
 
+
+    <h2 class="mb-4">✨ Ready to Go Deeper?</h2>
+    <p class="lead mb-5">
+        Unlock more topics and personalize your InfoCrumbs experience. Stay informed, inspired, and ahead — every day.
+    </p>
+
+    <div class="row justify-content-center text-start">
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 bg-dark text-light border border-warning shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title fs-4">🌟 Basic Plan</h5>
+                    <ul class="list-unstyled fs-6">
+                        <li><i class="fas fa-check-circle text-warning me-2"></i> Access to <strong>2 out of 12 topics</strong></li>
+                        <li><i class="fas fa-check-circle text-warning me-2"></i> Daily content updates</li>
+                        <li><i class="fas fa-check-circle text-warning me-2"></i> AI-powered summaries</li>
+                        <li><i class="fas fa-check-circle text-warning me-2"></i> Save & comment on crumbs</li>
+                    </ul>
+                    <a href="{% url 'choose_plan' %}" class="btn neon-button mt-3 w-100">
+                        Start with Basic
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 bg-dark text-light border border-primary shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title fs-4">💎 Premium Plan</h5>
+                    <ul class="list-unstyled fs-6">
+                        <li><i class="fas fa-check-circle text-primary me-2"></i> Access to <strong>all 12 topics</strong></li>
+                        <li><i class="fas fa-check-circle text-primary me-2"></i> Daily content updates</li>
+                        <li><i class="fas fa-check-circle text-primary me-2"></i> AI-powered summaries</li>
+                        <li><i class="fas fa-check-circle text-primary me-2"></i> Save & comment on crumbs</li>
+                    </ul>
+                    <a href="{% url 'choose_plan' %}" class="btn neon-button mt-3 w-100">
+                        Go Premium
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="mt-5 text-muted fst-italic">
+        Not sure yet? Start with Basic and upgrade anytime.
+    </p>
+
+
     {% if user.is_authenticated %}
-        {% if user_subscription_status.is_premium %}
+        {% if user_subscription_status.is_subscribed %}
             <a href="{% url 'crumb_list' %}" class="btn neon-button mt-4 btn-lg">
                 Explore Crumbs <i class="fas fa-arrow-right ms-2"></i>
-            </a>
-        {% elif user_subscription_status.is_subscribed %}
-            <a href="{% url 'choose_plan' %}" class="btn neon-button mt-4 btn-lg">
-                Upgrade to Premium <i class="fas fa-arrow-up ms-2"></i>
             </a>
         {% else %}
             <a href="{% url 'choose_plan' %}" class="btn neon-button mt-4 btn-lg">
@@ -55,6 +98,8 @@
 </div>
 
 <div class="container text-light text-center my-5">
+
+</div>
 
 </div>
 

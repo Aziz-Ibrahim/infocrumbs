@@ -4,42 +4,82 @@
 {% block title %}Choose Subscription Plan{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h1 class="text-center mb-4">Choose Your Subscription Plan</h1>
-    <div class="row g-4 justify-content-center">
+<div class="container my-5 gradient-border p-3">
+    <h1 class="text-center mb-2">Upgrade Your Knowledge Game</h1>
+    <p class="lead text-center text-light mb-5">
+        Get daily insights tailored to your interests. Choose a plan that fits your curiosity — or unlock it all with Premium.
+    </p>
+
+    <div class="row justify-content-center">
         {% for plan in plans %}
-            <div class="col-md-6 bg-dark text-light gradient-border m-2 p-4">
-                    {% if plan.name == 'Premium' %}
-                        <h3>{{ plan.name }} <i class="fa-regular fa-gem"></i></h3>
-                    {% else %}
-                        <h3>{{ plan.name }} <i class="fa-regular fa-user"></i></h3>
-                    {% endif %}
-                <p>Allows you to select up to {{ plan.topic_limit }} topics to follow</p>
-<hr>
-                <p>Select renewal frequency</p>
+        <div class="col-lg-5 col-md-6 mb-4">
+            <div class="card bg-dark text-light h-100 shadow-lg rounded position-relative {% if plan.name == 'Premium' %}border-primary border-2{% endif %}">
+                
+                {% if plan.name == 'Premium' %}
+                    <div class="position-absolute top-0 end-0 mt-2 me-2">
+                        <span class="badge bg-primary">Most Popular</span>
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h3 class="card-title">
+                        {{ plan.name }}
+                        {% if plan.name == 'Premium' %}
+                            <i class="fa-regular fa-gem text-primary"></i>
+                        {% else %}
+                            <i class="fa-regular fa-user text-warning"></i>
+                        {% endif %}
+                    </h3>
+
+                    <p class="mt-3 fs-6">
+                        Follow up to <strong>{{ plan.topic_limit }}</strong> topics.
+                        Stay updated with fresh crumbs <strong>every single day</strong>.
+                    </p>
+
+                    <hr class="text-muted">
+
+                    <p class="fw-semibold">Choose your renewal option:</p>
                     <ul class="list-unstyled">
-                            {% for freq in plan.frequencies %}
-                            <li class="p-2 d-flex row">
-                                <div class="col-3 d-flex align-items-start">
-                                    <p>{{ freq.name|default:"(empty Name)" }}</p>
-                                </div>
-                                <div class="col-6 d-flex justify-content-start align-items-center">
-                                    <p>£{{ freq.price }}</p>
-                                    {% if freq.discount > 0 %}
-                                        <small class="text-light text-sm">({{ freq.discount }}% off)</small>
-                                    {% endif %}
-                                </div>
-                                <div class="col-3 d-flex justify-content-end">
-                                    <a 
-                                    href="{% url 'checkout' plan.id freq.id %}" 
-                                    class="btn neon-button"
-                                    aria-label="link to checkout page">Subscribe</a>
-                                </div>
-                            </li>
-                            {% endfor %}
+                        {% for freq in plan.frequencies %}
+                        <li class="d-flex justify-content-between align-items-center mb-3 px-2">
+                            <div>
+                                <p class="mb-0 fw-normal">{{ freq.name }}</p>
+                                {% if freq.discount > 0 %}
+                                    <small class="text-success">Save {{ freq.discount }}%</small>
+                                {% endif %}
+                            </div>
+                            <div class="text-end">
+                                <p class="mb-1">£{{ freq.price }}</p>
+                                <a href="{% url 'checkout' plan.id freq.id %}" class="btn neon-button btn-sm mt-1" aria-label="Subscribe to {{ plan.name }} ({{ freq.name }})">
+                                    Subscribe
+                                </a>
+                            </div>
+                        </li>
+                        {% endfor %}
                     </ul>
+
+                    {% if plan.name == 'Premium' %}
+                        <div class="mt-4 alert bg-dark alert-info text-light bg-opacity-10 border-info border">
+                            <strong>Power access:</strong> Unlock <em>all 12 topics</em> and enjoy complete flexibility.
+                        </div>
+                    {% else %}
+                        <div class="mt-4 alert bg-dark alert-warning text-light bg-opacity-10 border-warning border">
+                            <strong>Just enough:</strong> Basic gives you 2 favourite topics — a great place to start!
+                        </div>
+                    {% endif %}
+                </div>
             </div>
+        </div>
         {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+        <p class="text-muted fst-italic">
+            Not ready to commit? You can start small and upgrade anytime.
+        </p>
+        <a href="{% url 'home' %}" class="btn neon-button">
+            Return to Homepage
+        </a>
     </div>
 </div>
 {% endblock %}

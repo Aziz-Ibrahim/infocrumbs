@@ -19,7 +19,7 @@ Crumbs List
                     <div class="mb-3">
                         <label for="topic-select" class="form-label text-light">Filter by topic:</label>
                         <select id="topic-select" name="topic" onchange="this.form.submit()" class="form-select bg-dark text-light border-secondary">
-                            <option value="">All Topics</option>
+                            <option value="">Topics You Follow</option>
                             {% for topic in topics %}
                                 <option value="{{ topic.id }}"
                                     {% if selected_topic == topic.id %}selected{% endif %}>
