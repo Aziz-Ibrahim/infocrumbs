@@ -12,7 +12,7 @@
 <div class="container preferences-container gradient-border glow rounded p-4 my-4">
     <h2 class="text-center my-4 text-light">Choose Your Topics</h2>
 
-    <form method="post" enctype="multipart/form-data"
+    <form id="preferences-form" method="post" enctype="multipart/form-data"
           data-topic-limit="{{ form.topic_limit|default_if_none:'no_limit' }}">
         {% csrf_token %}
 
@@ -45,13 +45,15 @@
                         id="topic_{{ topic.id }}"
                         {% if topic.id in form.selected_topic_ids %}checked{% endif %}
                         class="visually-hidden"
+                        aria-labelledby="topic_name_{{ topic.id }}"
                     >
                     <label for="topic_{{ topic.id }}" class="visually-hidden">Select {{ topic.name }}</label>
+
                     <div class="topic-image" style="background-image: url('{% static topic.image %}')">
                         <span class="tick-overlay">&#10004;</span>
                     </div>
                     <div class="topic-info text-center p-3">
-                        <h5 class="mb-1">{{ topic.name }}</h5>
+                        <h5 class="mb-1" id="topic_name_{{ topic.id }}">{{ topic.name }}</h5>
                         <p class="text-muted small">{{ topic.description }}</p>
                     </div>
                 </div>
@@ -69,50 +71,73 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form');
-        const topicLimitAttr = form.dataset.topicLimit;
-        const topicLimit = topicLimitAttr === 'no_limit' ? null : parseInt(topicLimitAttr);
+        const form = document.getElementById('preferences-form');
+        
+        if (!form) {
+            console.error('Error: Preferences form with ID "preferences-form" not found.');
+            return;
+        }
+
+        const topicLimitAttr = form.getAttribute('data-topic-limit');
+        const topicLimit = topicLimitAttr === 'no_limit' ? null : parseInt(topicLimitAttr, 10);
+
         const topicCards = document.querySelectorAll('.topic-card');
 
         topicCards.forEach(function (card) {
             const checkbox = card.querySelector('input[type="checkbox"]');
 
+            // Initial state: apply 'selected' class if checkbox is checked on load
             if (checkbox.checked) {
                 card.classList.add('selected');
             }
 
+            // Handle clicks on the entire card
             card.addEventListener('click', function (event) {
+                // Prevent click from bubbling if it originated from the checkbox itself
                 if (event.target === checkbox) {
                     return;
                 }
 
-                checkbox.checked = !checkbox.checked;
+                const isCurrentlyChecked = checkbox.checked;
 
-                card.classList.toggle('selected', checkbox.checked);
-
-                if (topicLimit !== null) {
-                    const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
-                    if (selectedCount > topicLimit) {
-                        checkbox.checked = false;
-                        card.classList.remove('selected');
-                        displayCustomAlert(`You can select only ${topicLimit} topics with your current plan.`);
+                if (isCurrentlyChecked) {
+                    // User is trying to UNCHECK the box - always allowed
+                    checkbox.checked = false;
+                    card.classList.remove('selected');
+                } else {
+                    // User is trying to CHECK the box
+                    if (topicLimit !== null && !isNaN(topicLimit)) {
+                        const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
+                        // Check if adding this topic would exceed the limit
+                        if (selectedCount >= topicLimit) {
+                            displayCustomAlert(`You can select only ${topicLimit} topics with your current plan.`);
+                            return; // PREVENT SELECTION: Do not toggle checkbox or class
+                        }
                     }
+                    // If we reach here, it's allowed to check
+                    checkbox.checked = true;
+                    card.classList.add('selected');
                 }
             });
 
+            // This change listener acts as a final safeguard,
+            // especially if the checkbox state is altered by other means (e.g., keyboard).
             checkbox.addEventListener('change', function() {
-                card.classList.toggle('selected', checkbox.checked);
-                if (topicLimit !== null) {
+                // If the checkbox was just checked and it exceeds the limit, revert it.
+                if (topicLimit !== null && !isNaN(topicLimit) && this.checked) {
                     const selectedCount = document.querySelectorAll('.topic-card input[type="checkbox"]:checked').length;
                     if (selectedCount > topicLimit) {
-                        this.checked = false;
-                        card.classList.remove('selected');
+                        this.checked = false; // Revert this checkbox
+                        card.classList.remove('selected'); // Remove visual selection
                         displayCustomAlert(`You can select only ${topicLimit} topics with your current plan.`);
                     }
                 }
+                // Ensure visual state matches the actual checkbox state (important if reverted above)
+                card.classList.toggle('selected', this.checked);
             });
         });
 
+        // Custom alert function (replaces alert() for better UX)
         function displayCustomAlert(message) {
             const alertDiv = document.createElement('div');
             alertDiv.classList.add('custom-alert', 'alert', 'alert-warning', 'fixed-top', 'text-center', 'py-2');

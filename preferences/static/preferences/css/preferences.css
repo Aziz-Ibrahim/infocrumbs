@@ -65,3 +65,50 @@
 .topic-card.selected .tick-overlay {
     display: block;
 }
+
+
+.custom-alert {
+    background-color: rgba(30, 30, 30, 0.9); /* Dark, slightly transparent background */
+    color: #ffda6a; /* Soft yellow/orange for warning text */
+    border: 2px solid #ffda6a; /* Matching border color */
+    border-radius: 15px; /* Rounded corners */
+    padding: 15px 25px; /* Ample padding */
+    box-shadow: 0 0 15px rgba(255, 218, 106, 0.6), /* Subtle glow effect */
+                0 0 25px rgba(255, 218, 106, 0.4);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(255, 218, 106, 0.5); /* Text glow */
+    transition: opacity 0.5s ease-in-out; /* Smooth fade in/out */
+    position: fixed; /* Ensures it stays at the top */
+    top: 50%; /* Distance from the top */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for perfect centering */
+    width: auto; /* Adjust width based on content */
+    max-width: 90%; /* Max width for responsiveness */
+    z-index: 1050; /* Ensure it's above other content */
+    text-align: center;
+}
+
+/* A subtle animation for when it appears */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.custom-alert.show { 
+    animation: fadeInDown 0.5s ease-out forwards;
+}
+
+/* Ensure the text is readable on smaller screens */
+@media (max-width: 768px) {
+    .custom-alert {
+        font-size: 0.95rem;
+        padding: 12px 20px;
+    }
+}
