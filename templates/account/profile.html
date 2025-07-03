@@ -105,6 +105,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const placeholder = document.getElementById("profile-placeholder");
     const profileTabsCollapse = document.getElementById("profileTabsCollapse");
 
+    /**
+     * Loads content into the profile placeholder via AJAX.
+     * @param {string} url - The URL to fetch content from.
+     */
     const loadTabContent = (url) => {
         placeholder.innerHTML = `<div class="text-center py-5">
                                     <div class="spinner-border text-light" role="status">
@@ -133,7 +137,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.html) {
                     placeholder.innerHTML = data.html;
-                    attachLoadMoreListeners();
+                    attachLoadMoreListeners(); // Re-attach existing load more listeners
+
+                    // --- NEW: Attach Account Update Form Listener if the form is present ---
+                    attachAccountUpdateFormListener(); 
+                    // --- END NEW ---
+
                 } else {
                     placeholder.innerHTML = "<p>No content available.</p>";
                 }
@@ -141,11 +150,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(error => {
                 console.error("Error loading profile section:", error);
                 if (!placeholder.innerHTML.includes("Error:") && typeof error === 'string' && !error.includes("Redirecting")) {
-                     placeholder.innerHTML = "<p class='text-danger'>Failed to load section. Please try again.</p>";
+                       placeholder.innerHTML = "<p class='text-danger'>Failed to load section. Please try again.</p>";
                 }
             });
     };
 
+    // Event listeners for tab clicks
     tabs.forEach(tab => {
         tab.addEventListener("click", (e) => {
             e.preventDefault();
@@ -165,13 +175,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    /**
+     * Attaches click listeners to "Load More" buttons.
+     * This needs to be called whenever new content with load-more buttons is loaded.
+     */
     const attachLoadMoreListeners = () => {
         document.querySelectorAll(".load-more-btn").forEach(button => {
-            button.removeEventListener("click", handleLoadMoreClick);
+            button.removeEventListener("click", handleLoadMoreClick); // Prevent duplicate listeners
             button.addEventListener("click", handleLoadMoreClick);
         });
     };
 
+    /**
+     * Handles the click event for "Load More" buttons.
+     * @param {Event} e - The click event.
+     */
     const handleLoadMoreClick = (e) => {
         e.preventDefault();
 
@@ -186,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const originalButtonText = button.innerHTML; // Store original text
+        const originalButtonText = button.innerHTML;
         button.disabled = true;
         button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`;
 
@@ -213,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.has_next_page) {
                     button.dataset.nextPage = data.next_page_number;
                     button.disabled = false;
-                    button.innerHTML = originalButtonText; // Restore original text
+                    button.innerHTML = originalButtonText;
                 } else {
                     button.remove();
                 }
@@ -223,20 +241,83 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.disabled = false;
                 button.innerHTML = `Error Loading. Try Again.`;
                 setTimeout(() => {
-                    button.innerHTML = originalButtonText; // Restore original text after a delay
+                    button.innerHTML = originalButtonText;
                 }, 2000);
             });
     };
 
+    /**
+     * Attaches the submit listener for the account update form.
+     * This needs to be called whenever the partial_account_details.html is loaded.
+     */
+    const attachAccountUpdateFormListener = () => {
+        const accountUpdateForm = document.getElementById('account-update-form');
+        if (accountUpdateForm) {
+            // Remove existing listener to prevent duplicates if called multiple times
+            accountUpdateForm.removeEventListener('submit', handleAccountUpdateSubmit);
+            accountUpdateForm.addEventListener('submit', handleAccountUpdateSubmit);
+        }
+    };
+
+    /**
+     * Handles the submission of the account update form via AJAX.
+     * @param {Event} e - The submit event.
+     */
+    const handleAccountUpdateSubmit = (e) => {
+        e.preventDefault(); // Prevent default form submission
+
+        const form = e.target;
+        const formData = new FormData(form);
+        const url = form.action;
+        const spinnerHtml = `<div class="text-center py-3"><div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div><p class="text-muted mt-2">Updating...</p></div>`;
+
+        // Temporarily replace form content with a spinner
+        form.innerHTML = spinnerHtml;
+
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                // If server returns a non-200 status, try to parse JSON error
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || `Server error: ${response.status}`);
+                }).catch(() => {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.html) {
+                placeholder.innerHTML = data.html; // Inject the new HTML (with errors or success)
+                attachAccountUpdateFormListener(); // Re-attach listener as HTML was replaced
+            } else {
+                placeholder.innerHTML = '<p class="text-danger">Failed to update account details: No HTML content received.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting account update form:', error);
+            placeholder.innerHTML = `<p class="text-danger">Failed to update account details: ${error.message || 'An unexpected error occurred.'}</p>`;
+        });
+    };
+
+
+    // Initial load for the default active tab
     if (tabs.length > 0) {
         const activeTab = document.querySelector(".nav-pills .nav-link.active");
         if (activeTab) {
             loadTabContent(activeTab.dataset.url);
         } else {
+            // If no active tab is found, click the first one to load content
             tabs[0].click();
         }
     }
 });
 </script>
-
 {% endblock %}

@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from accounts.forms import UserUpdateForm
+from .models import CustomUser
+from .forms import UserUpdateForm
 from preferences.models import UserPreference
 from feedback.models import SavedCrumb, Comment
 from subscriptions.models import UserSubscription
@@ -52,28 +53,40 @@ def load_account_details(request):
 @login_required
 def account_update(request):
     """
-    Handles the update of user account details using a ModelForm.
+    Handles the update of user account details using a ModelForm via AJAX POST.
+    Returns JSON with rendered HTML containing the form 
+    (with errors or updated data).
     """
     user = request.user
 
     if request.method == "POST":
-        # Instantiate the form with POST data AND the current user instance
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
-            # If the form is valid, save the changes to the user instance
             form.save()
             messages.success(request, "Account details updated successfully.")
-            return redirect("account_profile")  # Redirect to the profile page
+            # Re-instantiate the form with the updated user data
+            # so the rendered HTML shows the new values
+            form = UserUpdateForm(instance=user)
         else:
-            # If the form is NOT valid, show error messages
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(
-                        request, f"{field.replace('_', ' ').title()}: {error}"
-                        )
-            return redirect("account_profile")
-
-    return redirect("account_profile")
+            # If the form is NOT valid, add a general error message.
+            # Field-specific errors will be displayed by the template.
+            messages.error(request, "Please correct the errors below.")
+        
+        # Render the partial HTML template with the form 
+        # (either valid or invalid)
+        html_content = render_to_string(
+            "account/includes/partial_account_details.html",
+            {
+                'form': form,
+                'user': user, # Pass user if needed in partial template
+            },
+            request=request
+        )
+        return JsonResponse({"html": html_content})
+    else:
+        # If a GET request somehow hits this endpoint directly,
+        # redirect to the main profile page.
+        return redirect("account_profile")
 
 
 @login_required
