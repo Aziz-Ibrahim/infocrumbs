@@ -4,7 +4,7 @@
 
 InfoCrumbs is a sophisticated Django-based web application engineered to revolutionize how users consume digital content. In today's overwhelming information landscape, InfoCrumbs cuts through the noise by delivering **personalized news and articles**—or "crumbs"—directly tailored to individual interests and tiered subscription plans. This project showcases a robust backend data pipeline, dynamic content summarization, and a meticulously designed user experience, built with scalability and maintainability in mind.
 
-A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.com/)
+### A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.com/)
 
 ---
 
@@ -14,9 +14,11 @@ A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.
 
 2. [Technical Architecture & Stack](#technical-architecture--stack)
 
-3. [Entity-Relationship Diagram (ERD)](#entity-relationship-diagram)
+3. [Wireframes](#wireframes)
 
-4. [Installation and Setup](#installation-and-setup)
+4. [Entity-Relationship Diagram (ERD)](#entity-relationship-diagram)
+
+5. [Installation and Setup](#installation-and-setup)
 
     * [Prerequisites](#prerequisites)
 
@@ -34,21 +36,19 @@ A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.
 
     * [Populate Initial Data](#populate-initial-data)
 
-5. [Running the Application](#running-the-application)
+6. [Running the Application](#running-the-application)
 
     * [Development Server](#development-server)
 
     * [Running the Data Pipeline](#running-the-data-pipeline)
 
-6. [Testing](#testing)
+7. [Testing](#testing)
 
-7. [Code Quality & Linting Reports](#code-quality--linting-reports)
+8. [Code Quality & Linting Reports](#code-quality--linting-reports)
 
-8. [Wireframes](#wireframes)
+9. [Future Improvements](#future-improvements)
 
-9. [Screenshots](#screenshots)
-
-10. [Future Improvements](#future-improvements)
+10. [Credits](#credits)
 
 11. [Contributing](#contributing)
 
@@ -88,6 +88,8 @@ A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.
 
 * **Dynamic Access Control**: Critical views and features, such as topic preference management and payment processing, are protected by intelligent redirects, ensuring only active, subscribed users can access privileged functionalities.
 
+### For a visual illustration of the responsive design and key features, please refer to [Screenshots Documentstion](docs/screenshots.md)
+
 ---
 
 ## Technical Architecture & Stack
@@ -115,6 +117,13 @@ InfoCrumbs is built upon a modern, modular Django architecture, prioritizing cle
 * **Frontend**: Standard Django Templates (HTML, CSS, JavaScript) - Ensures a direct, efficient rendering pipeline for dynamic content, complemented by Bootstrap 5 for responsiveness.
 
 * **Development Tools**: `pip` (Python package management), `Git` (version control), `pytest` (testing).
+
+---
+
+## Wireframes
+The application's design process began with detailed wireframes, outlining the layout and user flow for all pages across different device sizes (small, medium, and large). These visual blueprints guided the development of the responsive user interface.
+
+* [View Wireframes (PDF):](docs/infocrumbs-wireframes.pdf)
 
 ---
 
@@ -267,7 +276,8 @@ These automated tasks ensure the application's content is always up-to-date and 
 
 ---
 
-## Testing: A Commitment to Quality
+## Testing
+### A Commitment to Quality
 
 InfoCrumbs boasts a comprehensive test suite covering models, forms, views, and critical business logic. This rigorous approach ensures code reliability, prevents regressions, and validates expected system behavior across various user scenarios and subscription states. Our iterative development process, including tackling complex issues like multi-hop redirects, dynamic form validation, and email sending, has significantly strengthened the application's stability.
 
@@ -292,73 +302,6 @@ The project's HTML and CSS files have undergone rigorous validation to ensure ad
 
 ---
 
-## Wireframes
-The application's design process began with detailed wireframes, outlining the layout and user flow for all pages across different device sizes (small, medium, and large). These visual blueprints guided the development of the responsive user interface.
-
-* [View Wireframes (PDF):](docs/infocrumbs-wireframes.pdf)
-
----
-## Screenshots
-
-Below are screenshots demonstrating the application's key features and responsive user interface across various screen sizes.
-
-* **Home Page**:
-    * Small: ![Home Page (Small)](docs/home-sm.png)
-    * Medium: ![Home Page (Medium)](docs/home-md.png)
-    * Large: ![Home Page (Large)](docs/home-lg.png)
-
-* **About Page**:
-    * Small: ![About Page (Small)](docs/about-sm.png)
-    * Medium: ![About Page (Medium)](docs/about-md.png)
-    * Large: ![About Page (Large)](docs/about-lg.png)
-
-* **Contact Page**:
-    * Small: ![Contact Page (Small)](docs/contact-sm.png)
-    * Medium: ![Contact Page (Medium)](docs/contact-md.png)
-    * Large: ![Contact Page (Large)](docs/contact-lg.png)
-
-* **FAQ Page**:
-    * Small: ![FAQ Page (Small)](docs/faq-sm.png)
-    * Medium: ![FAQ Page (Medium)](docs/faq-md.png)
-    * Large: ![FAQ Page (Large)](docs/faq-lg.png)
-
-* **Sign Up Page**:
-    * Small: ![Sign Up Page (Small)](docs/profile-sm.png)
-    * Medium: ![Sign Up Page (Medium)](docs/profile-md.png)
-    * Large: ![Sign Up Page (Large)](docs/profile-lg.png)
-
-* **Profile Page**:
-    * Small: ![Profile Page (Small)](docs/profile-sm.png)
-    * Medium: ![Profile Page (Medium)](docs/profile-md.png)
-    * Large: ![Profile Page (Large)](docs/profile-lg.png)
-
-* **Crumbs List Page**:
-    * Small: ![Crumbs List Page (Small)](docs/list-sm.png)
-    * Medium: ![Crumbs List Page (Medium)](docs/list-md.png)
-    * Large: ![Crumbs List Page (Large)](docs/list-lg.png)
-
-* **Crumbs Detail Page**:
-    * Small: ![Crumbs Detail Page (Small)](docs/detail-sm.png)
-    * Medium: ![Crumbs Detail Page (Medium)](docs/detail-md.png)
-    * Large: ![Crumbs Detail Page (Large)](docs/detail-lg.png)
-
-* **Subscription Plans Page**:
-    * Small: ![Subscription Plans Page (Small)](docs/plan-sm.png)
-    * Medium: ![Subscription Plans Page (Medium)](docs/plan-md.png)
-    * Large: ![Subscription Plans Page (Large)](docs/plan-lg.png)
-
-* **Checkout Page**:
-    * Small: ![Checkout Page (Small)](docs/checkout-sm.png)
-    * Medium: ![Checkout Page (Medium)](docs/checkout-md.png)
-    * Large: ![Checkout Page (Large)](docs/checkout-lg.png)
-
-* **Topic Preferences Page**:
-    * Small: ![Topic Preferences Page (Small)](docs/topics-sm.png)
-    * Medium: ![Topic Preferences Page (Medium)](docs/topics-md.png)
-    * Large: ![Topic Preferences Page (Large)](docs/topics-lg.png)
-
----
-
 ## Future Improvements
 
 InfoCrumbs is continuously evolving. Here are some key features and enhancements planned for future development:
@@ -377,6 +320,44 @@ InfoCrumbs is continuously evolving. Here are some key features and enhancements
 
 ---
 
+## Credits
+
+A huge thank you to the following for their invaluable contributions and services:
+ 1. InfoCrumbs relies on the following APIs to fetch fresh, relevant content across different topics. Huge thanks to these providers for their publicly available endpoints:
+    * News & Media
+       - [NewsData.io](https://newsdata.io/) – Environment, World News, Music, Fitness, Food & Drink topics  
+        - [NewsAPI.org](https://newsapi.org/) – General News, Fashion, DIY, Cars & Transport  
+        - [Mediastack](https://mediastack.com/) – Technology news  
+        - [TheNewsAPI](https://www.thenewsapi.com/) – Sports headlines 
+    * Music
+        - [Last.fm](https://www.last.fm/api) – Artist and album data  
+    * Finance
+        - [Finnhub](https://finnhub.io/) – Market news and financial updates  
+    * Gardening & Plants
+        - [Perenual](https://perenual.com/docs/api) – Plant care and species data  
+        - [Trefle](https://trefle.io/) – Botanical data  
+        - [PermaPeople](https://permapeople.org/) – Permaculture and plant information 
+    * Trivia & Fun
+        - [Useless Facts API](https://uselessfacts.jsph.pl/) – Random trivia  
+        - [Chuck Norris Jokes API](https://api.chucknorris.io/) – Humorous facts  
+        - [Open Trivia DB](https://opentdb.com/) – General trivia questions 
+    * Food & Drink
+        - [Spoonacular](https://spoonacular.com/food-api) – Recipes and nutrition
+
+ 2. [Stripe](https://stripe.com/): For providing a robust and secure payment processing API.
+
+ 3. [Hugging Face](https://huggingface.co/): For their open-source contributions to the AI community and powerful NLP tools.
+
+ 4. [Heroku](https://www.heroku.com/) For providing a fantastic platform for easy deployment and hosting.
+
+ 5. [GitHub](https://github.com/) For excellent version control and collaborative development tools.
+
+ 6. AI tools such as [Google Gemini](https://gemini.google.com/) and [Open AI's Chat GPT](https://chatgpt.com/): For general assistance, brainstorming,debugging, and problem-solving throughout the development process.
+
+ 7. Friends and Family: For their patience, support, and rigorous testing, helping to identify bugs and improve the user experience.
+
+---
+
 ## Contributing
 
 I welcome contributions to InfoCrumbs! Please feel free to open issues, suggest enhancements, or submit pull requests.
@@ -385,4 +366,4 @@ I welcome contributions to InfoCrumbs! Please feel free to open issues, suggest 
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the MIT License.
