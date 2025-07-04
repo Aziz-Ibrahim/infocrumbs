@@ -9,7 +9,7 @@ class CommentForm(forms.ModelForm):
     min/max length validation.
     """
     # Define the comment_body field directly with min/max length
-    comment_body = forms.CharField(
+    content = forms.CharField(
         label="",
         min_length=5,
         max_length=500,
@@ -28,11 +28,14 @@ class CommentForm(forms.ModelForm):
         default fields with our custom field.
         """
         model = Comment
-        fields = []
+        fields = ['content']
 
     def save(self, commit=True):
+        """
+        Saves the comment instance.
+        ModelForm's default save handles mapping 'content' field.
+        """
         comment = super().save(commit=False)
-        comment.content = self.cleaned_data['comment_body']
         if commit:
             comment.save()
         return comment
