@@ -5,13 +5,13 @@
 {% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
 
 {% block content %}
-<div class="container gradient-border my-5">
+<div class="container my-5 gradient-border">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow-lg p-4 rounded-3 text-center">
-                <h2 class="card-title mb-4 text-light">{% trans "Verify Your E-mail Address" %}</h2>
+            <div class="card bg-dark text-light p-4 my-3 rounded-3 text-center">
+                <h2 class="card-title mb-4">{% trans "Verify Your E-mail Address" %}</h2>
                 <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.{% endblocktrans %}</p>
-                <a href="{% url 'account_login' %}" class="btn neon-button mt-4">Return to Login</a>
+                <a href="{% url 'account_login' %}" class="btn neon-button">Return to Login</a>
             </div>
         </div>
     </div>
