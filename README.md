@@ -4,6 +4,14 @@
 
 InfoCrumbs is a sophisticated Django-based web application engineered to revolutionize how users consume digital content. In today's overwhelming information landscape, InfoCrumbs cuts through the noise by delivering **personalized news and articles**—or "crumbs"—directly tailored to individual interests and tiered subscription plans. This project showcases a robust backend data pipeline, dynamic content summarization, and a meticulously designed user experience, built with scalability and maintainability in mind.
 
+## Visuals & Branding
+
+Here are some visual assets showcasing the InfoCrumbs brand and its presence across social media platforms.
+
+![Home Page](docs/home-page-lg.png)
+![Facebook Mock Profile](docs/infocrumbs-fb.png)
+![Instagram Mock Page](docs/infocrumbs-ig.png)
+
 ### A deployed version can be seen [here](https://infocrumbs-9d4b700e944a.herokuapp.com/)
 
 ---
@@ -299,6 +307,22 @@ All JavaScript files have been thoroughly checked for quality and adherence to b
 * **HTML/CSS Markup Checks**:
 The project's HTML and CSS files have undergone rigorous validation to ensure adherence to web standards, promoting cross-browser compatibility and accessibility. The detailed validation report highlights compliance and provides explanations for accepted warnings related to modern CSS features and external imports.
     * [View HTML/CSS Validation Report (PDF)](docs/infocrumbs-markup-validation-report.pdf)
+
+* **Lighthouse Reports**:
+The Lighthouse reports for the "Topic Preferences" and "Checkout" pages highlight areas for performance improvement. The "Topic List" page's performance score of 67% is primarily impacted by the large number of images and their format, significantly affecting the Largest Contentful Paint. For the "Checkout" page, achieving 87% performance and 79% best practices, the main challenges stem from render-blocking resources and main-thread work, largely influenced by the integration of the external Stripe iframe and its associated third-party cookies. These diagnostics provide clear pathways for future optimization.
+    * [Lighthouse Report for Home page](docs/infocrumbs-lighthouse.pdf)
+    * [Lighthouse Report for Signup page](docs/infocrumbs-lighthouse-signup.pdf)
+    * [Lighthouse Report for Login page](docs/infocrumbs-lighthouse-login.pdf)
+    * [Lighthouse Report for About page](docs/infocrumbs-lighthouse-about.pdf)
+    * [Lighthouse Report for FAQ page](docs/infocrumbs-lighthouse-faq.pdf)
+    * [Lighthouse Report for Contact page](docs/infocrumbs-lighthouse-contact.pdf)
+    * [Lighthouse Report for Subscription page](docs/infocrumbs-lighthouse-plan.pdf)
+    * [Lighthouse Report for Checkout page](docs/infocrumbs-lighthouse-checkout.pdf)
+    * [Lighthouse Report for Checkout Success page](docs/infocrumbs-lighthouse-success.pdf)
+    * [Lighthouse Report for Profile page](docs/infocrumbs-lighthouse-profile.pdf)
+    * [Lighthouse Report for Topic Preferences page](docs/infocrumbs-lighthouse-topics.pdf)
+    * [Lighthouse Report for Crumbs List page](docs/infocrumbs-lighthouse-list.pdf)
+    * [Lighthouse Report for Crumb Detail page](docs/infocrumbs-lighthouse-detail.pdf)
 
 ---
 

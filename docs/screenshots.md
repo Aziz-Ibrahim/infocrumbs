@@ -3,7 +3,7 @@ Below are screenshots demonstrating the application's key features and responsiv
 * **Home Page**:
     * Small: ![Home Page (Small)](./home-sm.png)
     * Medium: ![Home Page (Medium)](./home-md.png)
-    * Large: ![Home Page (Large)](./home-lg.png)
+    * Large: ![Home Page (Large)](./home-page-lg.png)
 
 * **About Page**:
     * Small: ![About Page (Small)](./about-sm.png)
