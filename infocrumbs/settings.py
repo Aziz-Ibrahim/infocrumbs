@@ -116,7 +116,7 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm'
 }
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 WSGI_APPLICATION = 'infocrumbs.wsgi.application'
 
