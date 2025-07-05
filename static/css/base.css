@@ -88,10 +88,8 @@ body {
     color: var(--text-light);
     font-family: var(--font-primary);
     margin: 0;
-    margin-bottom: 70px; /* Space for footer */
     padding: 0;
     padding-top: 70px;
-    padding-bottom: 10px;
     overflow-y: auto;
 }
 
@@ -176,16 +174,9 @@ body {
 }
 
 .site-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    text-align: center;
-    color: var(--text-light);
     background-color: var(--bg-dark);
+    color: var(--text-light);
     border-top: 1px solid var(--neon-blue);
-    z-index: var(--z-index-dropdown);
 }
 
 .site-main {

@@ -139,44 +139,45 @@
             {% block content %}{% endblock %}
         </main>
 
-<footer class="site-footer py-md-3">
-    <div class="container my-0 d-flex flex-column flex-md-row justify-content-between align-items-center">
-        <p class="mb-0 text-center text-md-start">
-            &copy; 2025 InfoCrumbs. All rights reserved.
-        </p>
 
-        <div class="d-flex flex-column flex-md-row align-items-center">
-            <a
-                href="{% url 'about' %}"
-                class="infocrumbs-link me-md-3 mb-1 mb-md-0"
-                aria-label="Learn more about InfoCrumbs">
-                <i class="fa-solid fa-circle-info"></i> About
-            </a>
-            <a
-                href="{% url 'faq' %}"
-                class="infocrumbs-link me-md-3 mb-1 mb-md-0"
-                aria-label="Read the frequently asked questions">
-                <i class="fa fa-question-circle" aria-hidden="true"></i> FAQs
-            </a>
-            <a
-                href="https://www.instagram.com/infocrumbsapp/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="infocrumbs-link me-md-3 mb-1 mb-md-0"
-                aria-label="Visit InfoCrumbs on Instagram opens in a new tab">
-                <i class="fab fa-instagram"></i> Instagram
-            </a>
-            <a
-                href="https://www.facebook.com/profile.php?id=61578255560272"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="infocrumbs-link mb-1 mb-md-0"
-                aria-label="Visit InfoCrumbs on Facebook opens in a new tab">
-                <i class="fab fa-facebook"></i> Facebook
-            </a>
-        </div>
-    </div>
-</footer>
+        <footer class="site-footer py-3 py-md-4">
+            <div class="container my-0 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <p class="mb-2 mb-md-0 text-center text-md-start small">
+                    &copy; 2025 InfoCrumbs. All rights reserved.
+                </p>
+
+                <div class="d-flex flex-row align-items-center mt-2 mt-md-0">
+                    <a
+                        href="{% url 'about' %}"
+                        class="infocrumbs-link px-1 me-md-3 mb-2 mb-md-0 d-block text-center"
+                        aria-label="Learn more about InfoCrumbs">
+                        <i class="fa-solid fa-circle-info me-1"></i><br> About
+                    </a>
+                    <a
+                        href="{% url 'faq' %}"
+                        class="infocrumbs-link px-2 me-md-3 mb-2 mb-md-0 d-block text-center"
+                        aria-label="Read the frequently asked questions">
+                        <i class="fa fa-question-circle me-1" aria-hidden="true"></i><br> FAQs
+                    </a>
+                    <a
+                        href="https://www.instagram.com/infocrumbsapp/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="infocrumbs-link px-2 me-md-3 mb-2 mb-md-0 d-block text-center"
+                        aria-label="Visit InfoCrumbs on Instagram opens in a new tab">
+                          <i class="fab fa-instagram me-1"></i><br> Instagram
+                    </a>
+                    <a
+                        href="https://www.facebook.com/profile.php?id=61578255560272"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="infocrumbs-link px-1 mb-2 mb-md-0 d-block text-center"
+                        aria-label="Visit InfoCrumbs on Facebook opens in a new tab">
+                          <i class="fab fa-facebook me-1"></i><br> Facebook
+                    </a>
+                </div>
+            </div>
+        </footer>
 
 
         <script src="{% static 'js/base.js' %}"></script>
