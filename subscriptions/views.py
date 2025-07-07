@@ -88,7 +88,7 @@ def subscription_status(request):
     Displays the current subscription status of the user.
     """
     try:
-        subscription = request.user.usersubscription
+        subscription = request.user.subscriptions.filter(active=True).first()
     except UserSubscription.DoesNotExist:
         subscription = None
     return render(request, 'subscriptions/subscription_status.html', {
