@@ -56,14 +56,45 @@ After running tests, a coverage report can be generated (e.g., using `coverage.p
     coverage html # To generate an HTML report in 'htmlcov/'
     ```
 
-* **Current Coverage**:
+* **Current Code Coverage Report**:
 
-    * Overall: [Percentage]%
-    * `accounts` app: [Percentage]%
-    * `preferences` app: [Percentage]%
-    * `subscriptions` app: [Percentage]%
-    * `crumbs` app: [Percentage]%
-    * `pipeline` app: [Percentage]%
+To ensure the quality and reliability of the codebase, a comprehensive test suite has been developed. Code coverage was measured using the `coverage.py` tool, integrated with Django's test runner.
+
+The overall code coverage for the project is **90%**. This indicates that a significant portion of the application's logic is exercised by the automated tests, contributing to a robust and maintainable codebase.
+
+* **Detailed Coverage Breakdown**
+
+While the overall coverage is high, some individual files and modules currently have lower percentages. These areas are noted below, along with a brief explanation of why they might have reduced coverage and potential future considerations::
+
+    * Overall: 90%
+![Coverage Overall](./coverage-overall.png)
+
+    * `accounts` app: 84%
+![Coverage Accounts](./coverage-accounts.png)
+
+    * `checkout` app: 61%
+![Coverage Checkout](./coverage-checkout.png)
+The `checkout` app currently shows a coverage of **61%**. This is primarily due to the nature of its integration with the external Stripe API. While the core views and URL routing within the `checkout` app have been thoroughly tested, direct, live interactions with the Stripe API for payment processing were intentionally not covered by automated unit tests. Testing external API calls often involves complex mocking strategies or live API keys, which can introduce brittleness and security concerns into the test suite. The focus was instead placed on ensuring the correct internal logic and routing of the application's views.
+
+    * `core` app: 82%
+![Coverage Core](./coverage-core.png)
+
+    * `crumbs` app: 100%
+![Coverage Crumbs](./coverage-crumbs.png)
+
+    * `feedback` app: 100%
+![Coverage Feedback](./coverage-feedback.png)
+
+    * `pipeline` app: 100%
+![Coverage Pipeline](./coverage-pipeline.png)
+The `pipeline` application, despite showing 100% coverage, largely reflects coverage of its `apps.py` configuration file. Automated unit tests were not extensively developed for the core logic within this app, which includes tasks, handlers, utility functions, and management commands responsible for fetching, summarizing, and tagging content from external APIs. The decision to omit detailed automated testing for these components was based on their heavy reliance on external service interactions. Thoroughly mocking complex external API responses can lead to brittle tests that are difficult to maintain, and the primary validation for these functionalities is often more effectively performed through integration testing and manual verification of the end-to-end data flow.
+
+    * `preferences` app: 96%
+![Coverage Preferences](./coverage-preferences.png)
+
+    * `subscriptions` app: 99%
+![Coverage Subscription](./coverage-subscriptions.png)
+
 
 ### Key Areas Covered by Automated Tests
 
