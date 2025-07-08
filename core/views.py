@@ -124,3 +124,10 @@ def contact_view(request):
         form = ContactForm()
 
     return render(request, 'core/contact.html', {'form': form})
+
+# Custom 404 view
+def custom_404_view(request, exception):
+    """
+    Custom 404 error handler that renders a 404 page.
+    """
+    return render(request, 'core/404.html', {}, status=404)

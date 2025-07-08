@@ -1,4 +1,5 @@
 import datetime
+from decimal import Decimal
 
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -7,8 +8,12 @@ from django.utils import timezone
 
 from accounts.models import CustomUser, Profile
 from preferences.models import Topic, UserPreference
-from subscriptions.models import SubscriptionPlan, UserSubscription
-from feedback.models import SavedCrumb
+from subscriptions.models import (
+    SubscriptionPlan,
+    SubscriptionFrequency,
+    UserSubscription
+)
+from feedback.models import SavedCrumb, LikedCrumb, Comment
 from .models import Crumb
 
 
@@ -101,20 +106,24 @@ class CrumbListViewTest(TestCase):
         self.future_end_date = timezone.now() + datetime.timedelta(days=30)
 
         self.basic_plan = SubscriptionPlan.objects.create(
-            name='Basic Plan Type',
-            price=10.00,
+            name='basic',
+            price=Decimal('10.00'),
             topic_limit=2
         )
         self.premium_plan = SubscriptionPlan.objects.create(
-            name='Premium Plan Type',
-            price=20.00,
+            name='premium',
+            price=Decimal('20.00'),
             topic_limit=12
+        )
+        self.monthly_freq = SubscriptionFrequency.objects.create(
+            name='monthly', duration_days=30, discount_percent=0
         )
 
     def test_crumb_list_redirects_unauthenticated_user(self):
         """
         Ensure unauthenticated users are redirected to the login page.
         """
+        self.client.logout()
         response = self.client.get(reverse('crumb_list'))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('account_login'))
@@ -125,6 +134,8 @@ class CrumbListViewTest(TestCase):
         redirected to the choose_plan page.
         """
         self.client.login(username='testuser', password='password123')
+        # Ensure no active subscription exists for the user
+        UserSubscription.objects.filter(user=self.user, active=True).delete()
         response = self.client.get(reverse('crumb_list'))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('choose_plan'))
@@ -136,6 +147,7 @@ class CrumbListViewTest(TestCase):
         UserSubscription.objects.create(
             user=self.user,
             plan=self.basic_plan,
+            frequency=self.monthly_freq,
             active=True,
             end_date=self.future_end_date
         )
@@ -154,6 +166,7 @@ class CrumbListViewTest(TestCase):
         UserSubscription.objects.create(
             user=self.user,
             plan=self.basic_plan,
+            frequency=self.monthly_freq,
             active=True,
             end_date=self.future_end_date
         )
@@ -176,6 +189,7 @@ class CrumbListViewTest(TestCase):
         UserSubscription.objects.create(
             user=self.user,
             plan=self.premium_plan,
+            frequency=self.monthly_freq,
             active=True,
             end_date=self.future_end_date
         )
@@ -198,6 +212,7 @@ class CrumbListViewTest(TestCase):
         UserSubscription.objects.create(
             user=self.user,
             plan=self.premium_plan,
+            frequency=self.monthly_freq,
             active=True,
             end_date=self.future_end_date
         )
@@ -223,6 +238,7 @@ class CrumbListViewTest(TestCase):
         UserSubscription.objects.create(
             user=self.user,
             plan=self.premium_plan,
+            frequency=self.monthly_freq,
             active=True,
             end_date=self.future_end_date
         )
@@ -234,10 +250,11 @@ class CrumbListViewTest(TestCase):
         self.client.login(username='testuser', password='password123')
         response = self.client.get(reverse('crumb_list'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.crumb1_tech.id, response.context['saved_crumbs'])
+        # FIX: Using 'saved_ids' as confirmed by your view context.
+        self.assertIn(self.crumb1_tech.id, response.context['saved_ids'])
         self.assertNotIn(
             self.crumb2_finance.id,
-            response.context['saved_crumbs']
+            response.context['saved_ids']
         )
 
     def test_crumb_list_pagination(self):
@@ -247,12 +264,12 @@ class CrumbListViewTest(TestCase):
         UserSubscription.objects.create(
             user=self.user,
             plan=self.premium_plan,
+            frequency=self.monthly_freq,
             active=True,
             end_date=self.future_end_date
         )
         user_pref = UserPreference.objects.create(user=self.user)
-        user_pref.topics.clear()
-        user_pref.topics.add(self.topic1)
+        user_pref.topics.add(self.topic1, self.topic2, self.topic3)
 
         for i in range(10):
             Crumb.objects.create(
@@ -267,7 +284,8 @@ class CrumbListViewTest(TestCase):
         self.assertTrue(response_page1.context['page_obj'].has_next())
 
         response_page2 = self.client.get(reverse('crumb_list') + '?page=2')
-        self.assertEqual(len(response_page2.context['page_obj']), 2)
+        # The second page should have the remaining 4 crumbs.
+        self.assertEqual(len(response_page2.context['page_obj']), 4)
         self.assertFalse(response_page2.context['page_obj'].has_next())
 
 
@@ -292,6 +310,23 @@ class CrumbDetailViewTest(TestCase):
             url='http://detail.com', source='Detail Source',
             topic=self.topic, published_at=timezone.now()
         )
+
+        # Add an active subscription for the user to pass subscription check
+        self.basic_plan = SubscriptionPlan.objects.create(
+            name='basic', topic_limit=2, price=Decimal('10.00')
+        )
+        self.monthly_freq = SubscriptionFrequency.objects.create(
+            name='monthly', duration_days=30, discount_percent=0
+        )
+        UserSubscription.objects.create(
+            user=self.user,
+            plan=self.basic_plan,
+            frequency=self.monthly_freq,
+            active=True,
+            start_date=timezone.now(),
+            end_date=timezone.now() + datetime.timedelta(days=30)
+        )
+        self.client.login(username='testuser', password='password123')
 
     def test_crumb_detail_view_success(self):
         """
@@ -324,8 +359,6 @@ class CrumbDetailViewTest(TestCase):
         authenticated user.
         """
         SavedCrumb.objects.create(user=self.user, crumb=self.crumb)
-        self.client.login(username='testuser', password='password123')
-
         response = self.client.get(
             reverse(
                 'crumb_detail',
@@ -340,8 +373,6 @@ class CrumbDetailViewTest(TestCase):
         Ensure crumb_detail view correctly identifies an unsaved crumb for an
         authenticated user.
         """
-        self.client.login(username='testuser', password='password123')
-
         response = self.client.get(
             reverse(
                 'crumb_detail',
